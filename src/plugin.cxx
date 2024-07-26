@@ -7,11 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#if __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__) && defined(CLAP_HAS_THREADS_H)
-#define CLAP_HAS_THREAD
 #include <threads.h>
-#endif
 
 #include <clap/clap.h>
 
