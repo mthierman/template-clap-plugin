@@ -34,7 +34,7 @@ add_plugin(
     NAME
     ${PROJECT_NAME}
     SOURCES
-    "src/plugin.c"
+    "src/plugin.cxx"
     )
 
 target_link_libraries(

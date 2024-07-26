@@ -14,22 +14,22 @@
 #endif
 
 #include <clap/clap.h>
-// #include <clap/helpers/plugin.hh>
-// #include <clap/helpers/plugin.hxx>
 
-static const clap_plugin_descriptor_t s_my_plug_desc = {
-    .clap_version = CLAP_VERSION_INIT,
-    .id = "com.your-company.YourPlugin",
-    .name = "Plugin Name",
-    .vendor = "Vendor",
-    .url = "https://your-domain.com/your-plugin",
-    .manual_url = "https://your-domain.com/your-plugin/manual",
-    .support_url = "https://your-domain.com/support",
-    .version = "1.4.2",
-    .description = "The plugin description.",
-    .features
-    = (const char*[]) { CLAP_PLUGIN_FEATURE_INSTRUMENT, CLAP_PLUGIN_FEATURE_STEREO, NULL },
-};
+#include <clap/helpers/plugin.hh>
+#include <clap/helpers/plugin.hxx>
+
+const char* features[] = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
+
+clap_plugin_descriptor clap_descriptor = { CLAP_VERSION,
+                                           "com.gmail.mthierman",
+                                           "ClapPlugin",
+                                           "mthierman",
+                                           "https://github.com/mthierman",
+                                           "",
+                                           "",
+                                           "0.0.0",
+                                           "A test CLAP plugin.",
+                                           features };
 
 typedef struct {
     clap_plugin_t plugin;
@@ -368,90 +368,21 @@ static const clap_plugin_factory_t s_plugin_factory = {
 // clap_entry //
 ////////////////
 
-static bool entry_init(const char* plugin_path) {
-    // perform the plugin initialization
-    return true;
+const CLAP_EXPORT struct clap_plugin_factory plugin_factory
+    = { clap_get_plugin_count, clap_get_plugin_descriptor, clap_create_plugin };
+
+bool clap_init(const char* plugin) { return true; }
+void clap_deinit() { }
+
+static const void* get_factory(const char* factory_id) {
+    return (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID)) ? &clap_factory : nullptr;
 }
 
-static void entry_deinit(void) {
-    // perform the plugin de-initialization
-}
-
-#ifdef CLAP_HAS_THREAD
-static mtx_t g_entry_lock;
-static once_flag g_entry_once = ONCE_FLAG_INIT;
-#endif
-
-static int g_entry_init_counter = 0;
-
-#ifdef CLAP_HAS_THREAD
-// Initializes the necessary mutex for the entry guard
-static void entry_init_guard_init(void) { mtx_init(&g_entry_lock, mtx_plain); }
-#endif
-
-// Thread safe init counter
-static bool entry_init_guard(const char* plugin_path) {
-#ifdef CLAP_HAS_THREAD
-    call_once(&g_entry_once, entry_init_guard_init);
-
-    mtx_lock(&g_entry_lock);
-#endif
-
-    const int cnt = ++g_entry_init_counter;
-    assert(cnt > 0);
-
-    bool succeed = true;
-    if (cnt == 1) {
-        succeed = entry_init(plugin_path);
-        if (!succeed)
-            g_entry_init_counter = 0;
-    }
-
-#ifdef CLAP_HAS_THREAD
-    mtx_unlock(&g_entry_lock);
-#endif
-
-    return succeed;
-}
-
-// Thread safe deinit counter
-static void entry_deinit_guard(void) {
-#ifdef CLAP_HAS_THREAD
-    call_once(&g_entry_once, entry_init_guard_init);
-
-    mtx_lock(&g_entry_lock);
-#endif
-
-    const int cnt = --g_entry_init_counter;
-    // assert(cnt > 0);
-
-    bool succeed = true;
-    if (cnt == 0)
-        entry_deinit();
-
-#ifdef CLAP_HAS_THREAD
-    mtx_unlock(&g_entry_lock);
-#endif
-}
-
-static const void* entry_get_factory(const char* factory_id) {
-#ifdef CLAP_HAS_THREAD
-    call_once(&g_entry_once, entry_init_guard_init);
-#endif
-
-    assert(g_entry_init_counter > 0);
-    if (g_entry_init_counter <= 0)
-        return NULL;
-
-    if (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID))
-        return &s_plugin_factory;
-    return NULL;
-}
-
-// This symbol will be resolved by the host
-CLAP_EXPORT const clap_plugin_entry_t clap_entry = {
-    .clap_version = CLAP_VERSION_INIT,
-    .init = entry_init_guard,
-    .deinit = entry_deinit_guard,
-    .get_factory = entry_get_factory,
+extern "C" {
+const CLAP_EXPORT struct clap_plugin_entry clap_entry = {
+    CLAP_VERSION,
+    clap_init,
+    clap_deinit,
+    get_factory,
 };
+}
