@@ -60,16 +60,6 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
         return true;
     }
 
-    //---------------------//
-    // clap_plugin_latency //
-    //---------------------//
-    virtual bool implementsLatency() const noexcept { return false; }
-
-    //-------------------//
-    // clap_plugin_state //
-    //-------------------//
-    virtual bool implementsState() const noexcept { return false; }
-
     //-------------//
     // clap_plugin //
     //-------------//
