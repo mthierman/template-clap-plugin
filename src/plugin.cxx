@@ -11,7 +11,7 @@
 
 const char* features[] = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
 
-static const clap_plugin_descriptor_t s_my_plug_desc
+static const clap_plugin_descriptor s_my_plug_desc
     = { .clap_version { CLAP_VERSION },
         .id { "com.gmail.mthierman" },
         .name { "ClapPlugin" },
@@ -23,44 +23,28 @@ static const clap_plugin_descriptor_t s_my_plug_desc
         .description { "A test CLAP plugin." },
         .features { features } };
 
-struct my_plug_t {
-    clap_plugin_t plugin;
-    const clap_host_t* host;
-    const clap_host_latency_t* host_latency;
-    const clap_host_log_t* host_log;
-    const clap_host_thread_check_t* host_thread_check;
-    const clap_host_state_t* host_state;
+struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                             clap::helpers::CheckingLevel::Maximal> {
+    Plugin(const clap_plugin_descriptor* desc, const clap_host* host)
+        : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                clap::helpers::CheckingLevel::Maximal>(desc, host) { }
 
-    uint32_t latency;
-};
-
-/////////////////////////////
-// clap_plugin_audio_ports //
-/////////////////////////////
-
-static uint32_t my_plug_audio_ports_count(const clap_plugin_t* plugin, bool is_input) {
-    // We just declare 1 audio input and 1 audio output
-    return 1;
-}
-
-static bool my_plug_audio_ports_get(const clap_plugin_t* plugin,
-                                    uint32_t index,
-                                    bool is_input,
-                                    clap_audio_port_info_t* info) {
-    if (index > 0)
-        return false;
-    info->id = 0;
-    snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
-    info->channel_count = 2;
-    info->flags = CLAP_AUDIO_PORT_IS_MAIN;
-    info->port_type = CLAP_PORT_STEREO;
-    info->in_place_pair = CLAP_INVALID_ID;
-    return true;
-}
-
-static const clap_plugin_audio_ports_t s_my_plug_audio_ports = {
-    .count = my_plug_audio_ports_count,
-    .get = my_plug_audio_ports_get,
+    virtual bool implementsAudioPorts() const noexcept { return true; }
+    virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
+    virtual auto audioPortsInfo(uint32_t index,
+                                bool isInput,
+                                clap_audio_port_info* info) const noexcept -> bool {
+        // return false;
+        if (index > 0)
+            return false;
+        info->id = 0;
+        snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
+        info->channel_count = 2;
+        info->flags = CLAP_AUDIO_PORT_IS_MAIN;
+        info->port_type = CLAP_PORT_STEREO;
+        info->in_place_pair = CLAP_INVALID_ID;
+        return true;
+    }
 };
 
 ////////////////////////////
