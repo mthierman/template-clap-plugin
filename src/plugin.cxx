@@ -60,6 +60,16 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
         return true;
     }
 
+    //---------------------//
+    // clap_plugin_latency //
+    //---------------------//
+    virtual bool implementsLatency() const noexcept { return false; }
+
+    //-------------------//
+    // clap_plugin_state //
+    //-------------------//
+    virtual bool implementsState() const noexcept { return false; }
+
     //-------------//
     // clap_plugin //
     //-------------//
@@ -98,7 +108,7 @@ static const clap_plugin_t* factory_create_plugin(const struct clap_plugin_facto
     return p->clapPlugin();
 }
 
-const CLAP_EXPORT clap_plugin_factory plugin_factory = {
+const CLAP_EXPORT clap_plugin_factory clap_factory = {
     .get_plugin_count = plugin::factory_get_plugin_count,
     .get_plugin_descriptor = plugin::factory_get_plugin_descriptor,
     .create_plugin = plugin::factory_create_plugin,
@@ -111,7 +121,7 @@ const CLAP_EXPORT clap_plugin_factory plugin_factory = {
 static bool entry_init(const char* plugin_path) { return true; }
 static void entry_deinit(void) { }
 static const void* entry_get_factory(const char* factory_id) {
-    return (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID)) ? &plugin_factory : nullptr;
+    return (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID)) ? &clap_factory : nullptr;
 }
 } // namespace plugin
 
