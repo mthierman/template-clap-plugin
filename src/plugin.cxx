@@ -23,7 +23,7 @@ static const clap_plugin_descriptor_t s_my_plug_desc
         .description { "A test CLAP plugin." },
         .features { features } };
 
-typedef struct {
+struct my_plug_t {
     clap_plugin_t plugin;
     const clap_host_t* host;
     const clap_host_latency_t* host_latency;
@@ -32,7 +32,7 @@ typedef struct {
     const clap_host_state_t* host_state;
 
     uint32_t latency;
-} my_plug_t;
+};
 
 /////////////////////////////
 // clap_plugin_audio_ports //
