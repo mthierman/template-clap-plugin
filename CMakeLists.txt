@@ -9,8 +9,6 @@ list(
     "${CMAKE_SOURCE_DIR}/libs/cmake-modules/"
     )
 
-# include(cmake-modules) install_common() install_clap(main) install_clap_helpers(main)
-
 include(FetchContent)
 
 FetchContent_Declare(
