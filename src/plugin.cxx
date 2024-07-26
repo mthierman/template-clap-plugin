@@ -99,7 +99,7 @@ const CLAP_EXPORT clap_plugin_factory clap_factory = {
 auto entry_init(const char* plugin_path) -> bool { return true; }
 auto entry_deinit(void) -> void { }
 auto entry_get_factory(const char* factory_id) -> const void* {
-    return (!(CLAP_PLUGIN_FACTORY_ID == factory_id)) ? &clap_factory : nullptr;
+    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &clap_factory : nullptr;
 }
 } // namespace plugin
 
