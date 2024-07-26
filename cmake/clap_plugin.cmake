@@ -2,6 +2,9 @@ function(add_plugin)
     set(args NAME)
     set(listArgs SOURCES)
 
+    message(STATUS ${PROJECT_NAME})
+    message(STATUS ${PROJECT_VERSION})
+
     cmake_parse_arguments(
         ADD_PLUGIN
         ""
