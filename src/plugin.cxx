@@ -24,9 +24,7 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
             .description { "A test CLAP plugin." },
             .features { plugin_features } };
 
-    //-------------------------//
-    // clap_plugin_audio_ports //
-    //-------------------------//
+    // clap_plugin_audio_ports
     virtual bool implementsAudioPorts() const noexcept { return true; }
     virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
     virtual auto audioPortsInfo(uint32_t index,
@@ -43,9 +41,7 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
         return true;
     }
 
-    //------------------------//
-    // clap_plugin_note_ports //
-    //------------------------//
+    // clap_plugin_note_ports
     virtual bool implementsNotePorts() const noexcept { return true; }
     virtual uint32_t notePortsCount(bool isInput) const noexcept { return 1; }
     virtual bool
@@ -60,9 +56,7 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
         return true;
     }
 
-    //-------------//
-    // clap_plugin //
-    //-------------//
+    // clap_plugin
     virtual bool init() noexcept { return true; }
     virtual bool
     activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept {
@@ -80,10 +74,7 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
     virtual bool enableDraftExtensions() const noexcept { return false; }
 };
 
-/////////////////////////
-// clap_plugin_factory //
-/////////////////////////
-
+// clap_plugin_factory
 static uint32_t factory_get_plugin_count(const struct clap_plugin_factory* factory) { return 1; }
 
 static const clap_plugin_descriptor*
@@ -104,10 +95,7 @@ const CLAP_EXPORT clap_plugin_factory clap_factory = {
     .create_plugin = plugin::factory_create_plugin,
 };
 
-////////////////
-// clap_entry //
-////////////////
-
+// clap_entry
 static bool entry_init(const char* plugin_path) { return true; }
 static void entry_deinit(void) { }
 static const void* entry_get_factory(const char* factory_id) {
