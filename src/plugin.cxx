@@ -2,7 +2,6 @@
 #include <clap/helpers/plugin.hxx>
 
 namespace plugin {
-
 struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                                  clap::helpers::CheckingLevel::None> {
     ClapPlugin(const clap_host* host)
