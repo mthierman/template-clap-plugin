@@ -5,37 +5,20 @@ project(Plugin)
 list(
     APPEND
     CMAKE_MODULE_PATH
+    "${CMAKE_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/libs/cmake-modules/"
     )
 
 include(cmake-modules)
 install_common()
-install_clap()
-install_clap_helpers()
+install_clap(main)
+install_clap_helpers(main)
 
-add_library(
+include(clap_plugin)
+
+add_plugin(
+    NAME
     ${PROJECT_NAME}
-    MODULE
+    SOURCES
+    "src/entry.cxx"
     )
-
-target_sources(${PROJECT_NAME} PRIVATE "src/entry.cxx")
-
-target_link_libraries(
-    ${PROJECT_NAME}
-    PRIVATE common::flags
-            common::definitions
-            common::features
-            clap
-            clap-helpers
-    )
-
-if(CMAKE_SYSTEM_NAME
-   STREQUAL
-   "Windows"
-    )
-    set_target_properties(
-        ${PROJECT_NAME}
-        PROPERTIES SUFFIX
-                   ".clap"
-        )
-endif()
