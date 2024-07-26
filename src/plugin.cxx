@@ -10,11 +10,11 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
 
-    constexpr static std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+    static constexpr std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                            CLAP_PLUGIN_FEATURE_UTILITY,
                                            "\0" };
 
-    constexpr static clap_plugin_descriptor plugin_descriptor {
+    static constexpr clap_plugin_descriptor plugin_descriptor {
         .clap_version { CLAP_VERSION },
         .id { "com.gmail.mthierman" },
         .name { "Plugin" },
