@@ -1,6 +1,8 @@
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 
+#include <array>
+
 namespace plugin {
 struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                              clap::helpers::CheckingLevel::None> {
@@ -8,9 +10,9 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
 
-    constexpr static const char* plugin_features[] { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                                     CLAP_PLUGIN_FEATURE_UTILITY,
-                                                     NULL };
+    constexpr static std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                           CLAP_PLUGIN_FEATURE_UTILITY,
+                                           "\0" };
 
     constexpr static clap_plugin_descriptor plugin_descriptor {
         .clap_version { CLAP_VERSION },
@@ -22,7 +24,7 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         .support_url { "https://github.com/mthierman" },
         .version { "0.0.0" },
         .description { "Plugin" },
-        .features { plugin_features }
+        .features { features.data() }
     };
 
     // clap_plugin_audio_ports
