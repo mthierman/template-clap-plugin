@@ -20,16 +20,17 @@
 
 const char* features[] = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
 
-clap_plugin_descriptor clap_descriptor = { CLAP_VERSION,
-                                           "com.gmail.mthierman",
-                                           "ClapPlugin",
-                                           "mthierman",
-                                           "https://github.com/mthierman",
-                                           "",
-                                           "",
-                                           "0.0.0",
-                                           "A test CLAP plugin.",
-                                           features };
+static const clap_plugin_descriptor_t s_my_plug_desc
+    = { .clap_version { CLAP_VERSION },
+        .id { "com.gmail.mthierman" },
+        .name { "ClapPlugin" },
+        .vendor { "mthierman" },
+        .url { "https://github.com/mthierman" },
+        .manual_url { "https://github.com/mthierman" },
+        .support_url { "https://github.com/mthierman" },
+        .version { "0.0.0" },
+        .description { "A test CLAP plugin." },
+        .features { features } };
 
 typedef struct {
     clap_plugin_t plugin;
