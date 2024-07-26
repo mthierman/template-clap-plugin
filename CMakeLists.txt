@@ -21,13 +21,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(clap)
 
 FetchContent_Declare(
-    clap-helpers
+    clap_helpers
     GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
     GIT_TAG "main"
     GIT_SHALLOW ON
     )
 
-FetchContent_MakeAvailable(clap-helpers)
+FetchContent_MakeAvailable(clap_helpers)
 
 include(clap_plugin)
 
@@ -41,7 +41,7 @@ add_plugin(
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE clap
-            clap-helpers
+            clap_helpers
     )
 
 target_compile_features(
