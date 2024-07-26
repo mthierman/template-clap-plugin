@@ -25,7 +25,7 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
             .features { plugin_features } };
 
     // clap_plugin_audio_ports
-    virtual bool implementsAudioPorts() const noexcept { return true; }
+    virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
     virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
     virtual auto audioPortsInfo(uint32_t index,
                                 bool isInput,
@@ -42,10 +42,10 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
     }
 
     // clap_plugin_note_ports
-    virtual bool implementsNotePorts() const noexcept { return true; }
-    virtual uint32_t notePortsCount(bool isInput) const noexcept { return 1; }
-    virtual bool
-    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept {
+    virtual auto implementsNotePorts() const noexcept -> bool { return true; }
+    virtual auto notePortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
+    virtual auto
+    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept -> bool {
         if (index > 0)
             return false;
         info->id = 0;
@@ -57,34 +57,34 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
     }
 
     // clap_plugin
-    virtual bool init() noexcept { return true; }
-    virtual bool
-    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept {
+    virtual auto init() noexcept -> bool { return true; }
+    virtual auto
+    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept -> bool {
         return true;
     }
-    virtual void deactivate() noexcept { }
-    virtual bool startProcessing() noexcept { return true; }
-    virtual void stopProcessing() noexcept { }
-    virtual clap_process_status process(const clap_process* process) noexcept {
+    virtual auto deactivate() noexcept -> void { }
+    virtual auto startProcessing() noexcept -> bool { return true; }
+    virtual auto stopProcessing() noexcept -> void { }
+    virtual auto process(const clap_process* process) noexcept -> clap_process_status {
         return CLAP_PROCESS_SLEEP;
     }
-    virtual void reset() noexcept { }
-    virtual void onMainThread() noexcept { }
-    virtual const void* extension(const char* id) noexcept { return nullptr; }
-    virtual bool enableDraftExtensions() const noexcept { return false; }
+    virtual auto reset() noexcept -> void { }
+    virtual auto onMainThread() noexcept -> void { }
+    virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
+    virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
 
 // clap_plugin_factory
-static uint32_t factory_get_plugin_count(const struct clap_plugin_factory* factory) { return 1; }
+auto factory_get_plugin_count(const struct clap_plugin_factory* factory) -> uint32_t { return 1; }
 
-static const clap_plugin_descriptor*
-factory_get_plugin_descriptor(const struct clap_plugin_factory* factory, uint32_t index) {
+auto factory_get_plugin_descriptor(const struct clap_plugin_factory* factory,
+                                   uint32_t index) -> const clap_plugin_descriptor* {
     return &ClapPlugin::plugin_descriptor;
 }
 
-static const clap_plugin_t* factory_create_plugin(const struct clap_plugin_factory* factory,
-                                                  const clap_host_t* host,
-                                                  const char* plugin_id) {
+auto factory_create_plugin(const struct clap_plugin_factory* factory,
+                           const clap_host_t* host,
+                           const char* plugin_id) -> const clap_plugin_t* {
     auto p = new ClapPlugin(host);
     return p->clapPlugin();
 }
@@ -96,9 +96,9 @@ const CLAP_EXPORT clap_plugin_factory clap_factory = {
 };
 
 // clap_entry
-static bool entry_init(const char* plugin_path) { return true; }
-static void entry_deinit(void) { }
-static const void* entry_get_factory(const char* factory_id) {
+auto entry_init(const char* plugin_path) -> bool { return true; }
+auto entry_deinit(void) -> void { }
+auto entry_get_factory(const char* factory_id) -> const void* {
     return (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID)) ? &clap_factory : nullptr;
 }
 } // namespace plugin
