@@ -9,9 +9,9 @@
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 
+namespace plugin {
 const char* features[] = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
-
-static const clap_plugin_descriptor s_my_plug_desc
+static const clap_plugin_descriptor plugin_descriptor
     = { .clap_version { CLAP_VERSION },
         .id { "com.gmail.mthierman" },
         .name { "ClapPlugin" },
@@ -23,11 +23,11 @@ static const clap_plugin_descriptor s_my_plug_desc
         .description { "A test CLAP plugin." },
         .features { features } };
 
-struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                             clap::helpers::CheckingLevel::Maximal> {
-    Plugin(const clap_plugin_descriptor* desc, const clap_host* host)
+struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                                 clap::helpers::CheckingLevel::Maximal> {
+    ClapPlugin(const clap_host* host)
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                clap::helpers::CheckingLevel::Maximal>(desc, host) { }
+                                clap::helpers::CheckingLevel::Maximal>(&plugin_descriptor, host) { }
 
     //-------------------------//
     // clap_plugin_audio_ports //
@@ -119,29 +119,15 @@ static uint32_t plugin_factory_get_plugin_count(const struct clap_plugin_factory
 
 static const clap_plugin_descriptor*
 plugin_factory_get_plugin_descriptor(const struct clap_plugin_factory* factory, uint32_t index) {
-    return s_plugins[index].desc;
+    return &plugin_descriptor;
 }
 
 static const clap_plugin_t* plugin_factory_create_plugin(const struct clap_plugin_factory* factory,
                                                          const clap_host_t* host,
                                                          const char* plugin_id) {
-    if (!clap_version_is_compatible(host->clap_version)) {
-        return NULL;
-    }
-
-    const int N = sizeof(s_plugins) / sizeof(s_plugins[0]);
-    for (int i = 0; i < N; ++i)
-        if (!strcmp(plugin_id, s_plugins[i].desc->id))
-            return s_plugins[i].create(host);
-
-    return NULL;
+    auto p = new ClapPlugin(host);
+    return p->clapPlugin();
 }
-
-const CLAP_EXPORT clap_plugin_factory plugin_factory = {
-    .get_plugin_count = plugin_factory_get_plugin_count,
-    .get_plugin_descriptor = plugin_factory_get_plugin_descriptor,
-    .create_plugin = plugin_factory_create_plugin,
-};
 
 ////////////////
 // clap_entry //
@@ -154,11 +140,17 @@ static const void* get_factory(const char* factory_id) {
         return &aw2c_factory;
     return 0;
 }
+} // namespace plugin
 
-// This symbol will be resolved by the host
+const CLAP_EXPORT clap_plugin_factory plugin_factory = {
+    .get_plugin_count = plugin::plugin_factory_get_plugin_count,
+    .get_plugin_descriptor = plugin::plugin_factory_get_plugin_descriptor,
+    .create_plugin = plugin::plugin_factory_create_plugin,
+};
+
 const CLAP_EXPORT struct clap_plugin_entry clap_entry = {
     .clap_version = CLAP_VERSION_INIT,
-    .init = entry_init,
-    .deinit = entry_deinit,
-    .get_factory = entry_get_factory,
+    .init = plugin::entry_init,
+    .deinit = plugin::entry_deinit,
+    .get_factory = plugin::entry_get_factory,
 };
