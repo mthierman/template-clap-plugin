@@ -8,20 +8,22 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
 
-    inline static const char* plugin_features[]
-        = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
+    constexpr static const char* plugin_features[] { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                                     CLAP_PLUGIN_FEATURE_UTILITY,
+                                                     NULL };
 
-    inline static const clap_plugin_descriptor plugin_descriptor
-        = { .clap_version { CLAP_VERSION },
-            .id { "com.gmail.mthierman" },
-            .name { "Plugin" },
-            .vendor { "mthierman" },
-            .url { "https://github.com/mthierman" },
-            .manual_url { "https://github.com/mthierman" },
-            .support_url { "https://github.com/mthierman" },
-            .version { "0.0.0" },
-            .description { "Plugin" },
-            .features { plugin_features } };
+    constexpr static clap_plugin_descriptor plugin_descriptor {
+        .clap_version { CLAP_VERSION },
+        .id { "com.gmail.mthierman" },
+        .name { "Plugin" },
+        .vendor { "mthierman" },
+        .url { "https://github.com/mthierman" },
+        .manual_url { "https://github.com/mthierman" },
+        .support_url { "https://github.com/mthierman" },
+        .version { "0.0.0" },
+        .description { "Plugin" },
+        .features { plugin_features }
+    };
 
     // clap_plugin_audio_ports
     virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
