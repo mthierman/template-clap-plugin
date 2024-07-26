@@ -57,6 +57,7 @@ if(WIN32)
                 /WX
                 /wd4100
                 /wd4101
+                /wd4127
                 /wd4189
                 /utf-8
                 /bigobj
