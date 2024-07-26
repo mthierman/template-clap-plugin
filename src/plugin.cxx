@@ -105,7 +105,7 @@ static const clap_plugin_note_ports_t s_my_plug_note_ports = {
 //////////////////
 
 uint32_t my_plug_latency_get(const clap_plugin_t* plugin) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     return plug->latency;
 }
 
@@ -118,13 +118,13 @@ static const clap_plugin_latency_t s_my_plug_latency = {
 ////////////////
 
 bool my_plug_state_save(const clap_plugin_t* plugin, const clap_ostream_t* stream) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     // TODO: write the state into stream
     return true;
 }
 
 bool my_plug_state_load(const clap_plugin_t* plugin, const clap_istream_t* stream) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     // TODO: read the state from stream
     return true;
 }
@@ -139,7 +139,7 @@ static const clap_plugin_state_t s_my_plug_state = {
 /////////////////
 
 static bool my_plug_init(const struct clap_plugin* plugin) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
 
     // Fetch host's extensions here
     // Make sure to check that the interface functions are not null pointers
@@ -154,7 +154,7 @@ static bool my_plug_init(const struct clap_plugin* plugin) {
 }
 
 static void my_plug_destroy(const struct clap_plugin* plugin) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     free(plug);
 }
 
@@ -241,7 +241,7 @@ static void my_plug_process_event(my_plug_t* plug, const clap_event_header_t* hd
 
 static clap_process_status my_plug_process(const struct clap_plugin* plugin,
                                            const clap_process_t* process) {
-    my_plug_t* plug = plugin->plugin_data;
+    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     const uint32_t nframes = process->frames_count;
     const uint32_t nev = process->in_events->size(process->in_events);
     uint32_t ev_index = 0;
@@ -301,7 +301,7 @@ static const void* my_plug_get_extension(const struct clap_plugin* plugin, const
 static void my_plug_on_main_thread(const struct clap_plugin* plugin) { }
 
 clap_plugin_t* my_plug_create(const clap_host_t* host) {
-    my_plug_t* p = calloc(1, sizeof(*p));
+    my_plug_t* p = (my_plug_t*)calloc(1, sizeof(*p));
     p->host = host;
     p->plugin.desc = &s_my_plug_desc;
     p->plugin.plugin_data = p;
