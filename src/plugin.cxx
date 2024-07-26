@@ -103,9 +103,11 @@ auto entry_get_factory(const char* factory_id) -> const void* {
 }
 } // namespace plugin
 
+extern "C" {
 const CLAP_EXPORT struct clap_plugin_entry clap_entry = {
     .clap_version { CLAP_VERSION },
     .init { plugin::entry_init },
     .deinit { plugin::entry_deinit },
     .get_factory { plugin::entry_get_factory },
 };
+}
