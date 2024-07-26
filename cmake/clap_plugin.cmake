@@ -15,7 +15,7 @@ function(add_plugin)
         MODULE
         )
 
-    target_sources(${ADD_PLUGIN_NAME} PRIVATE "src/entry.cxx")
+    target_sources(${ADD_PLUGIN_NAME} PRIVATE ${ADD_PLUGIN_SOURCES})
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL

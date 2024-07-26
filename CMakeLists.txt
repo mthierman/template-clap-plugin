@@ -20,13 +20,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(clap)
 
 FetchContent_Declare(
-    clap_helpers
+    clap-helpers
     GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
     GIT_TAG "main"
     GIT_SHALLOW ON
     )
 
-FetchContent_MakeAvailable(clap_helpers)
+FetchContent_MakeAvailable(clap-helpers)
 
 include(clap_plugin)
 
@@ -34,13 +34,13 @@ add_plugin(
     NAME
     ${PROJECT_NAME}
     SOURCES
-    "src/entry.cxx"
+    "src/plugin.c"
     )
 
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE clap
-            clap_helpers
+            clap-helpers
     )
 
 target_compile_features(
@@ -55,6 +55,9 @@ if(WIN32)
         PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
                 /W4
                 /WX
+                /wd4100
+                /wd4101
+                /wd4189
                 /utf-8
                 /bigobj
                 /diagnostics:caret
@@ -72,11 +75,10 @@ if(WIN32)
         ${PROJECT_NAME}
         PRIVATE
         $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
-        /entry:mainCRTStartup
         /WX
         >
         $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
-        -Wl,/entry:mainCRTStartup,/WX
+        -Wl,/WX
         >
         )
 
