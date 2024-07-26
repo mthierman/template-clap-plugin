@@ -113,21 +113,11 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
 // clap_plugin_factory //
 /////////////////////////
 
-static struct {
-    const clap_plugin_descriptor_t* desc;
-    clap_plugin_t*(CLAP_ABI* create)(const clap_host_t* host);
-} s_plugins[] = {
-    {
-        .desc = &s_my_plug_desc,
-        .create = my_plug_create,
-    },
-};
-
 static uint32_t plugin_factory_get_plugin_count(const struct clap_plugin_factory* factory) {
-    return sizeof(s_plugins) / sizeof(s_plugins[0]);
+    return 1;
 }
 
-static const clap_plugin_descriptor_t*
+static const clap_plugin_descriptor*
 plugin_factory_get_plugin_descriptor(const struct clap_plugin_factory* factory, uint32_t index) {
     return s_plugins[index].desc;
 }
@@ -147,7 +137,7 @@ static const clap_plugin_t* plugin_factory_create_plugin(const struct clap_plugi
     return NULL;
 }
 
-static const clap_plugin_factory_t s_plugin_factory = {
+const CLAP_EXPORT clap_plugin_factory plugin_factory = {
     .get_plugin_count = plugin_factory_get_plugin_count,
     .get_plugin_descriptor = plugin_factory_get_plugin_descriptor,
     .create_plugin = plugin_factory_create_plugin,
@@ -157,76 +147,18 @@ static const clap_plugin_factory_t s_plugin_factory = {
 // clap_entry //
 ////////////////
 
-static bool entry_init(const char* plugin_path) {
-    // perform the plugin initialization
-    return true;
-}
-
-static void entry_deinit(void) {
-    // perform the plugin de-initialization
-}
-
-static mtx_t g_entry_lock;
-static once_flag g_entry_once = ONCE_FLAG_INIT;
-
-static int g_entry_init_counter = 0;
-
-// Initializes the necessary mutex for the entry guard
-static void entry_init_guard_init(void) { mtx_init(&g_entry_lock, mtx_plain); }
-
-// Thread safe init counter
-static bool entry_init_guard(const char* plugin_path) {
-    call_once(&g_entry_once, entry_init_guard_init);
-
-    mtx_lock(&g_entry_lock);
-
-    const int cnt = ++g_entry_init_counter;
-    assert(cnt > 0);
-
-    bool succeed = true;
-    if (cnt == 1) {
-        succeed = entry_init(plugin_path);
-        if (!succeed)
-            g_entry_init_counter = 0;
-    }
-
-    mtx_unlock(&g_entry_lock);
-
-    return succeed;
-}
-
-// Thread safe deinit counter
-static void entry_deinit_guard(void) {
-    call_once(&g_entry_once, entry_init_guard_init);
-
-    mtx_lock(&g_entry_lock);
-
-    const int cnt = --g_entry_init_counter;
-    // assert(cnt > 0);
-
-    bool succeed = true;
-    if (cnt == 0)
-        entry_deinit();
-
-    mtx_unlock(&g_entry_lock);
-}
-
-static const void* entry_get_factory(const char* factory_id) {
-    call_once(&g_entry_once, entry_init_guard_init);
-
-    assert(g_entry_init_counter > 0);
-    if (g_entry_init_counter <= 0)
-        return NULL;
-
-    if (!strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID))
-        return &s_plugin_factory;
-    return NULL;
+static bool entry_init(const char* plugin_path) { return true; }
+static void entry_deinit(void) { }
+static const void* get_factory(const char* factory_id) {
+    if (strcmp(factory_id, CLAP_PLUGIN_FACTORY_ID) == 0)
+        return &aw2c_factory;
+    return 0;
 }
 
 // This symbol will be resolved by the host
-CLAP_EXPORT const clap_plugin_entry_t clap_entry = {
+const CLAP_EXPORT struct clap_plugin_entry clap_entry = {
     .clap_version = CLAP_VERSION_INIT,
-    .init = entry_init_guard,
-    .deinit = entry_deinit_guard,
+    .init = entry_init,
+    .deinit = entry_deinit,
     .get_factory = entry_get_factory,
 };
