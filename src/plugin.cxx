@@ -90,9 +90,9 @@ auto factory_create_plugin(const struct clap_plugin_factory* factory,
 }
 
 const CLAP_EXPORT clap_plugin_factory clap_factory = {
-    .get_plugin_count = plugin::factory_get_plugin_count,
-    .get_plugin_descriptor = plugin::factory_get_plugin_descriptor,
-    .create_plugin = plugin::factory_create_plugin,
+    .get_plugin_count { plugin::factory_get_plugin_count },
+    .get_plugin_descriptor { plugin::factory_get_plugin_descriptor },
+    .create_plugin { plugin::factory_create_plugin },
 };
 
 // clap_entry
@@ -104,8 +104,8 @@ auto entry_get_factory(const char* factory_id) -> const void* {
 } // namespace plugin
 
 const CLAP_EXPORT struct clap_plugin_entry clap_entry = {
-    .clap_version = CLAP_VERSION_INIT,
-    .init = plugin::entry_init,
-    .deinit = plugin::entry_deinit,
-    .get_factory = plugin::entry_get_factory,
+    .clap_version { CLAP_VERSION },
+    .init { plugin::entry_init },
+    .deinit { plugin::entry_deinit },
+    .get_factory { plugin::entry_get_factory },
 };
