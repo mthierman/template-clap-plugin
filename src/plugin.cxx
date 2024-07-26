@@ -2,9 +2,9 @@
 #include <clap/helpers/plugin.hxx>
 
 namespace plugin {
-struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                                 clap::helpers::CheckingLevel::None> {
-    ClapPlugin(const clap_host* host)
+struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                             clap::helpers::CheckingLevel::None> {
+    Plugin(const clap_host* host)
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
 
@@ -14,13 +14,13 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
     inline static const clap_plugin_descriptor plugin_descriptor
         = { .clap_version { CLAP_VERSION },
             .id { "com.gmail.mthierman" },
-            .name { "ClapPlugin" },
+            .name { "Plugin" },
             .vendor { "mthierman" },
             .url { "https://github.com/mthierman" },
             .manual_url { "https://github.com/mthierman" },
             .support_url { "https://github.com/mthierman" },
             .version { "0.0.0" },
-            .description { "A test CLAP plugin." },
+            .description { "Plugin" },
             .features { plugin_features } };
 
     // clap_plugin_audio_ports
@@ -78,13 +78,13 @@ auto factory_get_plugin_count(const struct clap_plugin_factory* factory) -> uint
 
 auto factory_get_plugin_descriptor(const struct clap_plugin_factory* factory,
                                    uint32_t index) -> const clap_plugin_descriptor* {
-    return &ClapPlugin::plugin_descriptor;
+    return &Plugin::plugin_descriptor;
 }
 
 auto factory_create_plugin(const struct clap_plugin_factory* factory,
                            const clap_host_t* host,
                            const char* plugin_id) -> const clap_plugin_t* {
-    auto p = new ClapPlugin(host);
+    auto p = new Plugin(host);
     return p->clapPlugin();
 }
 
