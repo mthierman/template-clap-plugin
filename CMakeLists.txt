@@ -9,17 +9,9 @@ list(
     )
 
 include(cmake-modules)
-include(FetchContent)
-
-FetchContent_Declare(clap URL https://github.com/free-audio/clap/archive/refs/heads/main.zip)
-FetchContent_MakeAvailable(clap)
-
-FetchContent_Declare(
-    clap-helpers URL https://github.com/free-audio/clap-helpers/archive/refs/heads/main.zip
-    )
-FetchContent_MakeAvailable(clap-helpers)
-
 install_common()
+install_clap()
+install_clap_helpers()
 
 add_library(
     ${PROJECT_NAME}
