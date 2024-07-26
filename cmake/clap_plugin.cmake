@@ -1,31 +1,45 @@
 function(add_plugin)
-    set(args NAME)
+    set(args
+        ID
+        NAME
+        VENDOR
+        URL
+        MANUAL_URL
+        SUPPORT_URL
+        VERSION
+        DESCRIPTION
+        )
     set(listArgs SOURCES)
-
-    message(STATUS ${PROJECT_NAME})
-    message(STATUS ${PROJECT_VERSION})
-
     cmake_parse_arguments(
-        ADD_PLUGIN
+        PLUGIN
         ""
         "${args}"
         "${listArgs}"
         ${ARGN}
         )
 
+    message(STATUS ${PLUGIN_ID})
+    message(STATUS ${PLUGIN_NAME})
+    message(STATUS ${PLUGIN_VENDOR})
+    message(STATUS ${PLUGIN_URL})
+    message(STATUS ${PLUGIN_MANUAL_URL})
+    message(STATUS ${PLUGIN_SUPPORT_URL})
+    message(STATUS ${PLUGIN_VERSION})
+    message(STATUS ${PLUGIN_DESCRIPTION})
+
     add_library(
-        ${ADD_PLUGIN_NAME}
+        ${PLUGIN_NAME}
         MODULE
         )
 
-    target_sources(${ADD_PLUGIN_NAME} PRIVATE ${ADD_PLUGIN_SOURCES})
+    target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
        "Windows"
         )
         set_target_properties(
-            ${ADD_PLUGIN_NAME}
+            ${PLUGIN_NAME}
             PROPERTIES SUFFIX
                        ".clap"
             )
