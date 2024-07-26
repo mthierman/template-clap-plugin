@@ -34,7 +34,6 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
     virtual auto audioPortsInfo(uint32_t index,
                                 bool isInput,
                                 clap_audio_port_info* info) const noexcept -> bool {
-        // return false;
         if (index > 0)
             return false;
         info->id = 0;
@@ -45,34 +44,20 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         info->in_place_pair = CLAP_INVALID_ID;
         return true;
     }
-};
 
-////////////////////////////
-// clap_plugin_note_ports //
-////////////////////////////
-
-static uint32_t my_plug_note_ports_count(const clap_plugin_t* plugin, bool is_input) {
-    // We just declare 1 note input
-    return 1;
-}
-
-static bool my_plug_note_ports_get(const clap_plugin_t* plugin,
-                                   uint32_t index,
-                                   bool is_input,
-                                   clap_note_port_info_t* info) {
-    if (index > 0)
-        return false;
-    info->id = 0;
-    snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
-    info->supported_dialects
-        = CLAP_NOTE_DIALECT_CLAP | CLAP_NOTE_DIALECT_MIDI_MPE | CLAP_NOTE_DIALECT_MIDI2;
-    info->preferred_dialect = CLAP_NOTE_DIALECT_CLAP;
-    return true;
-}
-
-static const clap_plugin_note_ports_t s_my_plug_note_ports = {
-    .count = my_plug_note_ports_count,
-    .get = my_plug_note_ports_get,
+    virtual bool implementsNotePorts() const noexcept { return true; }
+    virtual uint32_t notePortsCount(bool isInput) const noexcept { return 1; }
+    virtual bool
+    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept {
+        if (index > 0)
+            return false;
+        info->id = 0;
+        snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
+        info->supported_dialects
+            = CLAP_NOTE_DIALECT_CLAP | CLAP_NOTE_DIALECT_MIDI_MPE | CLAP_NOTE_DIALECT_MIDI2;
+        info->preferred_dialect = CLAP_NOTE_DIALECT_CLAP;
+        return true;
+    }
 };
 
 //////////////////
