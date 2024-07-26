@@ -29,6 +29,9 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
                                 clap::helpers::CheckingLevel::Maximal>(desc, host) { }
 
+    //-------------------------//
+    // clap_plugin_audio_ports //
+    //-------------------------//
     virtual bool implementsAudioPorts() const noexcept { return true; }
     virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
     virtual auto audioPortsInfo(uint32_t index,
@@ -45,6 +48,9 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         return true;
     }
 
+    //------------------------//
+    // clap_plugin_note_ports //
+    //------------------------//
     virtual bool implementsNotePorts() const noexcept { return true; }
     virtual uint32_t notePortsCount(bool isInput) const noexcept { return 1; }
     virtual bool
@@ -58,40 +64,30 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
         info->preferred_dialect = CLAP_NOTE_DIALECT_CLAP;
         return true;
     }
-};
 
-//////////////////
-// clap_latency //
-//////////////////
+    //---------------------//
+    // clap_plugin_latency //
+    //---------------------//
+    virtual bool implementsLatency() const noexcept { return false; }
+    // virtual uint32_t latencyGet() const noexcept {
+    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
+    //     return plug->latency;
+    // }
 
-uint32_t my_plug_latency_get(const clap_plugin_t* plugin) {
-    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    return plug->latency;
-}
-
-static const clap_plugin_latency_t s_my_plug_latency = {
-    .get = my_plug_latency_get,
-};
-
-////////////////
-// clap_state //
-////////////////
-
-bool my_plug_state_save(const clap_plugin_t* plugin, const clap_ostream_t* stream) {
-    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    // TODO: write the state into stream
-    return true;
-}
-
-bool my_plug_state_load(const clap_plugin_t* plugin, const clap_istream_t* stream) {
-    my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    // TODO: read the state from stream
-    return true;
-}
-
-static const clap_plugin_state_t s_my_plug_state = {
-    .save = my_plug_state_save,
-    .load = my_plug_state_load,
+    //-------------------//
+    // clap_plugin_state //
+    //-------------------//
+    virtual bool implementsState() const noexcept { return false; }
+    // virtual bool stateSave(const clap_ostream* stream) noexcept {
+    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
+    //     // TODO: write the state into stream
+    //     return true;
+    // }
+    // virtual bool stateLoad(const clap_istream* stream) noexcept {
+    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
+    //     // TODO: read the state from stream
+    //     return true;
+    // }
 };
 
 /////////////////
