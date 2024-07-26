@@ -50,39 +50,41 @@ target_compile_features(
             cxx_std_23
     )
 
-target_compile_options(
-    ${PROJECT_NAME}
-    PRIVATE $<$<CXX_COMPILER_ID:MSVC>:
-            /W4
-            /WX
-            /utf-8
-            /bigobj
-            /diagnostics:caret
-            /Zc:__cplusplus
-            >
-            $<$<CXX_COMPILER_ID:Clang>:
-            -Wall
-            -Werror
-            -Wextra
-            -Wpedantic
-            >
-    )
+if(WIN32)
+    target_compile_options(
+        ${PROJECT_NAME}
+        PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+                /W4
+                /WX
+                /utf-8
+                /bigobj
+                /diagnostics:caret
+                /Zc:__cplusplus
+                >
+                $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+                -Wall
+                -Werror
+                -Wextra
+                -Wpedantic
+                >
+        )
 
-target_link_options(
-    ${PROJECT_NAME}
-    PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:
-    /entry:mainCRTStartup
-    /WX
-    >
-    $<$<CXX_COMPILER_ID:Clang>:
-    -Wl,/entry:mainCRTStartup,/WX
-    >
-    )
+    target_link_options(
+        ${PROJECT_NAME}
+        PRIVATE
+        $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+        /entry:mainCRTStartup
+        /WX
+        >
+        $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+        -Wl,/entry:mainCRTStartup,/WX
+        >
+        )
 
-target_compile_definitions(
-    ${PROJECT_NAME}
-    PRIVATE NOMINMAX
-            WIN32_LEAN_AND_MEAN
-            GDIPVER=0x0110
-    )
+    target_compile_definitions(
+        ${PROJECT_NAME}
+        PRIVATE NOMINMAX
+                WIN32_LEAN_AND_MEAN
+                GDIPVER=0x0110
+        )
+endif()
