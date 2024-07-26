@@ -14,8 +14,8 @@
 #endif
 
 #include <clap/clap.h>
-#include <clap/helpers/plugin.hh>
-#include <clap/helpers/plugin.hxx>
+// #include <clap/helpers/plugin.hh>
+// #include <clap/helpers/plugin.hxx>
 
 static const clap_plugin_descriptor_t s_my_plug_desc = {
     .clap_version = CLAP_VERSION_INIT,
