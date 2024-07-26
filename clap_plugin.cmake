@@ -17,15 +17,6 @@ function(add_plugin)
 
     target_sources(${ADD_PLUGIN_NAME} PRIVATE "src/entry.cxx")
 
-    target_link_libraries(
-        ${ADD_PLUGIN_NAME}
-        PRIVATE common::flags
-                common::definitions
-                common::features
-                clap
-                clap-helpers
-        )
-
     if(CMAKE_SYSTEM_NAME
        STREQUAL
        "Windows"
