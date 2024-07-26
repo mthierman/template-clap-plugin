@@ -60,30 +60,6 @@ struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
         return true;
     }
 
-    //---------------------//
-    // clap_plugin_latency //
-    //---------------------//
-    virtual bool implementsLatency() const noexcept { return false; }
-    // virtual uint32_t latencyGet() const noexcept {
-    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    //     return plug->latency;
-    // }
-
-    //-------------------//
-    // clap_plugin_state //
-    //-------------------//
-    virtual bool implementsState() const noexcept { return false; }
-    // virtual bool stateSave(const clap_ostream* stream) noexcept {
-    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    //     // TODO: write the state into stream
-    //     return true;
-    // }
-    // virtual bool stateLoad(const clap_istream* stream) noexcept {
-    //     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
-    //     // TODO: read the state from stream
-    //     return true;
-    // }
-
     //-------------//
     // clap_plugin //
     //-------------//
