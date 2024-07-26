@@ -88,6 +88,25 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
     //     // TODO: read the state from stream
     //     return true;
     // }
+
+    //-------------//
+    // clap_plugin //
+    //-------------//
+    virtual bool init() noexcept { return true; }
+    virtual bool
+    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept {
+        return true;
+    }
+    virtual void deactivate() noexcept { }
+    virtual bool startProcessing() noexcept { return true; }
+    virtual void stopProcessing() noexcept { }
+    virtual clap_process_status process(const clap_process* process) noexcept {
+        return CLAP_PROCESS_SLEEP;
+    }
+    virtual void reset() noexcept { }
+    virtual void onMainThread() noexcept { }
+    virtual const void* extension(const char* id) noexcept { return nullptr; }
+    virtual bool enableDraftExtensions() const noexcept { return false; }
 };
 
 /////////////////
@@ -113,21 +132,6 @@ static void my_plug_destroy(const struct clap_plugin* plugin) {
     my_plug_t* plug = (my_plug_t*)plugin->plugin_data;
     free(plug);
 }
-
-static bool my_plug_activate(const struct clap_plugin* plugin,
-                             double sample_rate,
-                             uint32_t min_frames_count,
-                             uint32_t max_frames_count) {
-    return true;
-}
-
-static void my_plug_deactivate(const struct clap_plugin* plugin) { }
-
-static bool my_plug_start_processing(const struct clap_plugin* plugin) { return true; }
-
-static void my_plug_stop_processing(const struct clap_plugin* plugin) { }
-
-static void my_plug_reset(const struct clap_plugin* plugin) { }
 
 static void my_plug_process_event(my_plug_t* plug, const clap_event_header_t* hdr) {
     if (hdr->space_id == CLAP_CORE_EVENT_SPACE_ID) {
