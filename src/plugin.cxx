@@ -2,24 +2,27 @@
 #include <clap/helpers/plugin.hxx>
 
 namespace plugin {
-const char* features[] = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
-static const clap_plugin_descriptor plugin_descriptor
-    = { .clap_version { CLAP_VERSION },
-        .id { "com.gmail.mthierman" },
-        .name { "ClapPlugin" },
-        .vendor { "mthierman" },
-        .url { "https://github.com/mthierman" },
-        .manual_url { "https://github.com/mthierman" },
-        .support_url { "https://github.com/mthierman" },
-        .version { "0.0.0" },
-        .description { "A test CLAP plugin." },
-        .features { features } };
 
 struct ClapPlugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                                  clap::helpers::CheckingLevel::None> {
     ClapPlugin(const clap_host* host)
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
+
+    inline static const char* plugin_features[]
+        = { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, NULL };
+
+    inline static const clap_plugin_descriptor plugin_descriptor
+        = { .clap_version { CLAP_VERSION },
+            .id { "com.gmail.mthierman" },
+            .name { "ClapPlugin" },
+            .vendor { "mthierman" },
+            .url { "https://github.com/mthierman" },
+            .manual_url { "https://github.com/mthierman" },
+            .support_url { "https://github.com/mthierman" },
+            .version { "0.0.0" },
+            .description { "A test CLAP plugin." },
+            .features { plugin_features } };
 
     //-------------------------//
     // clap_plugin_audio_ports //
@@ -109,7 +112,7 @@ static uint32_t factory_get_plugin_count(const struct clap_plugin_factory* facto
 
 static const clap_plugin_descriptor*
 factory_get_plugin_descriptor(const struct clap_plugin_factory* factory, uint32_t index) {
-    return &plugin_descriptor;
+    return &ClapPlugin::plugin_descriptor;
 }
 
 static const clap_plugin_t* factory_create_plugin(const struct clap_plugin_factory* factory,
