@@ -124,17 +124,18 @@ endfunction()
 function(clap_add_plugin)
     set(args
         NAME
+        VERSION
+        DESCRIPTION
         VENDOR
         ID
         URL
         MANUAL_URL
         SUPPORT_URL
-        VERSION
-        DESCRIPTION
         )
     set(listArgs
         SOURCES
         LINK_LIBRARIES
+        INCLUDE_DIRECTORIES
         )
     cmake_parse_arguments(
         PLUGIN
@@ -143,6 +144,24 @@ function(clap_add_plugin)
         "${listArgs}"
         ${ARGN}
         )
+
+    if(NOT
+       PLUGIN_NAME
+        )
+        message(FATAL_ERROR "Plugin name was not set")
+    endif()
+
+    if(NOT
+       PLUGIN_VENDOR
+        )
+        message(FATAL_ERROR "Plugin vendor was not set")
+    endif()
+
+    if(NOT
+       PLUGIN_ID
+        )
+        message(FATAL_ERROR "Plugin ID was not set")
+    endif()
 
     add_library(
         ${PLUGIN_NAME}
@@ -175,6 +194,8 @@ function(clap_add_plugin)
                 clap::flags
                 ${PLUGIN_LINK_LIBRARIES}
         )
+
+    target_include_directories(${PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDE_DIRECTORIES})
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL

@@ -14,6 +14,10 @@ clap_setup(
 clap_add_plugin(
     NAME
     "Gain"
+    VERSION
+    "0.0.0"
+    DESCRIPTION
+    "Gain plugin"
     VENDOR
     "Vendor"
     ID
@@ -24,10 +28,6 @@ clap_add_plugin(
     "https://cleveraudio.org/"
     SUPPORT_URL
     "https://cleveraudio.org/"
-    VERSION
-    "0.0.0"
-    DESCRIPTION
-    "Gain plugin"
     SOURCES
     "src/gain.cxx"
     )
