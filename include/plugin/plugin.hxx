@@ -3,7 +3,6 @@
 
 #include <array>
 #include <functional>
-#include <initializer_list>
 
 namespace plugin {
 using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
