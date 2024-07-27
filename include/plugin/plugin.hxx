@@ -22,35 +22,6 @@ template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_pl
 }
 
 struct PluginFactory {
-    inline static uint32_t s_count { 0 };
-    inline static const clap_plugin_descriptor* s_descriptor { nullptr };
-
-    static auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
-        return s_getPluginCountCallback(factory);
-    }
-
-    static auto getPluginDescriptor(const clap_plugin_factory* factory,
-                                    uint32_t index) -> const clap_plugin_descriptor* {
-        return s_getPluginDescriptorCallback(factory, index);
-    }
-
-    static auto createPlugin(const struct clap_plugin_factory* factory,
-                             const clap_host_t* host,
-                             const char* plugin_id) -> const clap_plugin* {
-        return s_createPluginCallback(host);
-    }
-
-    inline static std::function<uint32_t(const clap_plugin_factory* factory)>
-        s_getPluginCountCallback { [](const clap_plugin_factory* factory) { return s_count; } };
-
-    inline static std::function<const clap_plugin_descriptor*(
-        const struct clap_plugin_factory* factory, uint32_t index)>
-        s_getPluginDescriptorCallback { [](const struct clap_plugin_factory* factory,
-                                           uint32_t index) { return s_descriptor; } };
-
-    inline static std::function<const clap_plugin*(const clap_host_t* host)>
-        s_createPluginCallback { [](const clap_host_t* host) { return nullptr; } };
-
     static auto
     make(uint32_t count,
          const clap_plugin_descriptor* descriptor,
@@ -68,9 +39,51 @@ struct PluginFactory {
 
         return pluginFactory;
     }
+
+private:
+    static auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
+        return s_getPluginCountCallback(factory);
+    }
+
+    static auto getPluginDescriptor(const clap_plugin_factory* factory,
+                                    uint32_t index) -> const clap_plugin_descriptor* {
+        return s_getPluginDescriptorCallback(factory, index);
+    }
+
+    static auto createPlugin(const struct clap_plugin_factory* factory,
+                             const clap_host_t* host,
+                             const char* plugin_id) -> const clap_plugin* {
+        return s_createPluginCallback(host);
+    }
+
+    inline static uint32_t s_count { 0 };
+    inline static const clap_plugin_descriptor* s_descriptor { nullptr };
+
+    inline static std::function<uint32_t(const clap_plugin_factory* factory)>
+        s_getPluginCountCallback { [](const clap_plugin_factory* factory) { return s_count; } };
+
+    inline static std::function<const clap_plugin_descriptor*(
+        const struct clap_plugin_factory* factory, uint32_t index)>
+        s_getPluginDescriptorCallback { [](const struct clap_plugin_factory* factory,
+                                           uint32_t index) { return s_descriptor; } };
+
+    inline static std::function<const clap_plugin*(const clap_host_t* host)>
+        s_createPluginCallback { [](const clap_host_t* host) { return nullptr; } };
 };
 
 struct PluginEntry {
+    static auto make(const clap_plugin_factory* factory) -> const clap_plugin_entry {
+        PluginEntry::s_factory = factory;
+
+        clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
+                                        .init { PluginEntry::init },
+                                        .deinit { PluginEntry::deInit },
+                                        .get_factory { PluginEntry::getFactory } };
+
+        return pluginEntry;
+    }
+
+private:
     inline static const clap_plugin_factory* s_factory;
 
     static auto init(const char* plugin_path) -> bool { return s_init(plugin_path); }
@@ -92,15 +105,4 @@ struct PluginEntry {
         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? PluginEntry::s_factory : nullptr;
     }
     };
-
-    static auto make(const clap_plugin_factory* factory) -> const clap_plugin_entry {
-        PluginEntry::s_factory = factory;
-
-        clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
-                                        .init { PluginEntry::init },
-                                        .deinit { PluginEntry::deInit },
-                                        .get_factory { PluginEntry::getFactory } };
-
-        return pluginEntry;
-    }
 };
