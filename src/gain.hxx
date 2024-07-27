@@ -2,7 +2,6 @@
 
 namespace gain {
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
-
 const auto descriptor { plugin::descriptor::make(features) };
 
 using Helper = plugin::TerminateMax;
