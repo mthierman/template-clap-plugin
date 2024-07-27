@@ -27,11 +27,11 @@ struct Gain final : public PluginHelper {
         : PluginHelper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
-    virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
-    virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
-    virtual auto audioPortsInfo(uint32_t index,
-                                bool isInput,
-                                clap_audio_port_info* info) const noexcept -> bool {
+    auto implementsAudioPorts() const noexcept -> bool override { return true; }
+    auto audioPortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
+    auto audioPortsInfo(uint32_t index,
+                        bool isInput,
+                        clap_audio_port_info* info) const noexcept -> bool override {
         if (index > 0)
             return false;
         info->id = 0;
@@ -44,10 +44,11 @@ struct Gain final : public PluginHelper {
     }
 
     // clap_plugin_note_ports
-    virtual auto implementsNotePorts() const noexcept -> bool { return true; }
-    virtual auto notePortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
-    virtual auto
-    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept -> bool {
+    auto implementsNotePorts() const noexcept -> bool override { return true; }
+    auto notePortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
+    auto notePortsInfo(uint32_t index,
+                       bool isInput,
+                       clap_note_port_info* info) const noexcept -> bool override {
         if (index > 0)
             return false;
         info->id = 0;
@@ -59,21 +60,22 @@ struct Gain final : public PluginHelper {
     }
 
     // clap_plugin
-    virtual auto init() noexcept -> bool { return true; }
-    virtual auto
-    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept -> bool {
+    auto init() noexcept -> bool override { return true; }
+    auto activate(double sampleRate,
+                  uint32_t minFrameCount,
+                  uint32_t maxFrameCount) noexcept -> bool override {
         return true;
     }
-    virtual auto deactivate() noexcept -> void { }
-    virtual auto startProcessing() noexcept -> bool { return true; }
-    virtual auto stopProcessing() noexcept -> void { }
-    virtual auto process(const clap_process* process) noexcept -> clap_process_status {
+    auto deactivate() noexcept -> void override { }
+    auto startProcessing() noexcept -> bool override { return true; }
+    auto stopProcessing() noexcept -> void override { }
+    auto process(const clap_process* process) noexcept -> clap_process_status override {
         return CLAP_PROCESS_SLEEP;
     }
-    virtual auto reset() noexcept -> void { }
-    virtual auto onMainThread() noexcept -> void { }
-    virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
-    virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
+    auto reset() noexcept -> void override { }
+    auto onMainThread() noexcept -> void override { }
+    auto extension(const char* id) noexcept -> const void* override { return nullptr; }
+    auto enableDraftExtensions() const noexcept -> bool override { return false; }
 };
 
 constexpr clap_plugin_factory pluginFactory {
