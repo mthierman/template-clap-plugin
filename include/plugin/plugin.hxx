@@ -4,8 +4,8 @@
 #include <array>
 #include <initializer_list>
 
-using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                           clap::helpers::CheckingLevel::None>;
+using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                           clap::helpers::CheckingLevel::Maximal>;
 
 template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_plugin_descriptor {
     return { .clap_version { CLAP_VERSION },
