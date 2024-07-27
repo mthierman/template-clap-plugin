@@ -6,7 +6,6 @@ constexpr auto pluginFeatures { std::to_array(
 const auto pluginDescriptor { plugin::descriptor::make(pluginFeatures) };
 
 using PluginHelper = plugin::TerminateMax;
-
 struct Plugin final : public PluginHelper {
     explicit Plugin(const clap_host* host)
         : PluginHelper(&pluginDescriptor, host) { }
