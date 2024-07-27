@@ -8,7 +8,6 @@ using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::I
                                            clap::helpers::CheckingLevel::None>;
 
 template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_plugin_descriptor {
-
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
              .name { PLUGIN_NAME },
@@ -20,18 +19,3 @@ template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_pl
              .description { PLUGIN_DESCRIPTION },
              .features { features } };
 }
-
-// template <typename... Args> auto makePluginDescriptor(Args&&... args) -> clap_plugin_descriptor {
-//     constexpr auto pluginFeatures { std::to_array({ std::forward<Args>(args)... }) };
-
-//     return { .clap_version { CLAP_VERSION },
-//              .id { PLUGIN_ID },
-//              .name { PLUGIN_NAME },
-//              .vendor { PLUGIN_VENDOR },
-//              .url { PLUGIN_URL },
-//              .manual_url { PLUGIN_MANUAL_URL },
-//              .support_url { PLUGIN_SUPPORT_URL },
-//              .version { PLUGIN_VERSION },
-//              .description { PLUGIN_DESCRIPTION },
-//              .features { pluginFeatures.data() } };
-// }
