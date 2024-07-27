@@ -59,11 +59,11 @@ auto createPlugin(const struct clap_plugin_factory* factory,
 
 auto make(uint32_t count,
           const clap_plugin_descriptor* descriptor,
-          std::function<const clap_plugin*(const clap_host_t* host)> create)
+          std::function<const clap_plugin*(const clap_host_t* host)> callback)
     -> clap_plugin_factory {
     s_count = count;
     s_descriptor = descriptor;
-    s_callback = create;
+    s_callback = callback;
 
     return {
         .get_plugin_count { getPluginCount },
