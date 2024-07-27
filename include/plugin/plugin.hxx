@@ -11,13 +11,12 @@ using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::T
                                            clap::helpers::CheckingLevel::Minimal>;
 using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
                                             clap::helpers::CheckingLevel::None>;
-
 using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                           clap::helpers::CheckingLevel::Maximal>;
+                                        clap::helpers::CheckingLevel::Maximal>;
 using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                           clap::helpers::CheckingLevel::Minimal>;
+                                        clap::helpers::CheckingLevel::Minimal>;
 using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                            clap::helpers::CheckingLevel::None>;
+                                         clap::helpers::CheckingLevel::None>;
 } // namespace plugin
 
 namespace plugin::descriptor {
