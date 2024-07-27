@@ -1,23 +1,13 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-constexpr auto pluginFeatures { std::to_array(
+constexpr auto features { std::to_array(
     { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
-
-constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
-                                                    .id { PLUGIN_ID },
-                                                    .name { PLUGIN_NAME },
-                                                    .vendor { PLUGIN_VENDOR },
-                                                    .url { PLUGIN_URL },
-                                                    .manual_url { PLUGIN_MANUAL_URL },
-                                                    .support_url { PLUGIN_SUPPORT_URL },
-                                                    .version { PLUGIN_VERSION },
-                                                    .description { PLUGIN_DESCRIPTION },
-                                                    .features { pluginFeatures.data() } };
+constexpr auto descriptor { makePluginDescriptor(features.data()) };
 
 struct Gain final : public PluginHelper {
     explicit Gain(const clap_host* host)
-        : PluginHelper(&pluginDescriptor, host) { }
+        : PluginHelper(&descriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
@@ -77,7 +67,7 @@ constexpr clap_plugin_factory pluginFactory {
     },
     .get_plugin_descriptor {
         [](const struct clap_plugin_factory* factory,
-           uint32_t index) -> const clap_plugin_descriptor* { return &pluginDescriptor; },
+           uint32_t index) -> const clap_plugin_descriptor* { return &descriptor; },
     },
     .create_plugin { [](const struct clap_plugin_factory* factory,
                         const clap_host_t* host,
