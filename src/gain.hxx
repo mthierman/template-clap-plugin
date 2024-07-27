@@ -102,14 +102,4 @@ struct Gain final : public PluginHelper {
     virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
-
-// auto getPluginEntry() -> clap_plugin_entry {
-//     return { .clap_version { CLAP_VERSION },
-//              .init { [](const char* plugin_path) -> bool { return true; } },
-//              .deinit { [](void) -> void {} },
-//              .get_factory { [](const char* factory_id) -> const void* {
-//         auto factory { gain::Plugin::getPluginFactory() };
-//         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
-//     } } };
-// }
 } // namespace plugin
