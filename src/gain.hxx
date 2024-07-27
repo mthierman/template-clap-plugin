@@ -3,12 +3,12 @@
 namespace gain {
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
 
-const auto pluginDescriptor { plugin::descriptor::make(features) };
+const auto descriptor { plugin::descriptor::make(features) };
 
 using Helper = plugin::TerminateMax;
 struct Plugin final : public Helper {
     explicit Plugin(const clap_host* host)
-        : Helper(&pluginDescriptor, host) { }
+        : Helper(&descriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
@@ -62,10 +62,10 @@ struct Plugin final : public Helper {
     auto enableDraftExtensions() const noexcept -> bool override { return false; }
 };
 
-const auto pluginFactory { plugin::factory::make(&pluginDescriptor, [](const clap_host_t* host) {
+const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
     auto plugin { new Plugin(host) };
     return plugin->clapPlugin();
 }) };
 
-const auto pluginEntry { plugin::entry::make(&pluginFactory) };
+const auto entry { plugin::entry::make(&factory) };
 } // namespace gain
