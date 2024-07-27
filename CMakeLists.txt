@@ -31,5 +31,5 @@ clap_add_plugin(
     SOURCES
     "src/gain.cxx"
     LINK_LIBRARIES
-    clap::flags
+    clap::recommended
     )

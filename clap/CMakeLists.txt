@@ -65,14 +65,14 @@ function(clap_setup)
         )
 
     add_library(
-        clap_flags
+        clap_recommended
         INTERFACE
         )
 
     add_library(
-        clap::flags
+        clap::recommended
         ALIAS
-        clap_flags
+        clap_recommended
         )
 
     if(CMAKE_SYSTEM_NAME
@@ -80,7 +80,7 @@ function(clap_setup)
        "Windows"
         )
         target_compile_options(
-            clap_flags
+            clap_recommended
             INTERFACE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
                       /W4
                       /WX
@@ -102,7 +102,7 @@ function(clap_setup)
             )
 
         target_link_options(
-            clap_flags
+            clap_recommended
             INTERFACE
             $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
             /WX
@@ -113,7 +113,7 @@ function(clap_setup)
             )
 
         target_compile_definitions(
-            clap_flags
+            clap_recommended
             INTERFACE NOMINMAX
                       WIN32_LEAN_AND_MEAN
                       GDIPVER=0x0110
