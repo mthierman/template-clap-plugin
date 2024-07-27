@@ -1,4 +1,6 @@
-function(add_clap)
+project(Clap)
+
+function(clap_init)
     set(args
         BRANCH
         HELPERS_BRANCH
@@ -119,7 +121,7 @@ function(add_clap)
     endif()
 endfunction()
 
-function(add_plugin)
+function(clap_add_plugin)
     set(args
         ID
         NAME

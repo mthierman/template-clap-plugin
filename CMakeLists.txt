@@ -2,22 +2,16 @@ cmake_minimum_required(VERSION 3.29)
 
 project(Plugin VERSION 0.0.0 DESCRIPTION "Plugin description")
 
-list(
-    APPEND
-    CMAKE_MODULE_PATH
-    "${CMAKE_SOURCE_DIR}/cmake"
-    )
+add_subdirectory(clap)
 
-include(clap)
-
-add_clap(
+clap_init(
     BRANCH
     "main"
     HELPERS_BRANCH
     "main"
     )
 
-add_plugin(
+clap_add_plugin(
     ID
     "com.gmail.mthierman"
     NAME
