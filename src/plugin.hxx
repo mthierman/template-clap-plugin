@@ -78,30 +78,30 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
 };
 
 // clap_plugin_factory
-auto factory_get_plugin_count(const struct clap_plugin_factory* factory) -> uint32_t { return 1; }
+auto getPluginCount(const struct clap_plugin_factory* factory) -> uint32_t { return 1; }
 
-auto factory_get_plugin_descriptor(const struct clap_plugin_factory* factory,
-                                   uint32_t index) -> const clap_plugin_descriptor* {
+auto getPluginDescriptor(const struct clap_plugin_factory* factory,
+                         uint32_t index) -> const clap_plugin_descriptor* {
     return &Plugin::plugin_descriptor;
 }
 
-auto factory_create_plugin(const struct clap_plugin_factory* factory,
-                           const clap_host_t* host,
-                           const char* plugin_id) -> const clap_plugin_t* {
+auto createPlugin(const struct clap_plugin_factory* factory,
+                  const clap_host_t* host,
+                  const char* plugin_id) -> const clap_plugin_t* {
     auto p = new Plugin(host);
     return p->clapPlugin();
 }
 
-const CLAP_EXPORT clap_plugin_factory clap_factory = {
-    .get_plugin_count { plugin::factory_get_plugin_count },
-    .get_plugin_descriptor { plugin::factory_get_plugin_descriptor },
-    .create_plugin { plugin::factory_create_plugin },
+const CLAP_EXPORT clap_plugin_factory factory {
+    .get_plugin_count { plugin::getPluginCount },
+    .get_plugin_descriptor { plugin::getPluginDescriptor },
+    .create_plugin { plugin::createPlugin },
 };
 
 // clap_entry
-auto entry_init(const char* plugin_path) -> bool { return true; }
-auto entry_deinit(void) -> void { }
-auto entry_get_factory(const char* factory_id) -> const void* {
-    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &clap_factory : nullptr;
+auto init(const char* plugin_path) -> bool { return true; }
+auto deInit(void) -> void { }
+auto getFactory(const char* factory_id) -> const void* {
+    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
 }
 } // namespace plugin
