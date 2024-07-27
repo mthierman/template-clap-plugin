@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.29)
 
 project(Plugin)
 
-add_subdirectory(clap)
+include(cmake/clap.cmake)
 
 clap_setup(
     VERSION

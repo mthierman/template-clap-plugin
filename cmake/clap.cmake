@@ -1,5 +1,3 @@
-project(Clap)
-
 function(clap_setup)
     set(args
         VERSION
