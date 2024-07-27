@@ -20,7 +20,9 @@ using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ign
 } // namespace plugin
 
 namespace plugin::descriptor {
-template <typename T> auto make(T features) -> clap_plugin_descriptor {
+auto make(std::vector<const char*> features) -> clap_plugin_descriptor {
+    features.push_back("\0");
+
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
              .name { PLUGIN_NAME },

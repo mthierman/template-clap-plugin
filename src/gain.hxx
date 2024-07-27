@@ -1,9 +1,8 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-constexpr auto pluginFeatures { std::to_array(
-    { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
-const auto pluginDescriptor { plugin::descriptor::make(pluginFeatures) };
+std::vector<const char*> features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
+const auto pluginDescriptor { plugin::descriptor::make(features) };
 
 using PluginHelper = plugin::TerminateMax;
 struct Plugin final : public PluginHelper {
