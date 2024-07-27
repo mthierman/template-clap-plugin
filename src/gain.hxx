@@ -3,29 +3,45 @@
 
 #include <array>
 
-namespace plugin {
+namespace gain {
 using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                            clap::helpers::CheckingLevel::None>;
 
 struct Plugin final : public PluginHelper {
     Plugin(const clap_host* host)
-        : PluginHelper(&plugin_descriptor, host) { }
+        : PluginHelper(&pluginDescriptor, host) { }
 
-    // clap_plugin_descriptor
-    static constexpr std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                           CLAP_PLUGIN_FEATURE_UTILITY,
-                                           "\0" };
+    static constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                                 CLAP_PLUGIN_FEATURE_UTILITY,
+                                                 "\0" };
 
-    static constexpr clap_plugin_descriptor plugin_descriptor { .clap_version { CLAP_VERSION },
-                                                                .id { PLUGIN_ID },
-                                                                .name { PLUGIN_NAME },
-                                                                .vendor { PLUGIN_VENDOR },
-                                                                .url { PLUGIN_URL },
-                                                                .manual_url { PLUGIN_MANUAL_URL },
-                                                                .support_url { PLUGIN_SUPPORT_URL },
-                                                                .version { PLUGIN_VERSION },
-                                                                .description { PLUGIN_DESCRIPTION },
-                                                                .features { features.data() } };
+    static constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
+                                                               .id { PLUGIN_ID },
+                                                               .name { PLUGIN_NAME },
+                                                               .vendor { PLUGIN_VENDOR },
+                                                               .url { PLUGIN_URL },
+                                                               .manual_url { PLUGIN_MANUAL_URL },
+                                                               .support_url { PLUGIN_SUPPORT_URL },
+                                                               .version { PLUGIN_VERSION },
+                                                               .description { PLUGIN_DESCRIPTION },
+                                                               .features {
+                                                                   pluginFeatures.data() } };
+
+    static auto getPluginFactory() -> clap_plugin_factory {
+        return { .get_plugin_count {
+                     [](const clap_plugin_factory* factory) -> uint32_t { return 1; },
+                 },
+                 .get_plugin_descriptor {
+                     [](const struct clap_plugin_factory* factory, uint32_t index)
+                         -> const clap_plugin_descriptor* { return &pluginDescriptor; },
+                 },
+                 .create_plugin { [](const struct clap_plugin_factory* factory,
+                                     const clap_host_t* host,
+                                     const char* plugin_id) -> const clap_plugin* {
+            auto p = new Plugin(host);
+            return p->clapPlugin();
+        } } };
+    }
 
     // clap_plugin_audio_ports
     virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
@@ -77,29 +93,13 @@ struct Plugin final : public PluginHelper {
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
 
-auto getFactory() -> clap_plugin_factory {
-    return { .get_plugin_count {
-                 [](const clap_plugin_factory* factory) -> uint32_t { return 1; },
-             },
-             .get_plugin_descriptor {
-                 [](const struct clap_plugin_factory* factory, uint32_t index)
-                     -> const clap_plugin_descriptor* { return &Plugin::plugin_descriptor; },
-             },
-             .create_plugin { [](const struct clap_plugin_factory* factory,
-                                 const clap_host_t* host,
-                                 const char* plugin_id) -> const clap_plugin* {
-        auto p = new Plugin(host);
-        return p->clapPlugin();
-    } } };
-}
-
-auto getEntry() -> clap_plugin_entry {
+auto getPluginEntry() -> clap_plugin_entry {
     return { .clap_version { CLAP_VERSION },
              .init { [](const char* plugin_path) -> bool { return true; } },
              .deinit { [](void) -> void {} },
              .get_factory { [](const char* factory_id) -> const void* {
-        auto factory { getFactory() };
+        auto factory { gain::Plugin::getPluginFactory() };
         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
     } } };
 }
-} // namespace plugin
+} // namespace gain
