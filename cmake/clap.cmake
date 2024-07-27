@@ -11,9 +11,6 @@ function(add_clap)
         ${ARGN}
         )
 
-    message(STATUS ${CLAP_BRANCH})
-    message(STATUS ${CLAP_HELPERS_BRANCH})
-
     include(FetchContent)
 
     FetchContent_Declare(
@@ -21,7 +18,8 @@ function(add_clap)
         GIT_REPOSITORY "https://github.com/free-audio/clap.git"
         GIT_TAG ${CLAP_BRANCH}
         GIT_SHALLOW ON
-        # SOURCE_SUBDIR "NULL"
+        SOURCE_SUBDIR
+        "NULL"
         )
 
     FetchContent_MakeAvailable(clap)
@@ -31,7 +29,8 @@ function(add_clap)
         GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
         GIT_TAG ${CLAP_HELPERS_BRANCH}
         GIT_SHALLOW ON
-        # SOURCE_SUBDIR "NULL"
+        SOURCE_SUBDIR
+        "NULL"
         )
 
     FetchContent_MakeAvailable(clap-helpers)
@@ -83,15 +82,6 @@ function(add_plugin)
         "${listArgs}"
         ${ARGN}
         )
-
-    message(STATUS ${PLUGIN_ID})
-    message(STATUS ${PLUGIN_NAME})
-    message(STATUS ${PLUGIN_VENDOR})
-    message(STATUS ${PLUGIN_URL})
-    message(STATUS ${PLUGIN_MANUAL_URL})
-    message(STATUS ${PLUGIN_SUPPORT_URL})
-    message(STATUS ${PLUGIN_VERSION})
-    message(STATUS ${PLUGIN_DESCRIPTION})
 
     add_library(
         ${PLUGIN_NAME}
