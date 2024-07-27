@@ -61,7 +61,7 @@ struct Plugin final : public PluginHelper {
     auto enableDraftExtensions() const noexcept -> bool override { return false; }
 };
 
-auto pluginFactory { PluginFactory::make(1, &pluginDescriptor, [](const clap_host_t* host) {
+auto pluginFactory { plugin::factory::make(1, &pluginDescriptor, [](const clap_host_t* host) {
     auto gain { new Plugin(host) };
     return gain->clapPlugin();
 }) };
