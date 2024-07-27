@@ -4,8 +4,6 @@
 #include <array>
 
 namespace plugin {
-auto make() -> bool { return true; }
-
 struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                              clap::helpers::CheckingLevel::None> {
     Plugin(const clap_host* host)
@@ -104,5 +102,12 @@ auto init(const char* plugin_path) -> bool { return true; }
 auto deInit(void) -> void { }
 auto getFactory(const char* factory_id) -> const void* {
     return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
+}
+
+auto make() -> clap_plugin_entry {
+    return { .clap_version { CLAP_VERSION },
+             .init { plugin::init },
+             .deinit { plugin::deInit },
+             .get_factory { plugin::getFactory } };
 }
 } // namespace plugin
