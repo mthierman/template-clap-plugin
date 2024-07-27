@@ -41,7 +41,7 @@ function(add_clap)
         )
 
     add_library(
-        free-audio::clap
+        clap::clap
         ALIAS
         clap
         )
@@ -61,6 +61,62 @@ function(add_clap)
                   BASE_DIRS
                   "${clap-helpers_SOURCE_DIR}/include"
         )
+
+    add_library(
+        clap_flags
+        INTERFACE
+        )
+
+    add_library(
+        clap::flags
+        ALIAS
+        clap_flags
+        )
+
+    if(CMAKE_SYSTEM_NAME
+       STREQUAL
+       "Windows"
+        )
+        target_compile_options(
+            clap_flags
+            INTERFACE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+                      /W4
+                      /WX
+                      /wd4100
+                      /wd4101
+                      /wd4127
+                      /wd4189
+                      /utf-8
+                      /bigobj
+                      /diagnostics:caret
+                      /Zc:__cplusplus
+                      >
+                      $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+                      -Wall
+                      -Werror
+                      -Wextra
+                      -Wpedantic
+                      >
+            )
+
+        target_link_options(
+            clap_flags
+            INTERFACE
+            $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+            /WX
+            >
+            $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+            -Wl,/WX
+            >
+            )
+
+        target_compile_definitions(
+            clap_flags
+            INTERFACE NOMINMAX
+                      WIN32_LEAN_AND_MEAN
+                      GDIPVER=0x0110
+            )
+    endif()
 endfunction()
 
 function(add_plugin)
@@ -108,7 +164,11 @@ function(add_plugin)
                 cxx_std_23
         )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE free-audio::clap)
+    target_link_libraries(
+        ${PROJECT_NAME}
+        PRIVATE clap::clap
+                clap::flags
+        )
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
@@ -118,46 +178,6 @@ function(add_plugin)
             ${PLUGIN_NAME}
             PROPERTIES SUFFIX
                        ".clap"
-            )
-
-        target_compile_options(
-            ${PROJECT_NAME}
-            PRIVATE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
-                    /W4
-                    /WX
-                    /wd4100
-                    /wd4101
-                    /wd4127
-                    /wd4189
-                    /utf-8
-                    /bigobj
-                    /diagnostics:caret
-                    /Zc:__cplusplus
-                    >
-                    $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
-                    -Wall
-                    -Werror
-                    -Wextra
-                    -Wpedantic
-                    >
-            )
-
-        target_link_options(
-            ${PROJECT_NAME}
-            PRIVATE
-            $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
-            /WX
-            >
-            $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
-            -Wl,/WX
-            >
-            )
-
-        target_compile_definitions(
-            ${PROJECT_NAME}
-            PRIVATE NOMINMAX
-                    WIN32_LEAN_AND_MEAN
-                    GDIPVER=0x0110
             )
     endif()
 endfunction()
