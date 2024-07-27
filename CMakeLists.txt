@@ -31,3 +31,5 @@ clap_add_plugin(
     SOURCES
     "src/gain.cxx"
     )
+
+    target_link_directories

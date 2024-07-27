@@ -134,8 +134,9 @@ function(clap_add_plugin)
         )
     set(listArgs
         SOURCES
-        LINK_LIBRARIES
         INCLUDE_DIRECTORIES
+        LINK_DIRECTORIES
+        LINK_LIBRARIES
         )
     cmake_parse_arguments(
         PLUGIN
@@ -182,10 +183,18 @@ function(clap_add_plugin)
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
+    target_include_directories(${PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDE_DIRECTORIES})
+
     target_compile_features(
         ${PLUGIN_NAME}
         PRIVATE c_std_17
                 cxx_std_23
+        )
+
+    target_link_directories(
+        ${PLUGIN_NAME}
+        PRIVATE
+        ${PLUGIN_LINK_DIRECTORIES}
         )
 
     target_link_libraries(
