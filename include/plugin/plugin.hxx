@@ -22,7 +22,7 @@ using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ign
 
 namespace plugin::descriptor {
 auto make(plugin::Features& features) -> clap_plugin_descriptor {
-    features.push_back("\0");
+    features.push_back(nullptr);
 
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
