@@ -3,28 +3,28 @@
 
 #include <array>
 
+namespace plugin {
+constexpr std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                CLAP_PLUGIN_FEATURE_UTILITY,
+                                "\0" };
+
+constexpr clap_plugin_descriptor plugin_descriptor { .clap_version { CLAP_VERSION },
+                                                     .id { PLUGIN_ID },
+                                                     .name { PLUGIN_NAME },
+                                                     .vendor { PLUGIN_VENDOR },
+                                                     .url { PLUGIN_URL },
+                                                     .manual_url { PLUGIN_MANUAL_URL },
+                                                     .support_url { PLUGIN_SUPPORT_URL },
+                                                     .version { PLUGIN_VERSION },
+                                                     .description { PLUGIN_DESCRIPTION },
+                                                     .features { features.data() } };
+
 using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                            clap::helpers::CheckingLevel::None>;
 
-namespace plugin {
 struct Plugin final : public PluginHelper {
     Plugin(const clap_host* host)
         : PluginHelper(&plugin_descriptor, host) { }
-
-    static constexpr std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                           CLAP_PLUGIN_FEATURE_UTILITY,
-                                           "\0" };
-
-    static constexpr clap_plugin_descriptor plugin_descriptor { .clap_version { CLAP_VERSION },
-                                                                .id { PLUGIN_ID },
-                                                                .name { PLUGIN_NAME },
-                                                                .vendor { PLUGIN_VENDOR },
-                                                                .url { PLUGIN_URL },
-                                                                .manual_url { PLUGIN_MANUAL_URL },
-                                                                .support_url { PLUGIN_SUPPORT_URL },
-                                                                .version { PLUGIN_VERSION },
-                                                                .description { PLUGIN_DESCRIPTION },
-                                                                .features { features.data() } };
 
     // clap_plugin_audio_ports
     virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
@@ -83,7 +83,7 @@ clap_plugin_factory plugin_factory {
     },
     .get_plugin_descriptor {
         [](const struct clap_plugin_factory* factory,
-           uint32_t index) -> const clap_plugin_descriptor* { return &Plugin::plugin_descriptor; },
+           uint32_t index) -> const clap_plugin_descriptor* { return &plugin_descriptor; },
     },
     .create_plugin { [](const struct clap_plugin_factory* factory,
                         const clap_host_t* host,
