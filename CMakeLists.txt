@@ -7,8 +7,12 @@ add_subdirectory(clap)
 clap_setup(
     VERSION
     "main"
+    # LOCATION
+    # "$ENV{Repos}/free-audio/clap"
     HELPERS_VERSION
     "main"
+    # HELPERS_LOCATION
+    # "$ENV{Repos}/free-audio/clap-helpers"
     )
 
 clap_add_plugin(
