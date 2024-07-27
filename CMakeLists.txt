@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-project(Plugin VERSION 0.0.0 DESCRIPTION "Plugin description")
+project(Plugin)
 
 add_subdirectory(clap)
 
@@ -13,21 +13,21 @@ clap_setup(
 
 clap_add_plugin(
     ID
-    "com.gmail.mthierman"
+    "com.vendor.plugin"
     NAME
-    ${PROJECT_NAME}
+    "Gain"
     VENDOR
-    "mthierman"
+    "Vendor"
     URL
-    "https://github.com/mthierman"
+    "https://cleveraudio.org/"
     MANUAL_URL
-    "https://github.com/mthierman"
+    "https://cleveraudio.org/"
     SUPPORT_URL
-    "https://github.com/mthierman"
+    "https://cleveraudio.org/"
     VERSION
-    ${PROJECT_VERSION}
+    "0.0.0"
     DESCRIPTION
-    ${PROJECT_DESCRIPTION}
+    "Gain plugin"
     SOURCES
-    "src/plugin.cxx"
+    "src/gain.cxx"
     )
