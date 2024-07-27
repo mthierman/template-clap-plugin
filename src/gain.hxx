@@ -1,9 +1,9 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-constexpr auto features { std::to_array(
+constexpr auto pluginFeatures { std::to_array(
     { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
-constexpr auto pluginDescriptor { makePluginDescriptor(features.data()) };
+constexpr auto pluginDescriptor { makePluginDescriptor(pluginFeatures.data()) };
 
 struct Gain final : public PluginHelper {
     explicit Gain(const clap_host* host)
