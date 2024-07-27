@@ -38,45 +38,32 @@ auto make(plugin::Features& features) -> clap_plugin_descriptor {
 } // namespace plugin::descriptor
 
 namespace plugin::factory {
-uint32_t pluginCount { 0 };
-const clap_plugin_descriptor* pluginDescriptor { nullptr };
-
-std::function<uint32_t(const clap_plugin_factory* factory)> getPluginCountCallback {
-    [](const clap_plugin_factory* factory) { return pluginCount; }
-};
-
-std::function<const clap_plugin_descriptor*(const struct clap_plugin_factory* factory,
-                                            uint32_t index)>
-    getPluginDescriptorCallback { [](const struct clap_plugin_factory* factory, uint32_t index) {
-    return pluginDescriptor;
-} };
-
-std::function<const clap_plugin*(const clap_host_t* host)> createPluginCallback {
+uint32_t s_count { 0 };
+const clap_plugin_descriptor* s_descriptor { nullptr };
+std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
     [](const clap_host_t* host) { return nullptr; }
 };
 
-auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
-    return getPluginCountCallback(factory);
-}
+auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return s_count; }
 
 auto getPluginDescriptor(const clap_plugin_factory* factory,
                          uint32_t index) -> const clap_plugin_descriptor* {
-    return getPluginDescriptorCallback(factory, index);
+    return s_descriptor;
 }
 
 auto createPlugin(const struct clap_plugin_factory* factory,
                   const clap_host_t* host,
                   const char* plugin_id) -> const clap_plugin* {
-    return createPluginCallback(host);
+    return s_callback(host);
 }
 
 auto make(uint32_t count,
           const clap_plugin_descriptor* descriptor,
-          std::function<const clap_plugin*(const clap_host_t* host)> callback)
+          std::function<const clap_plugin*(const clap_host_t* host)> create)
     -> clap_plugin_factory {
-    pluginCount = count;
-    pluginDescriptor = descriptor;
-    createPluginCallback = callback;
+    s_count = count;
+    s_descriptor = descriptor;
+    s_callback = create;
 
     return {
         .get_plugin_count { getPluginCount },
