@@ -4,7 +4,7 @@ project(Plugin VERSION 0.0.0 DESCRIPTION "Plugin description")
 
 add_subdirectory(clap)
 
-clap_init(
+clap_setup(
     BRANCH
     "main"
     HELPERS_BRANCH

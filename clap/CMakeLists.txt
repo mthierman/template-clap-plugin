@@ -1,6 +1,6 @@
 project(Clap)
 
-function(clap_init)
+function(clap_setup)
     set(args
         BRANCH
         HELPERS_BRANCH
