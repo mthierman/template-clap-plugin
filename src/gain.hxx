@@ -66,5 +66,5 @@ auto pluginFactory { plugin::factory::make(1, &pluginDescriptor, [](const clap_h
     return gain->clapPlugin();
 }) };
 
-auto pluginEntry { PluginEntry::make(&pluginFactory) };
+auto pluginEntry { plugin::entry::make(&pluginFactory) };
 } // namespace gain
