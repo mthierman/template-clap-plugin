@@ -3,12 +3,13 @@
 
 #include <array>
 
+using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                           clap::helpers::CheckingLevel::None>;
+
 namespace plugin {
-struct Gain final : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                                 clap::helpers::CheckingLevel::None> {
-    Gain(const clap_host* host)
-        : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
+struct Plugin final : public PluginHelper {
+    Plugin(const clap_host* host)
+        : PluginHelper(&plugin_descriptor, host) { }
 
     static constexpr std::array features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                            CLAP_PLUGIN_FEATURE_UTILITY,
@@ -82,12 +83,12 @@ clap_plugin_factory plugin_factory {
     },
     .get_plugin_descriptor {
         [](const struct clap_plugin_factory* factory,
-           uint32_t index) -> const clap_plugin_descriptor* { return &Gain::plugin_descriptor; },
+           uint32_t index) -> const clap_plugin_descriptor* { return &Plugin::plugin_descriptor; },
     },
     .create_plugin { [](const struct clap_plugin_factory* factory,
                         const clap_host_t* host,
                         const char* plugin_id) -> const clap_plugin* {
-    auto p = new Gain(host);
+    auto p = new Plugin(host);
     return p->clapPlugin();
 } }
 };
