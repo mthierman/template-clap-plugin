@@ -74,4 +74,29 @@ struct Gain final : public clap::helpers::Plugin<clap::helpers::MisbehaviourHand
     virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
+
+// clap_plugin_factory
+clap_plugin_factory plugin_factory {
+    .get_plugin_count {
+        [](const clap_plugin_factory* factory) -> uint32_t { return 1; },
+    },
+    .get_plugin_descriptor {
+        [](const struct clap_plugin_factory* factory,
+           uint32_t index) -> const clap_plugin_descriptor* { return &Gain::plugin_descriptor; },
+    },
+    .create_plugin { [](const struct clap_plugin_factory* factory,
+                        const clap_host_t* host,
+                        const char* plugin_id) -> const clap_plugin* {
+    auto p = new Gain(host);
+    return p->clapPlugin();
+} }
+};
+
+// clap_entry
+clap_plugin_entry plugin_entry { .clap_version { CLAP_VERSION },
+                                 .init { [](const char* plugin_path) -> bool { return true; } },
+                                 .deinit { [](void) -> void {} },
+                                 .get_factory { [](const char* factory_id) -> const void* {
+    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &plugin_factory : nullptr;
+} } };
 } // namespace plugin
