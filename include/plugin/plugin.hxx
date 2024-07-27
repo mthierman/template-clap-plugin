@@ -73,16 +73,33 @@ struct PluginFactory {
 struct PluginEntry {
     inline static const clap_plugin_factory* s_factory;
 
+    static auto init(const char* plugin_path) -> bool { return s_init(plugin_path); }
+
+    static auto deInit(void) -> void { return s_deInit(); }
+
+    static auto getFactory(const char* factory_id) -> const void* {
+        return s_getFactory(factory_id);
+    }
+
+    inline static std::function<bool(const char* plugin_path)> s_init {
+        [](const char* plugin_path) { return true; }
+    };
+
+    inline static std::function<void()> s_deInit { []() {} };
+
+    inline static std::function<const void*(const char* factory_id)> s_getFactory {
+        [](const char* factory_id) {
+        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? PluginEntry::s_factory : nullptr;
+    }
+    };
+
     static auto make(const clap_plugin_factory* factory) -> const clap_plugin_entry {
         PluginEntry::s_factory = factory;
 
         clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
-                                        .init {
-                                            [](const char* plugin_path) -> bool { return true; } },
-                                        .deinit { [](void) -> void {} },
-                                        .get_factory { [](const char* factory_id) -> const void* {
-            return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? PluginEntry::s_factory : nullptr;
-        } } };
+                                        .init { PluginEntry::init },
+                                        .deinit { PluginEntry::deInit },
+                                        .get_factory { PluginEntry::getFactory } };
 
         return pluginEntry;
     }
