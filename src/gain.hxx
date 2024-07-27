@@ -23,7 +23,7 @@ using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::I
                                            clap::helpers::CheckingLevel::None>;
 
 struct Gain final : public PluginHelper {
-    Gain(const clap_host* host)
+    explicit Gain(const clap_host* host)
         : PluginHelper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
