@@ -78,10 +78,12 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
 extern "C" {
 const CLAP_EXPORT clap_plugin_factory plugin_factory {
     .get_plugin_count { [](const struct clap_plugin_factory* factory) -> uint32_t { return 1; } },
+
     .get_plugin_descriptor { [](const struct clap_plugin_factory* factory,
                                 uint32_t index) -> const clap_plugin_descriptor* {
     return &Plugin::plugin_descriptor;
 } },
+
     .create_plugin { [](const struct clap_plugin_factory* factory,
                         const clap_host_t* host,
                         const char* plugin_id) -> const clap_plugin* {
@@ -93,8 +95,11 @@ const CLAP_EXPORT clap_plugin_factory plugin_factory {
 
 auto makeEntry() -> clap_plugin_entry {
     return { .clap_version { CLAP_VERSION },
+
              .init { [](const char* plugin_path) -> bool { return true; } },
+
              .deinit { [](void) -> void {} },
+
              .get_factory { [](const char* factory_id) -> const void* {
         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &plugin_factory : nullptr;
     } } };
