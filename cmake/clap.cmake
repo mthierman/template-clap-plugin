@@ -80,23 +80,12 @@ function(clap_setup)
                   "${clap-helpers_SOURCE_DIR}/include"
         )
 
-    add_library(
-        clap_recommended
-        INTERFACE
-        )
-
-    add_library(
-        clap::recommended
-        ALIAS
-        clap_recommended
-        )
-
     if(CMAKE_SYSTEM_NAME
        STREQUAL
        "Windows"
         )
         target_compile_options(
-            clap_recommended
+            clap
             INTERFACE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
                       /W4
                       /WX
@@ -118,7 +107,7 @@ function(clap_setup)
             )
 
         target_link_options(
-            clap_recommended
+            clap
             INTERFACE
             $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
             /WX
@@ -129,10 +118,9 @@ function(clap_setup)
             )
 
         target_compile_definitions(
-            clap_recommended
+            clap
             INTERFACE NOMINMAX
                       WIN32_LEAN_AND_MEAN
-                      GDIPVER=0x0110
             )
     endif()
 endfunction()

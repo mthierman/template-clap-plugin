@@ -32,6 +32,4 @@ clap_add_plugin(
     "https://cleveraudio.org/"
     SOURCES
     "src/gain.cxx"
-    LINK_LIBRARIES
-    clap::recommended
     )
