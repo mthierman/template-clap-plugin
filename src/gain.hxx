@@ -74,11 +74,10 @@ struct Plugin final : public Helper {
                 info->min_value = 0;
                 info->max_value = 100;
                 info->default_value = 50;
-                return true;
             } break;
         }
 
-        return false;
+        return true;
     }
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override { return false; }
     auto paramsValueToText(clap_id paramId,
@@ -103,11 +102,10 @@ struct Plugin final : public Helper {
         switch (paramId) {
             case 0: {
                 *value = std::clamp(std::atoi(display), 1, 100);
-                return true;
             } break;
         }
 
-        return false;
+        return true;
     }
     auto paramsFlush(const clap_input_events* in,
                      const clap_output_events* out) noexcept -> void override { }
