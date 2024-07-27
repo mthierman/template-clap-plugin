@@ -104,7 +104,7 @@ auto getFactory(const char* factory_id) -> const void* {
     return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
 }
 
-auto make() -> clap_plugin_entry {
+auto makeEntry() -> clap_plugin_entry {
     return { .clap_version { CLAP_VERSION },
              .init { plugin::init },
              .deinit { plugin::deInit },
