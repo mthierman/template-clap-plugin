@@ -94,14 +94,16 @@ clap_plugin_factory plugin_factory {
 } }
 };
 
+auto getFactory() -> clap_plugin_factory { return plugin_factory; }
+
 // clap_entry
 auto getEntry() -> clap_plugin_entry {
     return { .clap_version { CLAP_VERSION },
              .init { [](const char* plugin_path) -> bool { return true; } },
              .deinit { [](void) -> void {} },
              .get_factory { [](const char* factory_id) -> const void* {
-        // auto factory { getFactory() };
-        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &plugin_factory : nullptr;
+        auto factory { getFactory() };
+        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
     } } };
 }
 } // namespace plugin
