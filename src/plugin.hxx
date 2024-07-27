@@ -92,11 +92,13 @@ auto createPlugin(const struct clap_plugin_factory* factory,
     return p->clapPlugin();
 }
 
+extern "C" {
 const CLAP_EXPORT clap_plugin_factory factory {
     .get_plugin_count { plugin::getPluginCount },
     .get_plugin_descriptor { plugin::getPluginDescriptor },
     .create_plugin { plugin::createPlugin },
 };
+}
 
 // clap_entry
 auto init(const char* plugin_path) -> bool { return true; }
