@@ -5,6 +5,8 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/free-audio/clap.git"
     GIT_TAG "main"
     GIT_SHALLOW ON
+    SOURCE_SUBDIR
+    "asd"
     )
 
 FetchContent_MakeAvailable(clap)
@@ -14,9 +16,38 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
     GIT_TAG "main"
     GIT_SHALLOW ON
+    SOURCE_SUBDIR
+    "asd"
     )
 
 FetchContent_MakeAvailable(clap-helpers)
+
+add_library(
+    clapper
+    INTERFACE
+    )
+
+add_library(
+    mthierman::clapper
+    ALIAS
+    clapper
+    )
+
+target_sources(
+    clapper
+    INTERFACE FILE_SET
+              HEADERS
+              BASE_DIRS
+              "${clap_SOURCE_DIR}/include"
+    )
+
+target_sources(
+    clapper
+    INTERFACE FILE_SET
+              HEADERS
+              BASE_DIRS
+              "${clap-helpers_SOURCE_DIR}/include"
+    )
 
 function(add_plugin)
     set(args
@@ -72,11 +103,7 @@ function(add_plugin)
                 cxx_std_23
         )
 
-    target_link_libraries(
-        ${PROJECT_NAME}
-        PRIVATE clap
-                clap-helpers
-        )
+    target_link_libraries(${PROJECT_NAME} PRIVATE mthierman::clapper)
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
