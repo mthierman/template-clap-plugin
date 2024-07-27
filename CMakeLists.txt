@@ -10,6 +10,13 @@ list(
 
 include(clap)
 
+add_clap(
+    BRANCH
+    "1.2.1"
+    HELPERS_BRANCH
+    "main"
+    )
+
 add_plugin(
     ID
     "com.gmail.mthierman"

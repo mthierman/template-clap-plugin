@@ -1,53 +1,68 @@
-include(FetchContent)
+function(add_clap)
+    set(args
+        BRANCH
+        HELPERS_BRANCH
+        )
+    cmake_parse_arguments(
+        CLAP
+        ""
+        "${args}"
+        ""
+        ${ARGN}
+        )
 
-FetchContent_Declare(
-    clap
-    GIT_REPOSITORY "https://github.com/free-audio/clap.git"
-    GIT_TAG "main"
-    GIT_SHALLOW ON
-    SOURCE_SUBDIR
-    "asd"
-    )
+    message(STATUS ${CLAP_BRANCH})
+    message(STATUS ${CLAP_HELPERS_BRANCH})
 
-FetchContent_MakeAvailable(clap)
+    include(FetchContent)
 
-FetchContent_Declare(
-    clap-helpers
-    GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
-    GIT_TAG "main"
-    GIT_SHALLOW ON
-    SOURCE_SUBDIR
-    "asd"
-    )
+    FetchContent_Declare(
+        clap
+        GIT_REPOSITORY "https://github.com/free-audio/clap.git"
+        GIT_TAG ${CLAP_BRANCH}
+        GIT_SHALLOW ON
+        # SOURCE_SUBDIR "NULL"
+        )
 
-FetchContent_MakeAvailable(clap-helpers)
+    FetchContent_MakeAvailable(clap)
 
-add_library(
-    thunderclap
-    INTERFACE
-    )
+    FetchContent_Declare(
+        clap-helpers
+        GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
+        GIT_TAG ${CLAP_HELPERS_BRANCH}
+        GIT_SHALLOW ON
+        # SOURCE_SUBDIR "NULL"
+        )
 
-add_library(
-    mthierman::thunderclap
-    ALIAS
-    thunderclap
-    )
+    FetchContent_MakeAvailable(clap-helpers)
 
-target_sources(
-    thunderclap
-    INTERFACE FILE_SET
-              HEADERS
-              BASE_DIRS
-              "${clap_SOURCE_DIR}/include"
-    )
+    add_library(
+        thunderclap
+        INTERFACE
+        )
 
-target_sources(
-    thunderclap
-    INTERFACE FILE_SET
-              HEADERS
-              BASE_DIRS
-              "${clap-helpers_SOURCE_DIR}/include"
-    )
+    add_library(
+        mthierman::thunderclap
+        ALIAS
+        thunderclap
+        )
+
+    target_sources(
+        thunderclap
+        INTERFACE FILE_SET
+                  HEADERS
+                  BASE_DIRS
+                  "${clap_SOURCE_DIR}/include"
+        )
+
+    target_sources(
+        thunderclap
+        INTERFACE FILE_SET
+                  HEADERS
+                  BASE_DIRS
+                  "${clap-helpers_SOURCE_DIR}/include"
+        )
+endfunction()
 
 function(add_plugin)
     set(args
