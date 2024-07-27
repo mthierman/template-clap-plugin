@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <string.h>
+#include <string>
 #include <vector>
 
 namespace plugin {

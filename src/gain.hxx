@@ -82,7 +82,17 @@ struct Plugin final : public Helper {
                            double value,
                            char* display,
                            uint32_t size) noexcept -> bool override {
-        return false;
+        std::string stringValue;
+
+        switch (paramId) {
+            case 0: {
+                stringValue = std::to_string(value);
+            } break;
+        }
+
+        strcpy_s(display, size, stringValue.c_str());
+
+        return true;
     }
     auto paramsTextToValue(clap_id paramId,
                            const char* display,
