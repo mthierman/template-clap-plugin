@@ -13,7 +13,7 @@ clap_setup(
 
 clap_add_plugin(
     ID
-    "com.vendor.plugin"
+    "com.vendor.gain"
     NAME
     "Gain"
     VENDOR
