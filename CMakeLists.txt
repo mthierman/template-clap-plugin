@@ -7,12 +7,10 @@ include(cmake/clap.cmake)
 clap_setup(
     VERSION
     "main"
-    # PATH
-    # "$ENV{Repos}/free-audio/clap"
+    # PATH "$ENV{Repos}/free-audio/clap"
     HELPERS_VERSION
     "main"
-    # HELPERS_PATH
-    # "$ENV{Repos}/free-audio/clap-helpers"
+    # HELPERS_PATH "$ENV{Repos}/free-audio/clap-helpers"
     )
 
 clap_add_plugin(
