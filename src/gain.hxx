@@ -62,8 +62,8 @@ struct Plugin final : public plugin::Helper {
 };
 
 const auto pluginFactory { plugin::factory::make(1, &pluginDescriptor, [](const clap_host_t* host) {
-    auto gain { new Plugin(host) };
-    return gain->clapPlugin();
+    auto plugin { new Plugin(host) };
+    return plugin->clapPlugin();
 }) };
 
 const auto pluginEntry { plugin::entry::make(&pluginFactory) };
