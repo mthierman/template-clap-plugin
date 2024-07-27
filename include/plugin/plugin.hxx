@@ -1,6 +1,7 @@
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 
+#include <algorithm>
 #include <functional>
 #include <string.h>
 #include <string>

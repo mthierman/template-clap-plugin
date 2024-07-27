@@ -65,6 +65,7 @@ struct Plugin final : public Helper {
     auto paramsCount() const noexcept -> uint32_t override { return 1; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
         info->flags = CLAP_PARAM_IS_AUTOMATABLE;
+
         switch (paramIndex) {
             case 0: {
                 info->id = 0;
@@ -73,8 +74,10 @@ struct Plugin final : public Helper {
                 info->min_value = 0;
                 info->max_value = 100;
                 info->default_value = 50;
+                return true;
             } break;
         }
+
         return false;
     }
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override { return false; }
@@ -97,6 +100,13 @@ struct Plugin final : public Helper {
     auto paramsTextToValue(clap_id paramId,
                            const char* display,
                            double* value) noexcept -> bool override {
+        switch (paramId) {
+            case 0: {
+                *value = std::clamp(std::atoi(display), 1, 100);
+                return true;
+            } break;
+        }
+
         return false;
     }
     auto paramsFlush(const clap_input_events* in,
