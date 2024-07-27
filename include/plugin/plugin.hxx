@@ -66,13 +66,11 @@ auto make(uint32_t count,
     pluginDescriptor = descriptor;
     createPluginCallback = callback;
 
-    clap_plugin_factory pluginFactory {
+    return {
         .get_plugin_count { getPluginCount },
         .get_plugin_descriptor { getPluginDescriptor },
         .create_plugin { createPlugin },
     };
-
-    return pluginFactory;
 }
 } // namespace plugin::factory
 
@@ -98,11 +96,9 @@ auto getFactory(const char* factory_id) -> const void* { return s_getFactory(fac
 auto make(const clap_plugin_factory* factory) -> clap_plugin_entry {
     pluginFactory = factory;
 
-    clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
-                                    .init { init },
-                                    .deinit { deInit },
-                                    .get_factory { getFactory } };
-
-    return pluginEntry;
+    return { .clap_version { CLAP_VERSION },
+             .init { init },
+             .deinit { deInit },
+             .get_factory { getFactory } };
 }
 }; // namespace plugin::entry
