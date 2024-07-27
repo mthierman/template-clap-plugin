@@ -1,24 +1,23 @@
-#include <clapper/clapper.hxx>
+#include <plugin/plugin.hxx>
 
 namespace gain {
-constexpr clap_plugin_descriptor pluginDescriptor {
-    .clap_version { CLAP_VERSION },
-    .id { PLUGIN_ID },
-    .name { PLUGIN_NAME },
-    .vendor { PLUGIN_VENDOR },
-    .url { PLUGIN_URL },
-    .manual_url { PLUGIN_MANUAL_URL },
-    .support_url { PLUGIN_SUPPORT_URL },
-    .version { PLUGIN_VERSION },
-    .description { PLUGIN_DESCRIPTION },
-    .features {
-        std::to_array({ CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" })
-            .data() }
-};
+constexpr auto pluginFeatures { std::to_array(
+    { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
 
-struct Gain final : public clapper::PluginHelper {
+constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
+                                                    .id { PLUGIN_ID },
+                                                    .name { PLUGIN_NAME },
+                                                    .vendor { PLUGIN_VENDOR },
+                                                    .url { PLUGIN_URL },
+                                                    .manual_url { PLUGIN_MANUAL_URL },
+                                                    .support_url { PLUGIN_SUPPORT_URL },
+                                                    .version { PLUGIN_VERSION },
+                                                    .description { PLUGIN_DESCRIPTION },
+                                                    .features { pluginFeatures.data() } };
+
+struct Gain final : public PluginHelper {
     explicit Gain(const clap_host* host)
-        : clapper::PluginHelper(&pluginDescriptor, host) { }
+        : PluginHelper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }

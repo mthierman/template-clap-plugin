@@ -3,7 +3,5 @@
 
 #include <array>
 
-namespace clapper {
 using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                            clap::helpers::CheckingLevel::None>;
-} // namespace clapper
