@@ -100,6 +100,8 @@ function(clap_setup)
             INTERFACE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
                       /W4
                       /WX
+                      /wd4100
+                      /wd4127
                       /utf-8
                       /bigobj
                       /diagnostics:caret
