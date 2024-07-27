@@ -1,8 +1,8 @@
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 
-#include <array>
 #include <functional>
+#include <vector>
 
 namespace plugin {
 using Features = std::vector<const char*>;
