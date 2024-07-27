@@ -3,7 +3,9 @@ project(Clap)
 function(clap_setup)
     set(args
         VERSION
+        LOCATION
         HELPERS_VERSION
+        HELPERS_LOCATION
         )
     cmake_parse_arguments(
         CLAP
@@ -14,6 +16,22 @@ function(clap_setup)
         )
 
     include(FetchContent)
+
+    if(NOT
+       CLAP_LOCATION
+       STREQUAL
+       ""
+        )
+        set(FETCHCONTENT_SOURCE_DIR_CLAP ${CLAP_LOCATION})
+    endif()
+
+    if(NOT
+       CLAP_HELPERS_LOCATION
+       STREQUAL
+       ""
+        )
+        set(FETCHCONTENT_SOURCE_DIR_CLAP-HELPERS ${CLAP_LOCATION})
+    endif()
 
     FetchContent_Declare(
         clap
