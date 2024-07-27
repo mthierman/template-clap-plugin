@@ -68,7 +68,11 @@ struct Plugin final : public Helper {
         switch (paramIndex) {
             case 0: {
                 info->id = 0;
-                strcpy_s(info->name, CLAP_NAME_SIZE, "Gain");
+                strcpy_s(info->name, CLAP_NAME_SIZE, "Level");
+                strcpy_s(info->module, CLAP_NAME_SIZE, "Gain");
+                info->min_value = 0;
+                info->max_value = 100;
+                info->default_value = 50;
             }
         }
         return false;
