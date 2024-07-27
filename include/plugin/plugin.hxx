@@ -74,26 +74,18 @@ auto make(uint32_t count,
 } // namespace plugin::factory
 
 namespace plugin::entry {
-const clap_plugin_factory* pluginFactory;
+const clap_plugin_factory* s_factory;
 
-std::function<bool(const char* plugin_path)> s_init { [](const char* plugin_path) {
-    return true;
-} };
+auto init(const char* plugin_path) -> bool { return true; }
 
-std::function<void()> s_deInit { []() {} };
+auto deInit(void) -> void { }
 
-std::function<const void*(const char* factory_id)> s_getFactory { [](const char* factory_id) {
-    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? pluginFactory : nullptr;
-} };
-
-auto init(const char* plugin_path) -> bool { return s_init(plugin_path); }
-
-auto deInit(void) -> void { return s_deInit(); }
-
-auto getFactory(const char* factory_id) -> const void* { return s_getFactory(factory_id); }
+auto getFactory(const char* factory_id) -> const void* {
+    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? s_factory : nullptr;
+}
 
 auto make(const clap_plugin_factory* factory) -> clap_plugin_entry {
-    pluginFactory = factory;
+    s_factory = factory;
 
     return { .clap_version { CLAP_VERSION },
              .init { init },
