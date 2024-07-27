@@ -8,7 +8,7 @@ list(
     "${CMAKE_SOURCE_DIR}/cmake"
     )
 
-include(clap_plugin)
+include(clap)
 
 add_plugin(
     ID
