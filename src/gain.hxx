@@ -38,8 +38,8 @@ struct Gain final : public PluginHelper {
                  .create_plugin { [](const struct clap_plugin_factory* factory,
                                      const clap_host_t* host,
                                      const char* plugin_id) -> const clap_plugin* {
-            auto p = new Gain(host);
-            return p->clapPlugin();
+            auto gain { new Gain(host) };
+            return gain->clapPlugin();
         } } };
     }
 
