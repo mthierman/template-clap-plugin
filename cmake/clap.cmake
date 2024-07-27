@@ -23,18 +23,18 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(clap-helpers)
 
 add_library(
-    clapper
+    thunderclap
     INTERFACE
     )
 
 add_library(
-    mthierman::clapper
+    mthierman::thunderclap
     ALIAS
-    clapper
+    thunderclap
     )
 
 target_sources(
-    clapper
+    thunderclap
     INTERFACE FILE_SET
               HEADERS
               BASE_DIRS
@@ -42,7 +42,7 @@ target_sources(
     )
 
 target_sources(
-    clapper
+    thunderclap
     INTERFACE FILE_SET
               HEADERS
               BASE_DIRS
@@ -103,7 +103,7 @@ function(add_plugin)
                 cxx_std_23
         )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE mthierman::clapper)
+    target_link_libraries(${PROJECT_NAME} PRIVATE mthierman::thunderclap)
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
