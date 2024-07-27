@@ -4,6 +4,21 @@
 #include <array>
 
 namespace plugin {
+constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                      CLAP_PLUGIN_FEATURE_UTILITY,
+                                      "\0" };
+
+constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
+                                                    .id { PLUGIN_ID },
+                                                    .name { PLUGIN_NAME },
+                                                    .vendor { PLUGIN_VENDOR },
+                                                    .url { PLUGIN_URL },
+                                                    .manual_url { PLUGIN_MANUAL_URL },
+                                                    .support_url { PLUGIN_SUPPORT_URL },
+                                                    .version { PLUGIN_VERSION },
+                                                    .description { PLUGIN_DESCRIPTION },
+                                                    .features { pluginFeatures.data() } };
+
 using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                            clap::helpers::CheckingLevel::None>;
 
@@ -11,53 +26,11 @@ struct Gain final : public PluginHelper {
     Gain(const clap_host* host)
         : PluginHelper(&pluginDescriptor, host) { }
 
-    static constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                                 CLAP_PLUGIN_FEATURE_UTILITY,
-                                                 "\0" };
-
-    static constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
-                                                               .id { PLUGIN_ID },
-                                                               .name { PLUGIN_NAME },
-                                                               .vendor { PLUGIN_VENDOR },
-                                                               .url { PLUGIN_URL },
-                                                               .manual_url { PLUGIN_MANUAL_URL },
-                                                               .support_url { PLUGIN_SUPPORT_URL },
-                                                               .version { PLUGIN_VERSION },
-                                                               .description { PLUGIN_DESCRIPTION },
-                                                               .features {
-                                                                   pluginFeatures.data() } };
-
-    static auto getPluginFactory() -> clap_plugin_factory {
-        return { .get_plugin_count {
-                     [](const clap_plugin_factory* factory) -> uint32_t { return 1; },
-                 },
-                 .get_plugin_descriptor {
-                     [](const struct clap_plugin_factory* factory, uint32_t index)
-                         -> const clap_plugin_descriptor* { return &pluginDescriptor; },
-                 },
-                 .create_plugin { [](const struct clap_plugin_factory* factory,
-                                     const clap_host_t* host,
-                                     const char* plugin_id) -> const clap_plugin* {
-            auto gain { new Gain(host) };
-            return gain->clapPlugin();
-        } } };
-    }
-
-    static auto getPluginEntry() -> clap_plugin_entry {
-        return { .clap_version { CLAP_VERSION },
-                 .init { [](const char* plugin_path) -> bool { return true; } },
-                 .deinit { [](void) -> void {} },
-                 .get_factory { [](const char* factory_id) -> const void* {
-            auto factory { getPluginFactory() };
-            return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
-        } } };
-    }
-
     // clap_plugin_audio_ports
     virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
-    virtual auto audioPortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
+    virtual auto audioPortsCount(bool /* isInput */) const noexcept -> uint32_t { return 1; }
     virtual auto audioPortsInfo(uint32_t index,
-                                bool isInput,
+                                bool /* isInput */,
                                 clap_audio_port_info* info) const noexcept -> bool {
         if (index > 0)
             return false;
@@ -72,9 +45,10 @@ struct Gain final : public PluginHelper {
 
     // clap_plugin_note_ports
     virtual auto implementsNotePorts() const noexcept -> bool { return true; }
-    virtual auto notePortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
-    virtual auto
-    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept -> bool {
+    virtual auto notePortsCount(bool /* isInput */) const noexcept -> uint32_t { return 1; }
+    virtual auto notePortsInfo(uint32_t index,
+                               bool /* isInput */,
+                               clap_note_port_info* info) const noexcept -> bool {
         if (index > 0)
             return false;
         info->id = 0;
@@ -87,19 +61,45 @@ struct Gain final : public PluginHelper {
 
     // clap_plugin
     virtual auto init() noexcept -> bool { return true; }
-    virtual auto
-    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept -> bool {
+    virtual auto activate(double /* sampleRate */,
+                          uint32_t /* minFrameCount */,
+                          uint32_t /* maxFrameCount */) noexcept -> bool {
         return true;
     }
     virtual auto deactivate() noexcept -> void { }
     virtual auto startProcessing() noexcept -> bool { return true; }
     virtual auto stopProcessing() noexcept -> void { }
-    virtual auto process(const clap_process* process) noexcept -> clap_process_status {
+    virtual auto process(const clap_process* /* process */) noexcept -> clap_process_status {
         return CLAP_PROCESS_SLEEP;
     }
     virtual auto reset() noexcept -> void { }
     virtual auto onMainThread() noexcept -> void { }
-    virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
+    virtual auto extension(const char* /* id */) noexcept -> const void* { return nullptr; }
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
+
+constexpr clap_plugin_factory pluginFactory {
+    .get_plugin_count {
+        [](const clap_plugin_factory* /* factory */) -> uint32_t { return 1; },
+    },
+    .get_plugin_descriptor {
+        [](const struct clap_plugin_factory* /* factory */,
+           uint32_t /* index */) -> const clap_plugin_descriptor* { return &pluginDescriptor; },
+    },
+    .create_plugin { [](const struct clap_plugin_factory* /* factory */,
+                        const clap_host_t* host,
+                        const char* /* plugin_id */) -> const clap_plugin* {
+    auto gain { new Gain(host) };
+    return gain->clapPlugin();
+} }
+};
+
+constexpr clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
+                                          .init { [](const char* /* plugin_path */) -> bool {
+    return true;
+} },
+                                          .deinit { [](void) -> void {} },
+                                          .get_factory { [](const char* factory_id) -> const void* {
+    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &pluginFactory : nullptr;
+} } };
 } // namespace plugin

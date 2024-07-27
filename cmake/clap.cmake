@@ -110,6 +110,8 @@ function(clap_setup)
                       -Werror
                       -Wextra
                       -Wpedantic
+                      -Wno-unused-parameter
+                      -Wno-braced-scalar-init
                       >
             )
 
