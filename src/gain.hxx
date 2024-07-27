@@ -5,9 +5,9 @@ constexpr auto pluginFeatures { std::to_array(
     { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
 const auto pluginDescriptor { plugin::descriptor::make(pluginFeatures) };
 
-struct Plugin final : public plugin::Helper {
+struct Plugin final : public plugin::TerminateMax {
     explicit Plugin(const clap_host* host)
-        : plugin::Helper(&pluginDescriptor, host) { }
+        : plugin::TerminateMax(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }

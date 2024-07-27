@@ -5,8 +5,19 @@
 #include <functional>
 
 namespace plugin {
-using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                     clap::helpers::CheckingLevel::Maximal>;
+using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                           clap::helpers::CheckingLevel::Maximal>;
+using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                           clap::helpers::CheckingLevel::Minimal>;
+using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                            clap::helpers::CheckingLevel::None>;
+
+using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                           clap::helpers::CheckingLevel::Maximal>;
+using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                           clap::helpers::CheckingLevel::Minimal>;
+using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                            clap::helpers::CheckingLevel::None>;
 } // namespace plugin
 
 namespace plugin::descriptor {
