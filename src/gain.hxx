@@ -1,7 +1,4 @@
-#include <clap/helpers/plugin.hh>
-#include <clap/helpers/plugin.hxx>
-
-#include <array>
+#include <clapper/clapper.hxx>
 
 namespace plugin {
 constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
@@ -19,12 +16,9 @@ constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION
                                                     .description { PLUGIN_DESCRIPTION },
                                                     .features { pluginFeatures.data() } };
 
-using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                           clap::helpers::CheckingLevel::None>;
-
-struct Gain final : public PluginHelper {
+struct Gain final : public clapper::PluginHelper {
     explicit Gain(const clap_host* host)
-        : PluginHelper(&pluginDescriptor, host) { }
+        : clapper::PluginHelper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }

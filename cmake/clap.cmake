@@ -193,7 +193,7 @@ function(clap_add_plugin)
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
-    target_include_directories(${PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDE_DIRECTORIES})
+    target_include_directories(${PLUGIN_NAME} PRIVATE "include" ${PLUGIN_INCLUDE_DIRECTORIES})
 
     target_link_directories(
         ${PLUGIN_NAME}
