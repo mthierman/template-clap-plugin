@@ -5,6 +5,7 @@
 #include <functional>
 
 namespace plugin {
+using Features = std::vector<const char*>;
 using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
                                            clap::helpers::CheckingLevel::Maximal>;
 using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
