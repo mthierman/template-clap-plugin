@@ -11,7 +11,7 @@ using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Termina
 } // namespace plugin
 
 namespace plugin::descriptor {
-template <typename T> constexpr auto make(T features) -> clap_plugin_descriptor {
+template <typename T> auto make(T features) -> clap_plugin_descriptor {
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
              .name { PLUGIN_NAME },
@@ -21,7 +21,7 @@ template <typename T> constexpr auto make(T features) -> clap_plugin_descriptor 
              .support_url { PLUGIN_SUPPORT_URL },
              .version { PLUGIN_VERSION },
              .description { PLUGIN_DESCRIPTION },
-             .features { features } };
+             .features { features.data() } };
 }
 } // namespace plugin::descriptor
 
