@@ -132,7 +132,10 @@ function(clap_add_plugin)
         VERSION
         DESCRIPTION
         )
-    set(listArgs SOURCES)
+    set(listArgs
+        SOURCES
+        LINK_LIBRARIES
+        )
     cmake_parse_arguments(
         PLUGIN
         ""
@@ -170,6 +173,7 @@ function(clap_add_plugin)
         ${PLUGIN_NAME}
         PRIVATE clap::clap
                 clap::flags
+                ${PLUGIN_LINK_LIBRARIES}
         )
 
     if(CMAKE_SYSTEM_NAME
