@@ -1,20 +1,20 @@
 #include <clapper/clapper.hxx>
 
 namespace gain {
-constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                      CLAP_PLUGIN_FEATURE_UTILITY,
-                                      "\0" };
-
-constexpr clap_plugin_descriptor pluginDescriptor { .clap_version { CLAP_VERSION },
-                                                    .id { PLUGIN_ID },
-                                                    .name { PLUGIN_NAME },
-                                                    .vendor { PLUGIN_VENDOR },
-                                                    .url { PLUGIN_URL },
-                                                    .manual_url { PLUGIN_MANUAL_URL },
-                                                    .support_url { PLUGIN_SUPPORT_URL },
-                                                    .version { PLUGIN_VERSION },
-                                                    .description { PLUGIN_DESCRIPTION },
-                                                    .features { pluginFeatures.data() } };
+constexpr clap_plugin_descriptor pluginDescriptor {
+    .clap_version { CLAP_VERSION },
+    .id { PLUGIN_ID },
+    .name { PLUGIN_NAME },
+    .vendor { PLUGIN_VENDOR },
+    .url { PLUGIN_URL },
+    .manual_url { PLUGIN_MANUAL_URL },
+    .support_url { PLUGIN_SUPPORT_URL },
+    .version { PLUGIN_VERSION },
+    .description { PLUGIN_DESCRIPTION },
+    .features {
+        std::to_array({ CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" })
+            .data() }
+};
 
 struct Gain final : public clapper::PluginHelper {
     explicit Gain(const clap_host* host)
