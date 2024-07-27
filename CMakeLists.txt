@@ -12,7 +12,7 @@ include(clap)
 
 add_clap(
     BRANCH
-    "1.2.1"
+    "main"
     HELPERS_BRANCH
     "main"
     )
