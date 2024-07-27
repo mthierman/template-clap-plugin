@@ -66,12 +66,5 @@ auto pluginFactory { PluginFactory::make(1, &pluginDescriptor, [](const clap_hos
     return gain->clapPlugin();
 }) };
 
-constexpr clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
-                                          .init { [](const char* plugin_path) -> bool {
-    return true;
-} },
-                                          .deinit { [](void) -> void {} },
-                                          .get_factory { [](const char* factory_id) -> const void* {
-    return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &pluginFactory : nullptr;
-} } };
+auto pluginEntry { PluginEntry::make(&pluginFactory) };
 } // namespace gain

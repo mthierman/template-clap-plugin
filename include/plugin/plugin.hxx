@@ -51,13 +51,14 @@ struct PluginFactory {
     inline static std::function<const clap_plugin*(const clap_host_t* host)>
         s_createPluginCallback { [](const clap_host_t* host) { return nullptr; } };
 
-    static auto make(uint32_t count,
-                     const clap_plugin_descriptor* descriptor,
-                     std::function<const clap_plugin*(const clap_host_t* host)> callback)
+    static auto
+    make(uint32_t count,
+         const clap_plugin_descriptor* descriptor,
+         std::function<const clap_plugin*(const clap_host_t* host)> createPluginCallback)
         -> const clap_plugin_factory {
         PluginFactory::s_count = count;
         PluginFactory::s_descriptor = descriptor;
-        PluginFactory::s_createPluginCallback = callback;
+        PluginFactory::s_createPluginCallback = createPluginCallback;
 
         clap_plugin_factory pluginFactory {
             .get_plugin_count { PluginFactory::getPluginCount },
