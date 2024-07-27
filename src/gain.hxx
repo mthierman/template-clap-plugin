@@ -3,12 +3,12 @@
 
 #include <array>
 
-namespace gain {
+namespace plugin {
 using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                            clap::helpers::CheckingLevel::None>;
 
-struct Plugin final : public PluginHelper {
-    Plugin(const clap_host* host)
+struct Gain final : public PluginHelper {
+    Gain(const clap_host* host)
         : PluginHelper(&pluginDescriptor, host) { }
 
     static constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
@@ -38,8 +38,18 @@ struct Plugin final : public PluginHelper {
                  .create_plugin { [](const struct clap_plugin_factory* factory,
                                      const clap_host_t* host,
                                      const char* plugin_id) -> const clap_plugin* {
-            auto p = new Plugin(host);
+            auto p = new Gain(host);
             return p->clapPlugin();
+        } } };
+    }
+
+    static auto getPluginEntry() -> clap_plugin_entry {
+        return { .clap_version { CLAP_VERSION },
+                 .init { [](const char* plugin_path) -> bool { return true; } },
+                 .deinit { [](void) -> void {} },
+                 .get_factory { [](const char* factory_id) -> const void* {
+            auto factory { getPluginFactory() };
+            return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
         } } };
     }
 
@@ -93,13 +103,13 @@ struct Plugin final : public PluginHelper {
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
 
-auto getPluginEntry() -> clap_plugin_entry {
-    return { .clap_version { CLAP_VERSION },
-             .init { [](const char* plugin_path) -> bool { return true; } },
-             .deinit { [](void) -> void {} },
-             .get_factory { [](const char* factory_id) -> const void* {
-        auto factory { gain::Plugin::getPluginFactory() };
-        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
-    } } };
-}
-} // namespace gain
+// auto getPluginEntry() -> clap_plugin_entry {
+//     return { .clap_version { CLAP_VERSION },
+//              .init { [](const char* plugin_path) -> bool { return true; } },
+//              .deinit { [](void) -> void {} },
+//              .get_factory { [](const char* factory_id) -> const void* {
+//         auto factory { gain::Plugin::getPluginFactory() };
+//         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &factory : nullptr;
+//     } } };
+// }
+} // namespace plugin
