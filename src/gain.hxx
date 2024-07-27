@@ -46,9 +46,8 @@ struct Gain final : public PluginHelper {
     // clap_plugin_note_ports
     virtual auto implementsNotePorts() const noexcept -> bool { return true; }
     virtual auto notePortsCount(bool isInput) const noexcept -> uint32_t { return 1; }
-    virtual auto notePortsInfo(uint32_t index,
-                               bool isInput,
-                               clap_note_port_info* info) const noexcept -> bool {
+    virtual auto
+    notePortsInfo(uint32_t index, bool isInput, clap_note_port_info* info) const noexcept -> bool {
         if (index > 0)
             return false;
         info->id = 0;
@@ -61,9 +60,8 @@ struct Gain final : public PluginHelper {
 
     // clap_plugin
     virtual auto init() noexcept -> bool { return true; }
-    virtual auto activate(double sampleRate,
-                          uint32_t minFrameCount,
-                          uint32_t maxFrameCount) noexcept -> bool {
+    virtual auto
+    activate(double sampleRate, uint32_t minFrameCount, uint32_t maxFrameCount) noexcept -> bool {
         return true;
     }
     virtual auto deactivate() noexcept -> void { }
