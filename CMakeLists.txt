@@ -10,12 +10,12 @@ clap_setup(
     )
 
 clap_add_plugin(
-    ID
-    "com.vendor.gain"
     NAME
     "Gain"
     VENDOR
     "Vendor"
+    ID
+    "com.vendor.gain"
     URL
     "https://cleveraudio.org/"
     MANUAL_URL

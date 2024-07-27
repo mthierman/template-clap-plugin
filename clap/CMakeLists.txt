@@ -1,9 +1,7 @@
 project(Clap)
 
 function(clap_setup)
-    set(args
-        GIT_TAG
-        )
+    set(args GIT_TAG)
     cmake_parse_arguments(
         CLAP
         ""
@@ -122,9 +120,9 @@ endfunction()
 
 function(clap_add_plugin)
     set(args
-        ID
         NAME
         VENDOR
+        ID
         URL
         MANUAL_URL
         SUPPORT_URL
