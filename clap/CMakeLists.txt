@@ -200,7 +200,6 @@ function(clap_add_plugin)
     target_link_libraries(
         ${PLUGIN_NAME}
         PRIVATE clap::clap
-                clap::flags
                 ${PLUGIN_LINK_LIBRARIES}
         )
 
