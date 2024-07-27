@@ -14,18 +14,16 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
                                            CLAP_PLUGIN_FEATURE_UTILITY,
                                            "\0" };
 
-    static constexpr clap_plugin_descriptor plugin_descriptor {
-        .clap_version { CLAP_VERSION },
-        .id { "com.gmail.mthierman" },
-        .name { "Plugin" },
-        .vendor { "mthierman" },
-        .url { "https://github.com/mthierman" },
-        .manual_url { "https://github.com/mthierman" },
-        .support_url { "https://github.com/mthierman" },
-        .version { "0.0.0" },
-        .description { "Plugin" },
-        .features { features.data() }
-    };
+    static constexpr clap_plugin_descriptor plugin_descriptor { .clap_version { CLAP_VERSION },
+                                                                .id { PLUGIN_ID },
+                                                                .name { PLUGIN_NAME },
+                                                                .vendor { PLUGIN_VENDOR },
+                                                                .url { PLUGIN_URL },
+                                                                .manual_url { PLUGIN_MANUAL_URL },
+                                                                .support_url { PLUGIN_SUPPORT_URL },
+                                                                .version { PLUGIN_VERSION },
+                                                                .description { PLUGIN_DESCRIPTION },
+                                                                .features { features.data() } };
 
     // clap_plugin_audio_ports
     virtual auto implementsAudioPorts() const noexcept -> bool { return true; }
