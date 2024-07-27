@@ -61,10 +61,10 @@ struct Plugin final : public plugin::Helper {
     auto enableDraftExtensions() const noexcept -> bool override { return false; }
 };
 
-auto pluginFactory { plugin::factory::make(1, &pluginDescriptor, [](const clap_host_t* host) {
+const auto pluginFactory { plugin::factory::make(1, &pluginDescriptor, [](const clap_host_t* host) {
     auto gain { new Plugin(host) };
     return gain->clapPlugin();
 }) };
 
-auto pluginEntry { plugin::entry::make(&pluginFactory) };
+const auto pluginEntry { plugin::entry::make(&pluginFactory) };
 } // namespace gain

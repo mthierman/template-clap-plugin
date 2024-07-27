@@ -61,7 +61,7 @@ auto createPlugin(const struct clap_plugin_factory* factory,
 auto make(uint32_t count,
           const clap_plugin_descriptor* descriptor,
           std::function<const clap_plugin*(const clap_host_t* host)> callback)
-    -> const clap_plugin_factory {
+    -> clap_plugin_factory {
     pluginCount = count;
     pluginDescriptor = descriptor;
     createPluginCallback = callback;
@@ -95,7 +95,7 @@ auto deInit(void) -> void { return s_deInit(); }
 
 auto getFactory(const char* factory_id) -> const void* { return s_getFactory(factory_id); }
 
-auto make(const clap_plugin_factory* factory) -> const clap_plugin_entry {
+auto make(const clap_plugin_factory* factory) -> clap_plugin_entry {
     pluginFactory = factory;
 
     clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
