@@ -1,6 +1,6 @@
 #include <clapper/clapper.hxx>
 
-namespace plugin {
+namespace gain {
 constexpr std::array pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                       CLAP_PLUGIN_FEATURE_UTILITY,
                                       "\0" };
@@ -96,4 +96,4 @@ constexpr clap_plugin_entry pluginEntry { .clap_version { CLAP_VERSION },
                                           .get_factory { [](const char* factory_id) -> const void* {
     return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &pluginFactory : nullptr;
 } } };
-} // namespace plugin
+} // namespace gain
