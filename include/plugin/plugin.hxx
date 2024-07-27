@@ -2,6 +2,7 @@
 #include <clap/helpers/plugin.hxx>
 
 #include <functional>
+#include <string.h>
 #include <vector>
 
 namespace plugin {

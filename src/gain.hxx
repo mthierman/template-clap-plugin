@@ -59,6 +59,52 @@ struct Plugin final : public Helper {
     auto onMainThread() noexcept -> void override { }
     auto extension(const char* id) noexcept -> const void* override { return nullptr; }
     auto enableDraftExtensions() const noexcept -> bool override { return false; }
+
+    // clap_plugin_params
+    auto implementsParams() const noexcept -> bool override { return true; }
+    auto paramsCount() const noexcept -> uint32_t override { return 1; }
+    auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
+        info->flags = CLAP_PARAM_IS_AUTOMATABLE;
+        switch (paramIndex) {
+            case 0: {
+                info->id = 0;
+                strcpy_s(info->name, CLAP_NAME_SIZE, "Gain");
+            }
+        }
+        return false;
+    }
+    auto paramsValue(clap_id paramId, double* value) noexcept -> bool override { return false; }
+    auto paramsValueToText(clap_id paramId,
+                           double value,
+                           char* display,
+                           uint32_t size) noexcept -> bool override {
+        return false;
+    }
+    auto paramsTextToValue(clap_id paramId,
+                           const char* display,
+                           double* value) noexcept -> bool override {
+        return false;
+    }
+    auto paramsFlush(const clap_input_events* in,
+                     const clap_output_events* out) noexcept -> void override { }
+
+    // clap_plugin_gui
+    // virtual bool implementsGui() const noexcept { return false; }
+    // virtual bool guiIsApiSupported(const char* api, bool isFloating) noexcept { return false; }
+    // virtual bool guiGetPreferredApi(const char** api, bool* is_floating) noexcept { return false;
+    // } virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; } virtual
+    // void guiDestroy() noexcept { } virtual bool guiSetScale(double scale) noexcept { return
+    // false; } virtual bool guiShow() noexcept { return false; } virtual bool guiHide() noexcept {
+    // return false; } virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return
+    // false; } virtual bool guiCanResize() const noexcept { return false; } virtual bool
+    // guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; } virtual bool
+    // guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
+    //     return guiGetSize(width, height);
+    // }
+    // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
+    // virtual void guiSuggestTitle(const char* title) noexcept { }
+    // virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
+    // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 };
 
 const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
