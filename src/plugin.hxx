@@ -4,6 +4,8 @@
 #include <array>
 
 namespace plugin {
+auto make() -> bool { return true; }
+
 struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                              clap::helpers::CheckingLevel::None> {
     Plugin(const clap_host* host)
