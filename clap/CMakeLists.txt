@@ -167,7 +167,7 @@ function(clap_add_plugin)
         )
 
     target_link_libraries(
-        ${PROJECT_NAME}
+        ${PLUGIN_NAME}
         PRIVATE clap::clap
                 clap::flags
         )
