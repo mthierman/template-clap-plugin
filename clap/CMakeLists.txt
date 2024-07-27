@@ -3,9 +3,9 @@ project(Clap)
 function(clap_setup)
     set(args
         VERSION
-        LOCATION
+        PATH
         HELPERS_VERSION
-        HELPERS_LOCATION
+        HELPERS_PATH
         )
     cmake_parse_arguments(
         CLAP
@@ -22,7 +22,7 @@ function(clap_setup)
        STREQUAL
        ""
         )
-        set(FETCHCONTENT_SOURCE_DIR_CLAP ${CLAP_LOCATION})
+        set(FETCHCONTENT_SOURCE_DIR_CLAP ${CLAP_PATH})
     endif()
 
     if(NOT
@@ -30,7 +30,7 @@ function(clap_setup)
        STREQUAL
        ""
         )
-        set(FETCHCONTENT_SOURCE_DIR_CLAP-HELPERS ${CLAP_HELPERS_LOCATION})
+        set(FETCHCONTENT_SOURCE_DIR_CLAP-HELPERS ${CLAP_HELPERS_PATH})
     endif()
 
     FetchContent_Declare(
