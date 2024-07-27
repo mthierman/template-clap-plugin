@@ -73,7 +73,7 @@ struct Plugin final : public Helper {
                 info->min_value = 0;
                 info->max_value = 100;
                 info->default_value = 50;
-            }
+            } break;
         }
         return false;
     }
