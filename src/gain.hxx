@@ -3,11 +3,11 @@
 namespace gain {
 constexpr auto pluginFeatures { std::to_array(
     { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
-constexpr auto pluginDescriptor { makePluginDescriptor(pluginFeatures.data()) };
+constexpr auto pluginDescriptor { plugin::descriptor::make(pluginFeatures.data()) };
 
-struct Plugin final : public PluginHelper {
+struct Plugin final : public plugin::Helper {
     explicit Plugin(const clap_host* host)
-        : PluginHelper(&pluginDescriptor, host) { }
+        : plugin::Helper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }

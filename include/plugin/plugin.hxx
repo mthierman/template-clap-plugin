@@ -5,10 +5,13 @@
 #include <functional>
 #include <initializer_list>
 
-using PluginHelper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                           clap::helpers::CheckingLevel::Maximal>;
+namespace plugin {
+using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                     clap::helpers::CheckingLevel::Maximal>;
+} // namespace plugin
 
-template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_plugin_descriptor {
+namespace plugin::descriptor {
+template <typename T> constexpr auto make(T features) -> clap_plugin_descriptor {
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
              .name { PLUGIN_NAME },
@@ -20,6 +23,7 @@ template <typename T> constexpr auto makePluginDescriptor(T features) -> clap_pl
              .description { PLUGIN_DESCRIPTION },
              .features { features } };
 }
+} // namespace plugin::descriptor
 
 namespace plugin::factory {
 uint32_t pluginCount { 0 };
