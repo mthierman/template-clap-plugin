@@ -36,18 +36,18 @@ function(add_clap)
     FetchContent_MakeAvailable(clap-helpers)
 
     add_library(
-        thunderclap
+        clap
         INTERFACE
         )
 
     add_library(
-        mthierman::thunderclap
+        free-audio::clap
         ALIAS
-        thunderclap
+        clap
         )
 
     target_sources(
-        thunderclap
+        clap
         INTERFACE FILE_SET
                   HEADERS
                   BASE_DIRS
@@ -55,7 +55,7 @@ function(add_clap)
         )
 
     target_sources(
-        thunderclap
+        clap
         INTERFACE FILE_SET
                   HEADERS
                   BASE_DIRS
@@ -108,7 +108,7 @@ function(add_plugin)
                 cxx_std_23
         )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE mthierman::thunderclap)
+    target_link_libraries(${PROJECT_NAME} PRIVATE free-audio::clap)
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
