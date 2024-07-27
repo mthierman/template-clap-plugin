@@ -1,24 +1,24 @@
 #include <functional>
 
-#include "plugin.h"
+#include "gain.hxx"
 
 namespace plugin {
-std::function<uint32_t(const clap_plugin_factory* factory)> getPluginCount {
-    [](const struct clap_plugin_factory* factory) { return 1; }
+static std::function<uint32_t(const clap_plugin_factory* factory)> getPluginCount {
+    [](const struct clap_plugin_factory* factory) -> uint32_t { return 1; }
 };
 
 std::function<const clap_plugin_descriptor*(const struct clap_plugin_factory* factory,
                                             uint32_t index)>
     getPluginDescriptor { [](const struct clap_plugin_factory* factory, uint32_t index) {
-    return &plugins::Gain::plugin_descriptor;
+    return &plugin::Gain::plugin_descriptor;
 } };
 
 std::function<const clap_plugin*(
     const struct clap_plugin_factory* factory, const clap_host_t* host, const char* plugin_id)>
     createPlugin { [](const struct clap_plugin_factory* factory,
                       const clap_host_t* host,
-                      const char* plugin_id) {
-    auto p = new plugins::Gain(host);
+                      const char* plugin_id) -> const clap_plugin* {
+    auto p = new plugin::Gain(host);
     return p->clapPlugin();
 } };
 

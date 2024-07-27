@@ -3,9 +3,9 @@
 
 #include <array>
 
-namespace plugins {
-struct Gain : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                           clap::helpers::CheckingLevel::None> {
+namespace plugin {
+struct Gain final : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                                 clap::helpers::CheckingLevel::None> {
     Gain(const clap_host* host)
         : clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                 clap::helpers::CheckingLevel::None>(&plugin_descriptor, host) { }
@@ -74,4 +74,4 @@ struct Gain : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::I
     virtual auto extension(const char* id) noexcept -> const void* { return nullptr; }
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
-} // namespace plugins
+} // namespace plugin

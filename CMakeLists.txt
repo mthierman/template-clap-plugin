@@ -29,5 +29,5 @@ clap_add_plugin(
     DESCRIPTION
     "Gain plugin"
     SOURCES
-    "src/gain.cxx"
+    "src/entry.cxx"
     )
