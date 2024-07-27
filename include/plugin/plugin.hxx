@@ -38,13 +38,12 @@ auto make(plugin::Features& features) -> clap_plugin_descriptor {
 } // namespace plugin::descriptor
 
 namespace plugin::factory {
-uint32_t s_count { 0 };
 const clap_plugin_descriptor* s_descriptor { nullptr };
 std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
     [](const clap_host_t* host) { return nullptr; }
 };
 
-auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return s_count; }
+auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return 1; }
 
 auto getPluginDescriptor(const clap_plugin_factory* factory,
                          uint32_t index) -> const clap_plugin_descriptor* {
@@ -57,11 +56,9 @@ auto createPlugin(const struct clap_plugin_factory* factory,
     return s_callback(host);
 }
 
-auto make(uint32_t count,
-          const clap_plugin_descriptor* descriptor,
+auto make(const clap_plugin_descriptor* descriptor,
           std::function<const clap_plugin*(const clap_host_t* host)> callback)
     -> clap_plugin_factory {
-    s_count = count;
     s_descriptor = descriptor;
     s_callback = callback;
 
