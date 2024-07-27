@@ -5,10 +5,8 @@ project(Plugin)
 add_subdirectory(clap)
 
 clap_setup(
-    BRANCH
-    "main"
-    HELPERS_BRANCH
-    "main"
+    GIT_TAG
+    "1.2.0"
     )
 
 clap_add_plugin(

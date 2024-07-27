@@ -2,8 +2,7 @@ project(Clap)
 
 function(clap_setup)
     set(args
-        BRANCH
-        HELPERS_BRANCH
+        GIT_TAG
         )
     cmake_parse_arguments(
         CLAP
@@ -18,7 +17,7 @@ function(clap_setup)
     FetchContent_Declare(
         clap
         GIT_REPOSITORY "https://github.com/free-audio/clap.git"
-        GIT_TAG ${CLAP_BRANCH}
+        GIT_TAG ${CLAP_GIT_TAG}
         GIT_SHALLOW ON
         SOURCE_SUBDIR
         "NULL"
@@ -29,7 +28,7 @@ function(clap_setup)
     FetchContent_Declare(
         clap-helpers
         GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
-        GIT_TAG ${CLAP_HELPERS_BRANCH}
+        GIT_TAG "main"
         GIT_SHALLOW ON
         SOURCE_SUBDIR
         "NULL"
