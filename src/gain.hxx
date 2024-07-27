@@ -4,10 +4,10 @@ namespace gain {
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
 const auto pluginDescriptor { plugin::descriptor::make(features) };
 
-using PluginHelper = plugin::TerminateMax;
-struct Plugin final : public PluginHelper {
+using Helper = plugin::TerminateMax;
+struct Plugin final : public Helper {
     explicit Plugin(const clap_host* host)
-        : PluginHelper(&pluginDescriptor, host) { }
+        : Helper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
