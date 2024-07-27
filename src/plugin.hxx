@@ -100,7 +100,6 @@ const CLAP_EXPORT clap_plugin_factory factory {
 };
 }
 
-// clap_entry
 auto init(const char* plugin_path) -> bool { return true; }
 auto deInit(void) -> void { }
 auto getFactory(const char* factory_id) -> const void* {
