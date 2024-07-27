@@ -2,6 +2,7 @@
 #include <clap/helpers/plugin.hxx>
 
 #include <array>
+#include <functional>
 
 namespace plugin {
 struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
@@ -75,13 +76,33 @@ struct Plugin : public clap::helpers::Plugin<clap::helpers::MisbehaviourHandler:
     virtual auto enableDraftExtensions() const noexcept -> bool { return false; }
 };
 
+std::function<uint32_t(const clap_plugin_factory* factory)> getPluginCount {
+    [](const struct clap_plugin_factory* factory) { return 1; }
+};
+
+std::function<const clap_plugin_descriptor*(const struct clap_plugin_factory* factory,
+                                            uint32_t index)>
+    getPluginDescriptor { [](const struct clap_plugin_factory* factory, uint32_t index) {
+    return &Plugin::plugin_descriptor;
+} };
+
+std::function<const clap_plugin*(
+    const struct clap_plugin_factory* factory, const clap_host_t* host, const char* plugin_id)>
+    createPlugin { [](const struct clap_plugin_factory* factory,
+                      const clap_host_t* host,
+                      const char* plugin_id) {
+    auto p = new Plugin(host);
+    return p->clapPlugin();
+} };
+
 extern "C" {
 const CLAP_EXPORT clap_plugin_factory plugin_factory {
-    .get_plugin_count { [](const struct clap_plugin_factory* factory) -> uint32_t { return 1; } },
+    .get_plugin_count {
+        [](const clap_plugin_factory* factory) -> uint32_t { return getPluginCount(factory); } },
 
     .get_plugin_descriptor { [](const struct clap_plugin_factory* factory,
                                 uint32_t index) -> const clap_plugin_descriptor* {
-    return &Plugin::plugin_descriptor;
+    return getPluginDescriptor(factory, index);
 } },
 
     .create_plugin { [](const struct clap_plugin_factory* factory,
