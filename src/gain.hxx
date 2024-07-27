@@ -5,8 +5,8 @@ constexpr auto pluginFeatures { std::to_array(
     { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY, "\0" }) };
 constexpr auto pluginDescriptor { makePluginDescriptor(pluginFeatures.data()) };
 
-struct Gain final : public PluginHelper {
-    explicit Gain(const clap_host* host)
+struct Plugin final : public PluginHelper {
+    explicit Plugin(const clap_host* host)
         : PluginHelper(&pluginDescriptor, host) { }
 
     // clap_plugin_audio_ports
@@ -72,7 +72,7 @@ constexpr clap_plugin_factory pluginFactory {
     .create_plugin { [](const struct clap_plugin_factory* factory,
                         const clap_host_t* host,
                         const char* plugin_id) -> const clap_plugin* {
-    auto gain { new Gain(host) };
+    auto gain { new Plugin(host) };
     return gain->clapPlugin();
 } }
 };
