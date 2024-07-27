@@ -30,7 +30,7 @@ function(clap_setup)
        STREQUAL
        ""
         )
-        set(FETCHCONTENT_SOURCE_DIR_CLAP-HELPERS ${CLAP_LOCATION})
+        set(FETCHCONTENT_SOURCE_DIR_CLAP-HELPERS ${CLAP_HELPERS_LOCATION})
     endif()
 
     FetchContent_Declare(
