@@ -22,20 +22,20 @@ struct Plugin final : public Helper {
     auto handleEventFromGui(const clap_output_events_t* outputEvents) -> void {
         std::cout << "handleEventFromGui" << std::endl;
 
-        bool uiAdjustedValues { false };
+        // bool uiAdjustedValues { false };
 
         // *paramToValue[r.id] = r.value;
         auto event { clap_event_param_value() };
-        event.header.size = sizeof(clap_event_param_value);
-        event.header.type = (uint16_t)CLAP_EVENT_PARAM_VALUE;
-        event.header.time = 0;
-        event.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
-        event.header.flags = 0;
+        // event.header.size = sizeof(clap_event_param_value);
+        // event.header.type = (uint16_t)CLAP_EVENT_PARAM_VALUE;
+        // event.header.time = 0;
+        // event.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
+        // event.header.flags = 0;
         // event.param_id =
         // event.value =
 
         outputEvents->try_push(outputEvents, &(event.header));
-        uiAdjustedValues = true;
+        // uiAdjustedValues = true;
     }
 
     auto handleInboundEvent(const clap_event_header_t* event) -> void {
@@ -70,7 +70,7 @@ struct Plugin final : public Helper {
             return CLAP_PROCESS_SLEEP;
         }
 
-        handleEventFromGui(process->out_events);
+        // handleEventFromGui(process->out_events);
 
         // auto out { process->audio_outputs[0].data32 };
         // auto chans { process->audio_outputs->channel_count };
@@ -190,19 +190,19 @@ struct Plugin final : public Helper {
 
         return false;
     }
-    auto paramsFlush(const clap_input_events* in,
-                     const clap_output_events* out) noexcept -> void override {
-        std::cout << "paramsFlush" << std::endl;
+    // auto paramsFlush(const clap_input_events* in,
+    //                  const clap_output_events* out) noexcept -> void override {
+    //     std::cout << "paramsFlush" << std::endl;
 
-        auto size { in->size(in) };
+    //     auto size { in->size(in) };
 
-        for (auto e = 0U; e < size; ++e) {
-            auto nextEvent { in->get(in, e) };
-            handleInboundEvent(nextEvent);
-        }
+    //     for (auto e = 0U; e < size; ++e) {
+    //         auto nextEvent { in->get(in, e) };
+    //         handleInboundEvent(nextEvent);
+    //     }
 
-        handleEventFromGui(out);
-    }
+    //     handleEventFromGui(out);
+    // }
 
     // This method is meant for implementing contract checking, it isn't part of CLAP.
     // The default implementation will be slow, so consider overriding it with a faster one.
