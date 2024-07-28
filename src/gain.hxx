@@ -1,18 +1,19 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
+using Helper = plugin::TerminateMax;
 enum paramIds : uint32_t { pmLevel };
 
-plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
-const auto descriptor { plugin::descriptor::make(features) };
-
-using Helper = plugin::TerminateMax;
 struct Plugin final : public Helper {
     explicit Plugin(const clap_host* host)
         : Helper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
     }
     ~Plugin() { }
+
+    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                              CLAP_PLUGIN_FEATURE_UTILITY };
+    inline static const auto descriptor { plugin::descriptor::make(features) };
 
     //-------------//
     // clap_plugin //
@@ -99,6 +100,16 @@ struct Plugin final : public Helper {
     auto paramsFlush(const clap_input_events* in,
                      const clap_output_events* out) noexcept -> void override { }
 
+    // This method is meant for implementing contract checking, it isn't part of CLAP.
+    // The default implementation will be slow, so consider overriding it with a faster one.
+    // Returns -1 if the parameter isn't found.
+    // auto getParamIndexForParamId(clap_id paramId) const noexcept -> int32_t override { }
+    auto isValidParamId(clap_id paramId) const noexcept -> bool override {
+        return paramToValue.find(paramId) != paramToValue.end();
+    }
+    // auto getParamInfoForParamId(clap_id paramId,
+    //                             clap_param_info* info) const noexcept -> bool override { }
+
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
@@ -163,7 +174,8 @@ struct Plugin final : public Helper {
     plugin::ParameterToValue paramToValue;
 };
 
-const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
+const auto pluginFactory { plugin::factory::make(&gain::Plugin::descriptor,
+                                                 [](const clap_host_t* host) {
     auto plugin { new Plugin(host) };
     return plugin->clapPlugin();
 }) };
