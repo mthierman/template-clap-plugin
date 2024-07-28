@@ -1,10 +1,8 @@
 #include <plugin/plugin.hxx>
 
-namespace gain {
-
-struct Plugin final : public plugin::Helper<Plugin> {
+struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> {
     explicit Plugin(const clap_host* host)
-        : plugin::Helper<Plugin>(&descriptor, host) {
+        : plugin::PluginHelper<Plugin, plugin::TerminateMax>(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -138,4 +136,3 @@ struct Plugin final : public plugin::Helper<Plugin> {
 extern "C" {
 const CLAP_EXPORT clap_plugin_entry clap_entry { Plugin::entry };
 }
-} // namespace gain

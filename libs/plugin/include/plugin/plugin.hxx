@@ -7,35 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-#if PLATFORM_WINDOWS
-#include <glow/filesystem.hxx>
-#include <glow/system.hxx>
-#include <glow/webview.hxx>
-#include <glow/window.hxx>
-#include <iostream>
-
-namespace plugin::gui {
-struct Window final : glow::window::Window {
-    Window() {
-        message(WM_CREATE, [this](glow::messages::wm_create message) {
-            glow::system::dbg("WM_CREATE");
-
-            return 0;
-        });
-
-        message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
-            // glow::system::dbg("WM_SIZE");
-            glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
-
-            return 0;
-        });
-    }
-
-    glow::webview::WebViewEnvironment webViewEnvironment;
-    glow::webview::WebView webView;
-};
-} // namespace plugin::gui
-#endif
+#include "window.hxx"
 
 namespace plugin {
 using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
@@ -53,8 +25,8 @@ using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ign
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
 
-template <typename T> struct Helper : public IgnoreNone {
-    using IgnoreNone::IgnoreNone;
+template <typename T, typename U> struct PluginHelper : public U {
+    using U::U;
 
     //--------------------//
     // clap_plugin_params //
@@ -243,7 +215,7 @@ template <typename T> struct Helper : public IgnoreNone {
         return true;
     }
 
-    plugin::gui::Window m_window;
+    plugin::PluginWindow m_window;
 };
 
 namespace descriptor {
