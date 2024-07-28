@@ -9,7 +9,8 @@ struct Plugin final : public plugin::Helper {
     }
     ~Plugin() { }
 
-    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
+    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                              CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make(features) };
     inline static const clap_plugin_factory factory { plugin::factory::make<Plugin>(&descriptor) };
 
@@ -131,8 +132,6 @@ struct Plugin final : public plugin::Helper {
     //------------------------//
     auto implementsNotePorts() const noexcept -> bool override { return true; }
 };
-
-// const auto factory { plugin::factory::make<Plugin>(&descriptor) };
 
 extern "C" {
 const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::entry::make(&Plugin::factory) };
