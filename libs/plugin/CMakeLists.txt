@@ -61,7 +61,7 @@ if(CMAKE_SYSTEM_NAME
    STREQUAL
    "Windows"
     )
-    target_sources(clap PRIVATE "src/gui_windows.cxx")
+    target_sources(clap PRIVATE "src/plugin.cxx" "src/gui_win32.cxx")
 
     target_link_libraries(clap PUBLIC glow::glow)
 
@@ -155,15 +155,15 @@ function(clap_add_plugin)
         )
 
     target_compile_definitions(
-        ${PLUGIN_NAME}
-        PRIVATE PLUGIN_ID="${PLUGIN_ID}"
-                PLUGIN_NAME="${PLUGIN_NAME}"
-                PLUGIN_VENDOR="${PLUGIN_VENDOR}"
-                PLUGIN_URL="${PLUGIN_URL}"
-                PLUGIN_MANUAL_URL="${PLUGIN_MANUAL_URL}"
-                PLUGIN_SUPPORT_URL="${PLUGIN_SUPPORT_URL}"
-                PLUGIN_VERSION="${PLUGIN_VERSION}"
-                PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
+        clap
+        PUBLIC PLUGIN_ID="${PLUGIN_ID}"
+               PLUGIN_NAME="${PLUGIN_NAME}"
+               PLUGIN_VENDOR="${PLUGIN_VENDOR}"
+               PLUGIN_URL="${PLUGIN_URL}"
+               PLUGIN_MANUAL_URL="${PLUGIN_MANUAL_URL}"
+               PLUGIN_SUPPORT_URL="${PLUGIN_SUPPORT_URL}"
+               PLUGIN_VERSION="${PLUGIN_VERSION}"
+               PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
         )
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})

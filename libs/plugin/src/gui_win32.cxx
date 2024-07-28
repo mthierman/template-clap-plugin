@@ -1,4 +1,4 @@
-#include "../include/plugin/gui.hxx"
+#include "../include/plugin/plugin.hxx"
 
 #include <glow/filesystem.hxx>
 #include <glow/system.hxx>
@@ -8,22 +8,18 @@
 #include <iostream>
 
 namespace plugin::gui {
-glow::webview::WebViewEnvironment webViewEnvironment;
-glow::webview::WebView webView;
-
 struct PluginWindow final : glow::window::Window {
     PluginWindow() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
-            glow::system::dbg("WM_CREATE, {}", ::GetACP());
-            glow::system::message_box("{}", ::GetACP());
+            // glow::system::dbg("WM_CREATE, {}", ::GetACP());
+            // glow::system::message_box("{}", ::GetACP());
 
             return 0;
         });
 
         message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
-            glow::system::dbg("{} x {}", message.size().cx, message.size().cy);
+            // glow::system::dbg("{} x {}", message.size().cx, message.size().cy);
             // webView.put_bounds(message.size());
-
             // ::SetWindowPos(hwnd, nullptr, 0, 0, message.size().cx, message.size().cy, 0);
 
             return 0;
@@ -31,25 +27,9 @@ struct PluginWindow final : glow::window::Window {
     }
 };
 
+glow::webview::WebViewEnvironment webViewEnvironment;
+glow::webview::WebView webView;
 PluginWindow pluginWindow;
-
-auto create() -> bool {
-    pluginWindow.create("Plugin", true);
-    // glow::window::show(pluginWindow.m_hwnd.get());
-
-    // webViewEnvironment.m_userDataFolder
-    //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-    // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
-
-    // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
-    //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
-    //         webView.navigate("https://www.google.ca/");
-    //         webView.put_bounds(hwnd);
-    //     });
-    // });
-
-    return true;
-}
 
 auto destroy() -> void { }
 
@@ -89,3 +69,23 @@ auto setParent(const clap_window* window) -> bool {
     return false;
 }
 } // namespace plugin::gui
+
+namespace plugin {
+auto Helper::guiCreate(const char* api, bool isFloating) noexcept -> bool {
+    plugin::gui::pluginWindow.create("Plugin", false);
+    // glow::window::show(pluginWindow.m_hwnd.get());
+
+    // webViewEnvironment.m_userDataFolder
+    //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+    // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+
+    // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
+    //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
+    //         webView.navigate("https://www.google.ca/");
+    //         webView.put_bounds(hwnd);
+    //     });
+    // });
+
+    return true;
+}
+} // namespace plugin
