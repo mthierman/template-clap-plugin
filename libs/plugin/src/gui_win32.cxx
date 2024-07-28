@@ -33,17 +33,6 @@ template <typename T>
 //     return false;
 // }
 
-// auto Helper::guiSetParent(const clap_window* window) noexcept -> bool {
-//     if (PLATFORM_WINDOWS) {
-//         // ::SetWindowLongPtrA(pluginWindow.m_hwnd.get(), GWL_STYLE, WS_POPUP);
-//         // glow::window::set_parent(pluginWindow.m_hwnd.get(), (::HWND)window->win32);
-
-//         return true;
-//     }
-
-//     return false;
-// }
-
 // auto Helper::guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool {
 //     return guiGetSize(width, height);
 // }
