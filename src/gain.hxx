@@ -13,7 +13,9 @@ struct Plugin final : public Helper {
         paramToValue[pmLevel] = &level;
     }
 
-    // clap_plugin_audio_ports
+    //-------------------------//
+    // clap_plugin_audio_ports //
+    //-------------------------//
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
     auto audioPortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
     auto audioPortsInfo(uint32_t index,
@@ -30,7 +32,9 @@ struct Plugin final : public Helper {
         return true;
     }
 
-    // clap_plugin_note_ports
+    //------------------------//
+    // clap_plugin_note_ports //
+    //------------------------//
     auto implementsNotePorts() const noexcept -> bool override { return true; }
     auto notePortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
     auto notePortsInfo(uint32_t index,
@@ -46,7 +50,9 @@ struct Plugin final : public Helper {
         return true;
     }
 
-    // clap_plugin
+    //-------------//
+    // clap_plugin //
+    //-------------//
     auto init() noexcept -> bool override { return true; }
     auto activate(double sampleRate,
                   uint32_t minFrameCount,
@@ -64,7 +70,9 @@ struct Plugin final : public Helper {
     auto extension(const char* id) noexcept -> const void* override { return nullptr; }
     auto enableDraftExtensions() const noexcept -> bool override { return false; }
 
-    // clap_plugin_params
+    //--------------------//
+    // clap_plugin_params //
+    //--------------------//
     auto implementsParams() const noexcept -> bool override { return true; }
     auto paramsCount() const noexcept -> uint32_t override { return 1; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
@@ -131,26 +139,30 @@ struct Plugin final : public Helper {
 
         return false;
     }
-    // auto paramsFlush(const clap_input_events* in,
-    //                  const clap_output_events* out) noexcept -> void override { }
+    auto paramsFlush(const clap_input_events* in,
+                     const clap_output_events* out) noexcept -> void override { }
 
-    // clap_plugin_gui
-    // virtual bool implementsGui() const noexcept { return false; }
-    // virtual bool guiIsApiSupported(const char* api, bool isFloating) noexcept { return false; }
-    // virtual bool guiGetPreferredApi(const char** api, bool* is_floating) noexcept { return false;
-    // } virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; } virtual
-    // void guiDestroy() noexcept { } virtual bool guiSetScale(double scale) noexcept { return
-    // false; } virtual bool guiShow() noexcept { return false; } virtual bool guiHide() noexcept {
-    // return false; } virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return
-    // false; } virtual bool guiCanResize() const noexcept { return false; } virtual bool
-    // guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; } virtual bool
-    // guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
-    //     return guiGetSize(width, height);
-    // }
-    // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
-    // virtual void guiSuggestTitle(const char* title) noexcept { }
-    // virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
-    // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
+    //-----------------//
+    // clap_plugin_gui //
+    //-----------------//
+    virtual bool implementsGui() const noexcept { return false; }
+    virtual bool guiIsApiSupported(const char* api, bool isFloating) noexcept { return false; }
+    virtual bool guiGetPreferredApi(const char** api, bool* is_floating) noexcept { return false; }
+    virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; }
+    virtual void guiDestroy() noexcept { }
+    virtual bool guiSetScale(double scale) noexcept { return false; }
+    virtual bool guiShow() noexcept { return false; }
+    virtual bool guiHide() noexcept { return false; }
+    virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
+    virtual bool guiCanResize() const noexcept { return false; }
+    virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
+    virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
+        return guiGetSize(width, height);
+    }
+    virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
+    virtual void guiSuggestTitle(const char* title) noexcept { }
+    virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
+    virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 
     const int nParams { 1 };
     double level { 0.3 };
