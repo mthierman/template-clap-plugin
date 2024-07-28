@@ -31,8 +31,8 @@ using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Igno
 using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                          clap::helpers::CheckingLevel::None>;
 
-struct Helper : public TerminateMax {
-    using TerminateMax::TerminateMax;
+struct Helper : public IgnoreNone {
+    using IgnoreNone::IgnoreNone;
 
     //--------------------//
     // clap_plugin_params //

@@ -144,7 +144,7 @@ struct Plugin final : public plugin::Helper {
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
 
-    // auto guiDestroy() noexcept -> void override { std::cout << "guiDestroy" << std::endl; }
+    auto guiDestroy() noexcept -> void override { std::cout << "guiDestroy" << std::endl; }
 
     // virtual bool guiSetScale(double scale) noexcept { return false; }
     // virtual bool guiShow() noexcept { return false; }
