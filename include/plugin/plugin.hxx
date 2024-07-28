@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <functional>
 #include <iomanip>
+#include <iostream>
 #include <string.h>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace plugin {

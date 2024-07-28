@@ -1,15 +1,17 @@
 #include <plugin/plugin.hxx>
 
-#include <iostream>
-
 namespace gain {
+enum paramIds : uint32_t { pmLevel };
+
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
 const auto descriptor { plugin::descriptor::make(features) };
 
 using Helper = plugin::TerminateMax;
 struct Plugin final : public Helper {
     explicit Plugin(const clap_host* host)
-        : Helper(&descriptor, host) { }
+        : Helper(&descriptor, host) {
+        paramToValue[pmLevel] = &level;
+    }
 
     // clap_plugin_audio_ports
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
@@ -86,7 +88,7 @@ struct Plugin final : public Helper {
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
         switch (paramId) {
             case 0: {
-                *value = m_level;
+                *value = level;
             }
         }
 
@@ -150,7 +152,9 @@ struct Plugin final : public Helper {
     // virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 
-    double m_level { 0.3 };
+    const int nParams { 1 };
+    double level { 0.3 };
+    std::unordered_map<clap_id, double*> paramToValue;
 };
 
 const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
@@ -159,4 +163,5 @@ const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* ho
 }) };
 
 const auto entry { plugin::entry::make(&factory) };
+
 } // namespace gain
