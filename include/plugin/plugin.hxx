@@ -106,6 +106,41 @@ struct Helper : public IgnoreNone {
     // }
     // virtual void guiSuggestTitle(const char* title) noexcept { }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
+
+    //-------------------------//
+    // clap_plugin_audio_ports //
+    //-------------------------//
+    auto audioPortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
+    auto audioPortsInfo(uint32_t index,
+                        bool isInput,
+                        clap_audio_port_info* info) const noexcept -> bool override {
+        if (index > 0)
+            return false;
+        info->id = 0;
+        snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
+        info->channel_count = 2;
+        info->flags = CLAP_AUDIO_PORT_IS_MAIN;
+        info->port_type = CLAP_PORT_STEREO;
+        info->in_place_pair = CLAP_INVALID_ID;
+        return true;
+    }
+
+    //------------------------//
+    // clap_plugin_note_ports //
+    //------------------------//
+    auto notePortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
+    auto notePortsInfo(uint32_t index,
+                       bool isInput,
+                       clap_note_port_info* info) const noexcept -> bool override {
+        if (index > 0)
+            return false;
+        info->id = 0;
+        snprintf(info->name, sizeof(info->name), "%s", "My Port Name");
+        info->supported_dialects
+            = CLAP_NOTE_DIALECT_CLAP | CLAP_NOTE_DIALECT_MIDI_MPE | CLAP_NOTE_DIALECT_MIDI2;
+        info->preferred_dialect = CLAP_NOTE_DIALECT_CLAP;
+        return true;
+    }
 };
 } // namespace plugin
 

@@ -200,7 +200,11 @@ function(clap_add_plugin)
                 PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
         )
 
-    target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
+    target_sources(
+        ${PLUGIN_NAME}
+        PRIVATE ${PLUGIN_SOURCES}
+                "plugin.manifest"
+        )
 
     target_include_directories(
         ${PLUGIN_NAME}
