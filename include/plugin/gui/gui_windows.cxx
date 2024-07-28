@@ -1,12 +1,38 @@
-#pragma once
+#include "gui.hxx"
 
-#include <clap/ext/gui.h>
-
-#if PLATFORM_WINDOWS
 #include <Windows.h>
-#endif
+// #include <wil/
 
 namespace plugin::gui {
+struct Window {
+    auto get_instance() -> ::HMODULE {
+        ::HMODULE module;
+        ::GetModuleHandleExW(0, nullptr, &module);
+        return module;
+    }
+
+    ::WNDCLASSEXA windowClass {
+        .cbSize { sizeof(::WNDCLASSEXA) },
+        .style { 0 },
+        .lpfnWndProc { window_proc },
+        .cbClsExtra { 0 },
+        .cbWndExtra { sizeof(Window) },
+        .hInstance { get_instance() },
+        .hIcon { nullptr },
+        .hCursor { static_cast<::HCURSOR>(
+            ::LoadImageA(nullptr, name, IMAGE_CURSOR, 0, 0, LR_SHARED | LR_DEFAULTSIZE)) },
+        .hbrBackground { static_cast<::HBRUSH>(::GetStockObject(BLACK_BRUSH)) },
+        .lpszMenuName { nullptr },
+        .lpszClassName { "Window" },
+        .hIconSm { nullptr }
+    };
+
+    // ::UINT m_dpi { USER_DEFAULT_SCREEN_DPI };
+    // float m_scale { 0.0 };
+    // std::unordered_map<::UINT, std::function<::LRESULT(glow::messages::wm message)>> m_map;
+    wil::unique_hwnd m_hwnd;
+};
+
 auto def_window_proc(::HWND hwnd, ::UINT msg, ::WPARAM wparam, ::LPARAM lparam) -> ::LRESULT {
     return ::DefWindowProcA(hwnd, msg, wparam, lparam);
 }
@@ -45,7 +71,8 @@ auto CALLBACK window_proc(::HWND hwnd, ::UINT msg, ::WPARAM wparam, ::LPARAM lpa
     return def_window_proc(hwnd, msg, wparam, lparam);
 }
 
-auto create() -> bool {
+auto createWindow() -> void* {
+    //
     ::WNDCLASSEXA m_windowClass {
         .cbSize { sizeof(::WNDCLASSEXA) },
         .style { 0 },
@@ -68,16 +95,6 @@ auto create() -> bool {
         ::RegisterClassExA(windowClass);
     }
 
-    return true;
-}
-
-auto destroy() -> void { }
-
-auto setParent(const clap_window* window) -> bool {
-    if (PLATFORM_WINDOWS) {
-        return true;
-    }
-
-    return false;
+    return nullptr;
 }
 } // namespace plugin::gui

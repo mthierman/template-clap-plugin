@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "gui/gui.hxx"
+
 namespace plugin {
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
@@ -62,14 +64,16 @@ struct Helper : public IgnoreNone {
         return false;
     }
 
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        return plugin::gui::create();
-    }
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
 
-    auto guiDestroy() noexcept -> void override { plugin::gui::destroy(); }
+    auto guiDestroy() noexcept -> void override { }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
-        return plugin::gui::setParent(window);
+        if (PLATFORM_WINDOWS) {
+            return true;
+        }
+
+        return false;
     }
 
     // virtual bool guiSetScale(double scale) noexcept { return false; }

@@ -217,12 +217,18 @@ function(clap_add_plugin)
        STREQUAL
        "Windows"
         )
+        target_sources(${PLUGIN_NAME} PRIVATE "include/plugin/gui/gui_windows.cxx")
+
         set_target_properties(
             ${PLUGIN_NAME}
             PROPERTIES SUFFIX
                        ".clap"
             )
 
-        target_compile_definitions(${PLUGIN_NAME} PRIVATE PLATFORM_WINDOWS=1 OPERATING_SYSTEM="Windows")
+        target_compile_definitions(
+            ${PLUGIN_NAME}
+            PRIVATE PLATFORM_WINDOWS=1
+                    OPERATING_SYSTEM="Windows"
+            )
     endif()
 endfunction()

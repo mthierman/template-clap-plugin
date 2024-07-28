@@ -1,4 +1,3 @@
-#include <plugin/gui.hxx>
 #include <plugin/plugin.hxx>
 
 namespace gain {
