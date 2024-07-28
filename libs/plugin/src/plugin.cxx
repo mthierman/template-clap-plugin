@@ -4,7 +4,7 @@
 
 namespace plugin {
 namespace descriptor {
-    auto make(plugin::Features& features) -> clap_plugin_descriptor {
+    auto make(Features& features) -> clap_plugin_descriptor {
         features.push_back(nullptr);
 
         return { .clap_version { CLAP_VERSION },

@@ -1,4 +1,4 @@
-#include "../include/plugin/helper.hxx"
+#include "../include/plugin/plugin.hxx"
 
 namespace plugin {
 //--------------------//
