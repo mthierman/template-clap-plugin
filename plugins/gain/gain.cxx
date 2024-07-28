@@ -136,7 +136,7 @@ const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host
     return plugin->clapPlugin();
 }) };
 
-// extern "C" {
-// const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::entry::make(&pluginFactory) };
-// }
+extern "C" {
+const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::entry::make(&pluginFactory) };
+}
 } // namespace gain
