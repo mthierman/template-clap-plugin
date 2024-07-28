@@ -8,6 +8,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     }
     ~Plugin() { }
 
+    inline static plugin::Config config;
     inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make<Plugin>() };

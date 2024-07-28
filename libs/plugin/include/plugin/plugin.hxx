@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "config.hxx"
 #include "window.hxx"
 
 namespace plugin {
@@ -216,6 +217,7 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     plugin::PluginWindow m_window;
+    plugin::Config m_config;
 };
 
 namespace descriptor {
