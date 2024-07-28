@@ -88,11 +88,13 @@ namespace descriptor {
 } // namespace descriptor
 
 namespace factory {
-    inline const clap_plugin_descriptor* s_descriptor { nullptr };
-
     auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
+
+    template <typename T>
     auto getPluginDescriptor(const clap_plugin_factory* factory,
-                             uint32_t index) -> const clap_plugin_descriptor*;
+                             uint32_t index) -> const clap_plugin_descriptor* {
+        return &T::descriptor;
+    }
 
     template <typename T>
     auto createPlugin(const struct clap_plugin_factory* factory,
@@ -103,22 +105,30 @@ namespace factory {
     }
 
     template <typename T> auto make() -> clap_plugin_factory {
-        s_descriptor = &T::descriptor;
+        // s_descriptor = &T::descriptor;
 
         return {
             .get_plugin_count { getPluginCount },
-            .get_plugin_descriptor { getPluginDescriptor },
+            .get_plugin_descriptor { getPluginDescriptor<T> },
             .create_plugin { createPlugin<T> },
         };
     }
 } // namespace factory
 
 namespace entry {
-    inline const clap_plugin_factory* s_factory;
     auto init(const char* plugin_path) -> bool;
     auto deInit(void) -> void;
-    auto getFactory(const char* factory_id) -> const void*;
-    auto make(const clap_plugin_factory* factory) -> clap_plugin_entry;
+
+    template <typename T> auto getFactory(const char* factory_id) -> const void* {
+        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &T::factory : nullptr;
+    }
+
+    template <typename T> auto make() -> clap_plugin_entry {
+        return { .clap_version { CLAP_VERSION },
+                 .init { init },
+                 .deinit { deInit },
+                 .get_factory { getFactory<T> } };
+    }
 }; // namespace entry
 
 namespace event {

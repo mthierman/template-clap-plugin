@@ -13,7 +13,7 @@ struct Plugin final : public plugin::Helper {
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make<Plugin>() };
     inline static const clap_plugin_factory factory { plugin::factory::make<Plugin>() };
-    inline static const clap_plugin_entry entry { plugin::entry::make(&factory) };
+    inline static const clap_plugin_entry entry { plugin::entry::make<Plugin>() };
 
     //-------------//
     // clap_plugin //

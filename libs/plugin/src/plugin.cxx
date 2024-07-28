@@ -5,11 +5,6 @@
 namespace plugin {
 namespace factory {
     auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return 1; }
-
-    auto getPluginDescriptor(const clap_plugin_factory* factory,
-                             uint32_t index) -> const clap_plugin_descriptor* {
-        return s_descriptor;
-    }
 } // namespace factory
 
 namespace entry {
@@ -17,18 +12,6 @@ namespace entry {
 
     auto deInit(void) -> void { }
 
-    auto getFactory(const char* factory_id) -> const void* {
-        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? s_factory : nullptr;
-    }
-
-    auto make(const clap_plugin_factory* factory) -> clap_plugin_entry {
-        s_factory = factory;
-
-        return { .clap_version { CLAP_VERSION },
-                 .init { init },
-                 .deinit { deInit },
-                 .get_factory { getFactory } };
-    }
 }; // namespace entry
 
 namespace event {
