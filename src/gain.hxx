@@ -1,6 +1,5 @@
 #include <plugin/plugin.hxx>
 
-namespace gain {
 enum paramIds : uint32_t { pmLevel };
 
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
@@ -163,11 +162,9 @@ struct Plugin final : public Helper {
     std::unordered_map<clap_id, double*> paramToValue;
 };
 
-const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
+const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
     auto plugin { new Plugin(host) };
     return plugin->clapPlugin();
 }) };
 
-const auto entry { plugin::entry::make(&factory) };
-
-} // namespace gain
+const auto pluginEntry { plugin::entry::make(&pluginFactory) };
