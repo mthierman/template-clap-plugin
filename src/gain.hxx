@@ -19,20 +19,18 @@ struct Plugin final : public Helper {
     double level { 0.3 };
     plugin::ParameterToValue paramToValue;
 
-    // auto handleEvent(const clap_event_header_t* event) -> void {
-    //     std::cout << "handleEvent" << std::endl;
+    auto handleEvent(const clap_event_header_t* event) -> void {
+        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
+            return;
+        }
 
-    //     if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
-    //         return;
-    //     }
-
-    //     switch (event->type) {
-    //         case CLAP_EVENT_PARAM_VALUE: {
-    //             auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-    //             *paramToValue[paramValue->param_id] = paramValue->value;
-    //         } break;
-    //     }
-    // }
+        switch (event->type) {
+            case CLAP_EVENT_PARAM_VALUE: {
+                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
+                *paramToValue[paramValue->param_id] = paramValue->value;
+            } break;
+        }
+    }
 
     //-------------//
     // clap_plugin //
@@ -47,20 +45,8 @@ struct Plugin final : public Helper {
     auto startProcessing() noexcept -> bool override { return true; }
     auto stopProcessing() noexcept -> void override { }
     auto process(const clap_process* process) noexcept -> clap_process_status override {
-        return plugin::event::run_loop(process, [this](const clap_event_header* event) {
-            std::cout << "handleEvent" << std::endl;
-
-            if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
-                return;
-            }
-
-            switch (event->type) {
-                case CLAP_EVENT_PARAM_VALUE: {
-                    auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-                    *paramToValue[paramValue->param_id] = paramValue->value;
-                } break;
-            }
-        });
+        return plugin::event::run_loop(
+            process, [this](const clap_event_header_t* event) { handleEvent(event); });
     }
     auto reset() noexcept -> void override { }
     auto onMainThread() noexcept -> void override { }
@@ -140,18 +126,16 @@ struct Plugin final : public Helper {
 
         return false;
     }
-    // auto paramsFlush(const clap_input_events* in,
-    //                  const clap_output_events* out) noexcept -> void override {
+    auto paramsFlush(const clap_input_events* in,
+                     const clap_output_events* out) noexcept -> void override {
 
-    //     auto size { in->size(in) };
+        auto size { in->size(in) };
 
-    //     for (auto e = 0U; e < size; ++e) {
-    //         auto nextEvent { in->get(in, e) };
-    //         handleInboundEvent(nextEvent);
-    //     }
-
-    //     handleEventFromGui(out);
-    // }
+        for (auto e = 0U; e < size; ++e) {
+            auto nextEvent { in->get(in, e) };
+            handleEvent(nextEvent);
+        }
+    }
 
     // This method is meant for implementing contract checking, it isn't part of CLAP.
     // The default implementation will be slow, so consider overriding it with a faster one.
