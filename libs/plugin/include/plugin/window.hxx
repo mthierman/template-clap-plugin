@@ -28,11 +28,11 @@ struct Window final : glow::window::Window {
             return 0;
         });
 
-        message(WM_SIZE, [this, hwnd = m_hwnd.get()](glow::messages::wm_size message) {
+        message(WM_SIZE, [this](glow::messages::wm_size message) {
             glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
 
-            // ::SetWindowPos(hwnd, nullptr, 0, 0, message.size().cx, message.size().cy, 0);
-            // webView.put_bounds(hwnd);
+            ::SetWindowPos(m_hwnd.get(), nullptr, 0, 0, message.size().cx, message.size().cy, 0);
+            webView.put_bounds(m_hwnd.get());
 
             return 0;
         });
