@@ -70,23 +70,35 @@ struct Helper : public IgnoreNone {
 
     auto guiDestroy() noexcept -> void override { plugin::gui::destroy(); }
 
-    auto guiSetParent(const clap_window* window) noexcept -> bool override {
-        return plugin::gui::setParent(window);
-    }
-
     auto guiShow() noexcept -> bool override { return plugin::gui::show(); }
 
     auto guiHide() noexcept -> bool override { return plugin::gui::hide(); }
 
-    // virtual bool guiSetScale(double scale) noexcept { return false; }
+    auto guiSetScale(double scale) noexcept -> bool override {
+        return plugin::gui::setScale(scale);
+    }
 
-    // virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
-    // virtual bool guiCanResize() const noexcept { return false; }
+    auto guiCanResize() const noexcept -> bool override { return true; }
+
+    auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
+        std::cout << "setSize: " << width << " x " << height << std::endl;
+
+        return false;
+    }
+
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+        std::cout << "getSize: " << width << " x " << height << std::endl;
+
+        return false;
+    }
+
+    auto guiSetParent(const clap_window* window) noexcept -> bool override {
+        return plugin::gui::setParent(window);
+    }
     // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
     // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
     //     return guiGetSize(width, height);
     // }
-    // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
     // virtual void guiSuggestTitle(const char* title) noexcept { }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 };

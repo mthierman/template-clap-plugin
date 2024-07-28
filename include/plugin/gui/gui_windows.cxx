@@ -2,6 +2,8 @@
 
 #include <glow/window.hxx>
 
+#include <iostream>
+
 namespace plugin::gui {
 struct PluginWindow final : glow::window::Window {
     PluginWindow() {
@@ -41,6 +43,13 @@ auto show() -> bool {
 
 auto hide() -> bool {
     glow::window::hide(pluginWindow.m_hwnd.get());
+
+    return true;
+}
+
+auto setScale(double scale) -> bool {
+    std::cout << scale << std::endl;
+    pluginWindow.m_scale = scale;
 
     return true;
 }

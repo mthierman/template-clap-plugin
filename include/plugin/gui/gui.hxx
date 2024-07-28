@@ -8,4 +8,5 @@ auto destroy() -> void;
 auto setParent(const clap_window* window) -> bool;
 auto show() -> bool;
 auto hide() -> bool;
+auto setScale(double scale) -> bool;
 } // namespace plugin::gui
