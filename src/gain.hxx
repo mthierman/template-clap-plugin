@@ -45,30 +45,27 @@ struct Plugin final : public Helper {
     auto implementsParams() const noexcept -> bool override { return true; }
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
+        if (paramIndex >= nParams) {
+            return false;
+        }
+
         info->flags = CLAP_PARAM_IS_AUTOMATABLE;
 
         switch (paramIndex) {
             case 0: {
-                info->id = 0;
+                info->id = pmLevel;
                 strcpy_s(info->name, CLAP_NAME_SIZE, "Level");
                 strcpy_s(info->module, CLAP_NAME_SIZE, "Gain");
-                info->min_value = 0.0;
-                info->max_value = 1.0;
-                // info->default_value = 0.5;
-                // info->flags = CLAP_PARAM_IS_AUTOMATABLE;
-                info->cookie = nullptr;
+                info->min_value = 0;
+                info->max_value = 100;
+                info->default_value = 50;
             } break;
         }
 
         return true;
     }
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
-        switch (paramId) {
-            case 0: {
-                *value = level;
-            }
-        }
-
+        *value = *paramToValue[paramId];
         return true;
     }
     auto paramsValueToText(clap_id paramId,
