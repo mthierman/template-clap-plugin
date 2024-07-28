@@ -20,9 +20,11 @@ struct Window final : glow::window::Window {
 
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
-                    webView.navigate("https://www.google.ca/");
+                    webView.navigate("about:blank");
                     // glow::messages::send_message(m_hwnd.get(), WM_SIZE, 0, MAKELPARAM(200, 200));
                     // webView.put_bounds(m_hwnd.get());
+                    auto rect { glow::window::get_client_rect(m_hwnd.get()) };
+                    webView.put_bounds(rect);
                 });
             });
 
@@ -33,7 +35,8 @@ struct Window final : glow::window::Window {
             glow::system::dbg(
                 "WM_NOTIFY: cx: {} cy: {}", LOWORD(message.lparam), HIWORD(message.lparam));
 
-            ::SetWindowPos(m_hwnd.get(), nullptr, 0, 0, message.size().cx, message.size().cy, 0);
+            ::SetWindowPos(
+                m_hwnd.get(), nullptr, 0, 0, LOWORD(message.lparam), HIWORD(message.lparam), 0);
             webView.put_bounds(m_hwnd.get());
 
             return 0;
