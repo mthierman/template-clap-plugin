@@ -49,7 +49,6 @@ target_compile_features(
 
 target_sources(
     clap
-    PRIVATE "src/gui_windows.cxx"
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
@@ -58,12 +57,14 @@ target_sources(
            "${clap-helpers_SOURCE_DIR}/include"
     )
 
-target_link_libraries(clap PUBLIC glow::glow)
-
 if(CMAKE_SYSTEM_NAME
    STREQUAL
    "Windows"
     )
+    target_sources(clap PRIVATE "src/gui_windows.cxx")
+
+    target_link_libraries(clap PUBLIC glow::glow)
+
     target_compile_options(
         clap
         PUBLIC $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
