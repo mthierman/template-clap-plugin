@@ -1,116 +1,46 @@
 #pragma once
 
-#include <clap/helpers/plugin.hh>
-#include <clap/helpers/plugin.hxx>
+#include <clap/all.h>
 
-#include <algorithm>
-#include <cstring>
-#include <format>
 #include <functional>
-#include <iomanip>
-#include <iostream>
-#include <print>
-#include <string.h>
-#include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace plugin {
-using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
-using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                           clap::helpers::CheckingLevel::Maximal>;
-using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                           clap::helpers::CheckingLevel::Minimal>;
-using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                            clap::helpers::CheckingLevel::None>;
-using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                        clap::helpers::CheckingLevel::Maximal>;
-using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                        clap::helpers::CheckingLevel::Minimal>;
-using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                         clap::helpers::CheckingLevel::None>;
 
-struct Helper : public IgnoreNone {
-    using IgnoreNone::IgnoreNone;
+namespace descriptor {
+    auto make(plugin::Features& features) -> clap_plugin_descriptor;
+} // namespace descriptor
 
-    //--------------------//
-    // clap_plugin_params //
-    //--------------------//
-    clap_id nParams { 0 };
-    plugin::ParameterToValue paramToValue;
-    auto paramsCount() const noexcept -> uint32_t override;
+namespace factory {
+    inline const clap_plugin_descriptor* s_descriptor { nullptr };
 
-    //-----------------//
-    // clap_plugin_gui //
-    //-----------------//
-    // auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
-    // auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
-    // auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
-    // auto guiDestroy() noexcept -> void override;
-    // auto guiShow() noexcept -> bool override;
-    // auto guiHide() noexcept -> bool override;
-    // auto guiSetScale(double scale) noexcept -> bool override;
-    // auto guiCanResize() const noexcept -> bool override;
-    // auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override;
-    // auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
-    // auto guiSetParent(const clap_window* window) noexcept -> bool override;
-    // auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
+    inline std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
+        [](const clap_host_t* host) { return nullptr; }
+    };
 
-    // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
-    // auto guiSuggestTitle(const char* title) noexcept -> void override;
-    // auto guiSetTransient(const clap_window* window) noexcept -> bool override;
+    auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
+    auto getPluginDescriptor(const clap_plugin_factory* factory,
+                             uint32_t index) -> const clap_plugin_descriptor*;
+    auto createPlugin(const struct clap_plugin_factory* factory,
+                      const clap_host_t* host,
+                      const char* plugin_id) -> const clap_plugin*;
+    auto make(const clap_plugin_descriptor* descriptor,
+              std::function<const clap_plugin*(const clap_host_t* host)> callback)
+        -> clap_plugin_factory;
+} // namespace factory
 
-    //-------------------------//
-    // clap_plugin_audio_ports //
-    //-------------------------//
-    // auto audioPortsCount(bool isInput) const noexcept -> uint32_t override;
-    // auto audioPortsInfo(uint32_t index,
-    //                     bool isInput,
-    //                     clap_audio_port_info* info) const noexcept -> bool override;
+namespace entry {
+    inline const clap_plugin_factory* s_factory;
+    auto init(const char* plugin_path) -> bool;
+    auto deInit(void) -> void;
+    auto getFactory(const char* factory_id) -> const void*;
+    auto make(const clap_plugin_factory* factory) -> clap_plugin_entry;
+}; // namespace entry
 
-    //------------------------//
-    // clap_plugin_note_ports //
-    //------------------------//
-    // auto notePortsCount(bool isInput) const noexcept -> uint32_t override;
-    // auto notePortsInfo(uint32_t index,
-    //                    bool isInput,
-    //                    clap_note_port_info* info) const noexcept -> bool override;
-};
+namespace event {
+    auto run_loop(const clap_process* process,
+                  std::function<void(const clap_event_header* event)> eventHandler)
+        -> clap_process_status;
+} // namespace event
 } // namespace plugin
-
-namespace plugin::descriptor {
-auto make(plugin::Features& features) -> clap_plugin_descriptor;
-} // namespace plugin::descriptor
-
-namespace plugin::factory {
-inline const clap_plugin_descriptor* s_descriptor { nullptr };
-
-inline std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
-    [](const clap_host_t* host) { return nullptr; }
-};
-
-auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
-auto getPluginDescriptor(const clap_plugin_factory* factory,
-                         uint32_t index) -> const clap_plugin_descriptor*;
-auto createPlugin(const struct clap_plugin_factory* factory,
-                  const clap_host_t* host,
-                  const char* plugin_id) -> const clap_plugin*;
-auto make(const clap_plugin_descriptor* descriptor,
-          std::function<const clap_plugin*(const clap_host_t* host)> callback)
-    -> clap_plugin_factory;
-} // namespace plugin::factory
-
-namespace plugin::entry {
-inline const clap_plugin_factory* s_factory;
-auto init(const char* plugin_path) -> bool;
-auto deInit(void) -> void;
-auto getFactory(const char* factory_id) -> const void*;
-auto make(const clap_plugin_factory* factory) -> clap_plugin_entry;
-}; // namespace plugin::entry
-
-namespace plugin::event {
-auto run_loop(const clap_process* process,
-              std::function<void(const clap_event_header* event)> eventHandler)
-    -> clap_process_status;
-} // namespace plugin::event
