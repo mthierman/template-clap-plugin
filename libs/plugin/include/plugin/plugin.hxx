@@ -102,9 +102,8 @@ namespace factory {
         return plugin->clapPlugin();
     }
 
-    template <typename T>
-    auto make(const clap_plugin_descriptor* descriptor) -> clap_plugin_factory {
-        s_descriptor = descriptor;
+    template <typename T> auto make() -> clap_plugin_factory {
+        s_descriptor = &T::descriptor;
 
         return {
             .get_plugin_count { getPluginCount },
