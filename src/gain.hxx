@@ -131,16 +131,32 @@ struct Plugin final : public Helper {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    // virtual bool implementsGui() const noexcept { return false; }
-    // virtual bool guiIsApiSupported(const char* api, bool isFloating) noexcept { return false; }
-    // virtual bool guiGetPreferredApi(const char** api, bool* is_floating) noexcept { return false;
-    // } virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; } virtual
-    // void guiDestroy() noexcept { } virtual bool guiSetScale(double scale) noexcept { return
-    // false; } virtual bool guiShow() noexcept { return false; } virtual bool guiHide() noexcept {
-    // return false; } virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return
-    // false; } virtual bool guiCanResize() const noexcept { return false; } virtual bool
-    // guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; } virtual bool
-    // guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
+    auto implementsGui() const noexcept -> bool override { return true; }
+    auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
+        if (isFloating) {
+            return false;
+        }
+
+        if (WIN32) {
+            if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
+        return false;
+    }
+    virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; }
+    // virtual void guiDestroy() noexcept { }
+    // virtual bool guiSetScale(double scale) noexcept { return false; }
+    // virtual bool guiShow() noexcept { return false; }
+    // virtual bool guiHide() noexcept { return false; }
+    // virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
+    // virtual bool guiCanResize() const noexcept { return false; }
+    // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
+    // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
     //     return guiGetSize(width, height);
     // }
     // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
