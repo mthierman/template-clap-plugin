@@ -122,7 +122,7 @@ struct Plugin final : public plugin::Helper {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    auto implementsGui() const noexcept -> bool override { return true; }
+    auto implementsGui() const noexcept -> bool override { return false; }
 
     //-------------------------//
     // clap_plugin_audio_ports //

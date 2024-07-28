@@ -33,22 +33,22 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(clap-helpers)
 
-add_library(clap)
+add_library(plugin)
 
 add_library(
-    clap::clap
+    plugin::plugin
     ALIAS
-    clap
+    plugin
     )
 
 target_compile_features(
-    clap
+    plugin
     PUBLIC c_std_17
            cxx_std_23
     )
 
 target_sources(
-    clap
+    plugin
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
@@ -61,12 +61,16 @@ if(CMAKE_SYSTEM_NAME
    STREQUAL
    "Windows"
     )
-    target_sources(clap PRIVATE "src/plugin.cxx" "src/gui_win32.cxx")
+    target_sources(
+        plugin
+        PRIVATE "src/plugin.cxx"
+                "src/gui_win32.cxx"
+        )
 
-    target_link_libraries(clap PUBLIC glow::glow)
+    target_link_libraries(plugin PUBLIC glow::glow)
 
     target_compile_options(
-        clap
+        plugin
         PUBLIC $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
                /W4
                /WX
@@ -88,7 +92,7 @@ if(CMAKE_SYSTEM_NAME
         )
 
     target_link_options(
-        clap
+        plugin
         PUBLIC
         $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /WX
@@ -99,13 +103,13 @@ if(CMAKE_SYSTEM_NAME
         )
 
     target_compile_definitions(
-        clap
+        plugin
         PUBLIC NOMINMAX
                WIN32_LEAN_AND_MEAN
         )
 
     target_compile_definitions(
-        clap
+        plugin
         PUBLIC PLATFORM_WINDOWS=1
                OPERATING_SYSTEM="Windows"
         )
@@ -155,7 +159,7 @@ function(clap_add_plugin)
         )
 
     target_compile_definitions(
-        clap
+        plugin
         PUBLIC PLUGIN_ID="${PLUGIN_ID}"
                PLUGIN_NAME="${PLUGIN_NAME}"
                PLUGIN_VENDOR="${PLUGIN_VENDOR}"
@@ -168,7 +172,7 @@ function(clap_add_plugin)
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
-    target_link_libraries(${PLUGIN_NAME} PRIVATE clap::clap)
+    target_link_libraries(${PLUGIN_NAME} PRIVATE plugin::plugin)
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL

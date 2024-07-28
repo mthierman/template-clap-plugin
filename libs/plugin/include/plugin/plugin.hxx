@@ -47,18 +47,19 @@ struct Helper : public IgnoreNone {
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
-    auto guiDestroy() noexcept -> void override;
-    auto guiShow() noexcept -> bool override;
-    auto guiHide() noexcept -> bool override;
-    auto guiSetScale(double scale) noexcept -> bool override;
-    auto guiCanResize() const noexcept -> bool override;
-    auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override;
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
-    auto guiSetParent(const clap_window* window) noexcept -> bool override;
-    auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
-    // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
-    // virtual void guiSuggestTitle(const char* title) noexcept { }
-    // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
+    // auto guiDestroy() noexcept -> void override;
+    // auto guiShow() noexcept -> bool override;
+    // auto guiHide() noexcept -> bool override;
+    // auto guiSetScale(double scale) noexcept -> bool override;
+    // auto guiCanResize() const noexcept -> bool override;
+    // auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override;
+    // auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
+    // auto guiSetParent(const clap_window* window) noexcept -> bool override;
+    // auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
+
+    // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
+    // auto guiSuggestTitle(const char* title) noexcept -> void override;
+    // auto guiSetTransient(const clap_window* window) noexcept -> bool override;
 
     //-------------------------//
     // clap_plugin_audio_ports //
