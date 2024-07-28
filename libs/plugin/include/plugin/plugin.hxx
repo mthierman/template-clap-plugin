@@ -67,17 +67,6 @@ template <typename T, typename U> struct PluginHelper : public U {
         if (PLATFORM_WINDOWS) {
             m_window.create("PluginHelper", false);
 
-            m_window.webViewEnvironment.m_userDataFolder
-                = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-            std::cout << m_window.webViewEnvironment.m_userDataFolder.string() << std::endl;
-
-            m_window.webViewEnvironment.create([this, hwnd = m_window.m_hwnd.get()]() {
-                m_window.webView.create(m_window.webViewEnvironment, hwnd, [this, hwnd]() {
-                    m_window.webView.navigate("https://www.google.ca/");
-                    m_window.webView.put_bounds(hwnd);
-                });
-            });
-
             return true;
         }
 
