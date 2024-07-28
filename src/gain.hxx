@@ -1,5 +1,7 @@
 #include <plugin/plugin.hxx>
 
+#include <iostream>
+
 namespace gain {
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
 const auto descriptor { plugin::descriptor::make(features) };
@@ -71,28 +73,47 @@ struct Plugin final : public Helper {
                 info->id = 0;
                 strcpy_s(info->name, CLAP_NAME_SIZE, "Level");
                 strcpy_s(info->module, CLAP_NAME_SIZE, "Gain");
-                info->min_value = 0;
-                info->max_value = 100;
-                info->default_value = 50;
+                info->min_value = 0.0;
+                info->max_value = 1.0;
+                // info->default_value = 0.5;
+                // info->flags = CLAP_PARAM_IS_AUTOMATABLE;
+                info->cookie = nullptr;
             } break;
         }
 
         return true;
     }
-    auto paramsValue(clap_id paramId, double* value) noexcept -> bool override { return false; }
+    auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
+        switch (paramId) {
+            case 0: {
+                *value = m_level;
+            }
+        }
+
+        return true;
+    }
     auto paramsValueToText(clap_id paramId,
                            double value,
                            char* display,
                            uint32_t size) noexcept -> bool override {
         std::string stringValue;
 
+        // auto toString { [](auto n) {
+        //     std::ostringstream oss;
+        //     oss << std::setprecision(6) << n;
+        //     return oss.str();
+        // } };
+
         switch (paramId) {
             case 0: {
+                // stringValue = toString(value);
                 stringValue = std::to_string(value);
             } break;
         }
 
         strcpy_s(display, size, stringValue.c_str());
+
+        std::cout << display << std::endl;
 
         return true;
     }
@@ -101,14 +122,15 @@ struct Plugin final : public Helper {
                            double* value) noexcept -> bool override {
         switch (paramId) {
             case 0: {
-                *value = std::clamp(std::atoi(display), 1, 100);
+                *value = std::clamp(std::atof(display), 0.0, 1.0);
+                return true;
             } break;
         }
 
-        return true;
+        return false;
     }
-    auto paramsFlush(const clap_input_events* in,
-                     const clap_output_events* out) noexcept -> void override { }
+    // auto paramsFlush(const clap_input_events* in,
+    //                  const clap_output_events* out) noexcept -> void override { }
 
     // clap_plugin_gui
     // virtual bool implementsGui() const noexcept { return false; }
@@ -127,6 +149,8 @@ struct Plugin final : public Helper {
     // virtual void guiSuggestTitle(const char* title) noexcept { }
     // virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
+
+    double m_level { 0.3 };
 };
 
 const auto factory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
