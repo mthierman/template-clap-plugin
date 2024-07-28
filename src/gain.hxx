@@ -159,7 +159,7 @@ struct Plugin final : public Helper {
 
     const int nParams { 1 };
     double level { 0.3 };
-    std::unordered_map<clap_id, double*> paramToValue;
+    plugin::ParameterToValue paramToValue;
 };
 
 const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {

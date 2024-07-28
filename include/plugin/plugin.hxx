@@ -11,6 +11,7 @@
 #include <vector>
 
 namespace plugin {
+using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
 using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
                                            clap::helpers::CheckingLevel::Maximal>;
