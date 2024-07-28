@@ -70,9 +70,9 @@ struct Helper : public IgnoreNone {
 
     auto guiDestroy() noexcept -> void override { plugin::gui::destroy(); }
 
-    auto guiShow() noexcept -> bool override { return plugin::gui::show(); }
+    // auto guiShow() noexcept -> bool override { return plugin::gui::show(); }
 
-    auto guiHide() noexcept -> bool override { return plugin::gui::hide(); }
+    // auto guiHide() noexcept -> bool override { return plugin::gui::hide(); }
 
     auto guiSetScale(double scale) noexcept -> bool override {
         return plugin::gui::setScale(scale);
@@ -88,17 +88,16 @@ struct Helper : public IgnoreNone {
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         std::cout << "getSize: " << width << " x " << height << std::endl;
-        // *width = 200;
-        // *height = 200;
+        *width = 200;
+        *height = 200;
 
-        // return true;
-
-        return false;
+        return true;
     }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         return plugin::gui::setParent(window);
     }
+
     // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
     // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
     //     return guiGetSize(width, height);

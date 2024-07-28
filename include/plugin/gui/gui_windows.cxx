@@ -19,31 +19,42 @@ struct PluginWindow final : glow::window::Window {
             return 0;
         });
 
-        message(WM_SIZE, [](glow::messages::wm_size message) {
+        message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
             glow::system::dbg("{} x {}", message.size().cx, message.size().cy);
+            // webView.put_bounds(message.size());
+
+            ::SetWindowPos(hwnd,
+                           nullptr,
+                           0,
+                           0,
+                           message.size().cx,
+                           message.size().cy,
+                           SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
             return 0;
         });
-
-        create();
     }
 };
 
 PluginWindow pluginWindow;
 
 auto create() -> bool {
-    pluginWindow.create();
+    pluginWindow.create("Plugin", true);
 
-    webViewEnvironment.m_userDataFolder
-        = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-    std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+    // ::SetWindowLongPtrA(pluginWindow.m_hwnd.get(), GWL_STYLE, WS_CHILD);
+    // glow::window::show(pluginWindow.m_hwnd.get());
+    // glow::window::show(pluginWindow.m_hwnd.get());
 
-    webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
-        webView.create(webViewEnvironment, hwnd, []() {
-            webView.navigate("https://www.google.ca/");
-            webView.put_bounds(pluginWindow.m_hwnd.get());
-        });
-    });
+    // webViewEnvironment.m_userDataFolder
+    //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+    // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+
+    // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
+    //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
+    //         webView.navigate("https://www.google.ca/");
+    //         webView.put_bounds(hwnd);
+    //     });
+    // });
 
     return true;
 }
@@ -70,17 +81,13 @@ auto setScale(double scale) -> bool {
 }
 
 auto setSize(uint32_t width, uint32_t height) -> bool {
-    std::cout << "setSize: " << width << " x " << height << std::endl;
-
     glow::window::set_position(pluginWindow.m_hwnd.get(), 0, 0, width, height);
-    // ::SendMessage(pluginWindow.m_hwnd.get(), WM_SIZE, 0, 0);
 
     return true;
 }
 
 auto setParent(const clap_window* window) -> bool {
     if (PLATFORM_WINDOWS) {
-        glow::window::set_child(pluginWindow.m_hwnd.get());
         glow::window::set_parent(pluginWindow.m_hwnd.get(), (::HWND)window->win32);
 
         return true;
