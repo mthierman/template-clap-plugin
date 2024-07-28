@@ -64,16 +64,14 @@ struct Helper : public IgnoreNone {
         return false;
     }
 
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
+        return plugin::gui::create();
+    }
 
-    auto guiDestroy() noexcept -> void override { }
+    auto guiDestroy() noexcept -> void override { plugin::gui::destroy(); }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
-        if (PLATFORM_WINDOWS) {
-            return true;
-        }
-
-        return false;
+        return plugin::gui::setParent(window);
     }
 
     // virtual bool guiSetScale(double scale) noexcept { return false; }

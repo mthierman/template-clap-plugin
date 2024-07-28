@@ -32,6 +32,15 @@ function(clap_setup)
     endif()
 
     FetchContent_Declare(
+        glow
+        GIT_REPOSITORY "https://github.com/mthierman/Glow.git"
+        GIT_TAG "next"
+        GIT_SHALLOW ON
+        )
+
+    FetchContent_MakeAvailable(glow)
+
+    FetchContent_Declare(
         clap
         GIT_REPOSITORY "https://github.com/free-audio/clap.git"
         GIT_TAG ${CLAP_VERSION}
@@ -207,7 +216,8 @@ function(clap_add_plugin)
 
     target_link_libraries(
         ${PLUGIN_NAME}
-        PRIVATE clap::clap
+        PRIVATE glow::glow
+                clap::clap
                 ${PLUGIN_LINK_LIBRARIES}
         )
 
