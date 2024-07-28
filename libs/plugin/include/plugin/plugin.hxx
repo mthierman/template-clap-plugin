@@ -77,19 +77,28 @@ namespace descriptor {
 namespace factory {
     inline const clap_plugin_descriptor* s_descriptor { nullptr };
 
-    inline std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
-        [](const clap_host_t* host) { return nullptr; }
-    };
-
     auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
     auto getPluginDescriptor(const clap_plugin_factory* factory,
                              uint32_t index) -> const clap_plugin_descriptor*;
+
+    template <typename T>
     auto createPlugin(const struct clap_plugin_factory* factory,
                       const clap_host_t* host,
-                      const char* plugin_id) -> const clap_plugin*;
-    auto make(const clap_plugin_descriptor* descriptor,
-              std::function<const clap_plugin*(const clap_host_t* host)> callback)
-        -> clap_plugin_factory;
+                      const char* plugin_id) -> const clap_plugin* {
+        auto plugin { new T(host) };
+        return plugin->clapPlugin();
+    }
+
+    template <typename T>
+    auto make(const clap_plugin_descriptor* descriptor) -> clap_plugin_factory {
+        s_descriptor = descriptor;
+
+        return {
+            .get_plugin_count { getPluginCount },
+            .get_plugin_descriptor { getPluginDescriptor },
+            .create_plugin { createPlugin<T> },
+        };
+    }
 } // namespace factory
 
 namespace entry {

@@ -27,25 +27,6 @@ namespace factory {
                              uint32_t index) -> const clap_plugin_descriptor* {
         return s_descriptor;
     }
-
-    auto createPlugin(const struct clap_plugin_factory* factory,
-                      const clap_host_t* host,
-                      const char* plugin_id) -> const clap_plugin* {
-        return s_callback(host);
-    }
-
-    auto make(const clap_plugin_descriptor* descriptor,
-              std::function<const clap_plugin*(const clap_host_t* host)> callback)
-        -> clap_plugin_factory {
-        s_descriptor = descriptor;
-        s_callback = callback;
-
-        return {
-            .get_plugin_count { getPluginCount },
-            .get_plugin_descriptor { getPluginDescriptor },
-            .create_plugin { createPlugin },
-        };
-    }
 } // namespace factory
 
 namespace entry {
