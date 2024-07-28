@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <iostream>
 #include <print>
+#include <string.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
