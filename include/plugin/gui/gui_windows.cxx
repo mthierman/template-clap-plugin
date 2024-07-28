@@ -14,7 +14,8 @@ glow::webview::WebView webView;
 struct PluginWindow final : glow::window::Window {
     PluginWindow() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
-            glow::system::dbg("WM_CREATE");
+            glow::system::dbg("WM_CREATE, {}", ::GetACP());
+            glow::system::message_box("{}", ::GetACP());
 
             return 0;
         });
