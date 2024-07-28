@@ -33,6 +33,13 @@ using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ign
 
 struct Helper : public TerminateMax {
     using TerminateMax::TerminateMax;
+
+    //--------------------//
+    // clap_plugin_params //
+    //--------------------//
+    clap_id nParams { 0 };
+    plugin::ParameterToValue paramToValue;
+    auto paramsCount() const noexcept -> uint32_t override { return nParams; }
 };
 } // namespace plugin
 

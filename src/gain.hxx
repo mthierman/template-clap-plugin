@@ -5,37 +5,33 @@ struct Plugin final : public plugin::Helper {
     explicit Plugin(const clap_host* host)
         : plugin::Helper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
+        nParams = static_cast<clap_id>(paramToValue.size());
     }
     ~Plugin() { }
 
-    //-------------//
-    // clap_plugin //
-    //-------------//
+    //-----------------//
+    // clap_descriptor //
+    //-----------------//
     inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const auto descriptor { plugin::descriptor::make(features) };
 
-    auto init() noexcept -> bool override { return true; }
-    auto activate(double sampleRate,
-                  uint32_t minFrameCount,
-                  uint32_t maxFrameCount) noexcept -> bool override {
-        return true;
-    }
-    auto deactivate() noexcept -> void override { }
-    auto startProcessing() noexcept -> bool override { return true; }
-    auto stopProcessing() noexcept -> void override { }
+    //-------------//
+    // clap_plugin //
+    //-------------//
     auto process(const clap_process* process) noexcept -> clap_process_status override {
         return plugin::event::run_loop(
             process, [this](const clap_event_header_t* event) { handleEvent(event); });
     }
-    auto reset() noexcept -> void override { }
-    auto onMainThread() noexcept -> void override { }
-    auto extension(const char* id) noexcept -> const void* override { return nullptr; }
-    auto enableDraftExtensions() const noexcept -> bool override { return false; }
 
     //--------------------//
     // clap_plugin_params //
     //--------------------//
+    enum paramIds : uint32_t { pmLevel };
+    double level { 0.3 };
+
+    auto implementsParams() const noexcept -> bool override { return true; }
+
     auto handleEvent(const clap_event_header_t* event) -> void {
         if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
             return;
@@ -49,8 +45,6 @@ struct Plugin final : public plugin::Helper {
         }
     }
 
-    auto implementsParams() const noexcept -> bool override { return true; }
-    auto paramsCount() const noexcept -> uint32_t override { return nParams; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
         if (paramIndex >= nParams) {
             return false;
@@ -71,11 +65,13 @@ struct Plugin final : public plugin::Helper {
 
         return true;
     }
+
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
         *value = *paramToValue[paramId];
 
         return true;
     }
+
     auto paramsValueToText(clap_id paramId,
                            double value,
                            char* display,
@@ -93,6 +89,7 @@ struct Plugin final : public plugin::Helper {
 
         return true;
     }
+
     auto paramsTextToValue(clap_id paramId,
                            const char* display,
                            double* value) noexcept -> bool override {
@@ -106,6 +103,7 @@ struct Plugin final : public plugin::Helper {
 
         return true;
     }
+
     auto paramsFlush(const clap_input_events* in,
                      const clap_output_events* out) noexcept -> void override {
 
@@ -117,11 +115,6 @@ struct Plugin final : public plugin::Helper {
         }
     }
 
-    enum paramIds : uint32_t { pmLevel };
-    double level { 0.3 };
-    clap_id nParams { 1 };
-    plugin::ParameterToValue paramToValue;
-
     auto isValidParamId(clap_id paramId) const noexcept -> bool override {
         return paramToValue.find(paramId) != paramToValue.end();
     }
@@ -130,6 +123,7 @@ struct Plugin final : public plugin::Helper {
     // clap_plugin_gui //
     //-----------------//
     auto implementsGui() const noexcept -> bool override { return true; }
+
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
         if (isFloating) {
             return false;
@@ -143,11 +137,15 @@ struct Plugin final : public plugin::Helper {
 
         return false;
     }
+
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
     }
+
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
-    auto guiDestroy() noexcept -> void override { }
+
+    // auto guiDestroy() noexcept -> void override { std::cout << "guiDestroy" << std::endl; }
+
     // virtual bool guiSetScale(double scale) noexcept { return false; }
     // virtual bool guiShow() noexcept { return false; }
     // virtual bool guiHide() noexcept { return false; }
