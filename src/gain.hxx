@@ -12,6 +12,7 @@ struct Plugin final : public Helper {
         : Helper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
     }
+    ~Plugin() { }
 
     //-------------//
     // clap_plugin //
