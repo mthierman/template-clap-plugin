@@ -15,21 +15,15 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     inline static const clap_plugin_factory factory { plugin::factory::make<Plugin>() };
     inline static const clap_plugin_entry entry { plugin::entry::make<Plugin>() };
 
-    //-------------//
-    // clap_plugin //
-    //-------------//
+    auto implementsGui() const noexcept -> bool override { return true; }
+    auto implementsAudioPorts() const noexcept -> bool override { return true; }
+    auto implementsNotePorts() const noexcept -> bool override { return true; }
+    auto implementsParams() const noexcept -> bool override { return true; }
+
     auto process(const clap_process* process) noexcept -> clap_process_status override {
         return plugin::event::run_loop(
             process, [this](const clap_event_header_t* event) { handleEvent(event); });
     }
-
-    //--------------------//
-    // clap_plugin_params //
-    //--------------------//
-    enum paramIds : uint32_t { pmLevel };
-    double level { 0.3 };
-
-    auto implementsParams() const noexcept -> bool override { return true; }
 
     auto handleEvent(const clap_event_header_t* event) -> void {
         if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
@@ -118,20 +112,8 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
         return paramToValue.find(paramId) != paramToValue.end();
     }
 
-    //-----------------//
-    // clap_plugin_gui //
-    //-----------------//
-    auto implementsGui() const noexcept -> bool override { return true; }
-
-    //-------------------------//
-    // clap_plugin_audio_ports //
-    //-------------------------//
-    auto implementsAudioPorts() const noexcept -> bool override { return true; }
-
-    //------------------------//
-    // clap_plugin_note_ports //
-    //------------------------//
-    auto implementsNotePorts() const noexcept -> bool override { return true; }
+    enum paramIds : uint32_t { pmLevel };
+    double level { 0.3 };
 };
 
 extern "C" {
