@@ -4,12 +4,12 @@
 #include <clap/helpers/plugin.hxx>
 
 #include <algorithm>
+#include <cstring>
 #include <format>
 #include <functional>
 #include <iomanip>
 #include <iostream>
-// #include <string.h>
-// #include <cstring>
+#include <print>
 #include <string>
 #include <unordered_map>
 #include <vector>
