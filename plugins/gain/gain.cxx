@@ -1,9 +1,10 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-struct Plugin final : public plugin::Helper {
+
+struct Plugin final : public plugin::Helper<Plugin> {
     explicit Plugin(const clap_host* host)
-        : plugin::Helper(&descriptor, host) {
+        : plugin::Helper<Plugin>(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -121,7 +122,7 @@ struct Plugin final : public plugin::Helper {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    auto implementsGui() const noexcept -> bool override { return false; }
+    auto implementsGui() const noexcept -> bool override { return true; }
 
     //-------------------------//
     // clap_plugin_audio_ports //

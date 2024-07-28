@@ -62,10 +62,8 @@ if(CMAKE_SYSTEM_NAME
    "Windows"
     )
     target_sources(
-        plugin
-        PRIVATE "src/plugin.cxx"
-                "src/helper.cxx"
-                "src/gui_win32.cxx"
+        plugin PRIVATE "src/plugin.cxx"
+                       # "src/gui_win32.cxx"
         )
 
     target_link_libraries(plugin PUBLIC glow::glow)
