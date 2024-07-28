@@ -24,7 +24,8 @@ struct Window final : glow::window::Window {
         });
 
         message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
-            glow::system::dbg("cx: {} cy: {}", message.size().cx, message.size().cy);
+            glow::system::dbg("WM_SIZE");
+            // glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
 
             return 0;
         });
@@ -66,6 +67,8 @@ template <typename T> struct Helper : public IgnoreNone {
     // clap_plugin_gui //
     //-----------------//
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
+        glow::system::dbg("guiIsApiSupported");
+
         if (isFloating) {
             return false;
         }
@@ -80,35 +83,29 @@ template <typename T> struct Helper : public IgnoreNone {
     }
 
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
+        glow::system::dbg("guiGetPreferredApi");
+
         return false;
     }
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        m_window.create("plugin", true);
-        glow::window::show(m_window.m_hwnd.get());
-
-        // webViewEnvironment.m_userDataFolder
-        //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-        // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
-
-        // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
-        //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
-        //         webView.navigate("https://www.google.ca/");
-        //         webView.put_bounds(hwnd);
-        //     });
-        // });
-
-        return true;
-    }
-
-    auto guiDestroy() noexcept -> void override { }
-
-    auto guiSetParent(const clap_window* window) noexcept -> bool override {
-        glow::system::dbg("guiSetParent");
+        glow::system::dbg("guiCreate");
 
         if (PLATFORM_WINDOWS) {
-            ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
-            glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
+            m_window.create("plugin", false);
+            // glow::window::show(m_window.m_hwnd.get());
+
+            // webViewEnvironment.m_userDataFolder
+            //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin"
+            //     });
+            // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+
+            // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
+            //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
+            //         webView.navigate("https://www.google.ca/");
+            //         webView.put_bounds(hwnd);
+            //     });
+            // });
 
             return true;
         }
@@ -116,46 +113,96 @@ template <typename T> struct Helper : public IgnoreNone {
         return false;
     }
 
-    auto guiShow() noexcept -> bool override {
-        glow::window::show(m_window.m_hwnd.get());
+    auto guiDestroy() noexcept -> void override { glow::system::dbg("guiDestroy"); }
 
-        return true;
+    auto guiSetParent(const clap_window* window) noexcept -> bool override {
+        glow::system::dbg("guiSetParent");
+
+        if (PLATFORM_WINDOWS) {
+            // ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
+            // glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
+
+            // return true;
+        }
+
+        return false;
+    }
+
+    auto guiShow() noexcept -> bool override {
+        glow::system::dbg("guiShow");
+
+        if (PLATFORM_WINDOWS) {
+            // glow::window::show(m_window.m_hwnd.get());
+
+            // return true;
+        }
+
+        return false;
     }
 
     auto guiHide() noexcept -> bool override {
-        glow::window::hide(m_window.m_hwnd.get());
+        glow::system::dbg("guiHide");
 
-        return true;
+        if (PLATFORM_WINDOWS) {
+            // glow::window::hide(m_window.m_hwnd.get());
+
+            // return true;
+        }
+
+        return false;
     }
 
     auto guiSetScale(double scale) noexcept -> bool override {
-        std::cout << scale << std::endl;
-        m_window.m_scale = scale;
+        glow::system::dbg("guiSetScale: {}", scale);
 
-        return true;
+        if (PLATFORM_WINDOWS) {
+            // m_window.m_scale = scale;
+            // return true;
+        }
+
+        return false;
     }
 
-    auto guiCanResize() const noexcept -> bool override { return true; }
+    auto guiCanResize() const noexcept -> bool override {
+        glow::system::dbg("guiCanResize");
+
+        if (PLATFORM_WINDOWS) {
+            // return true;
+        }
+
+        return false;
+    }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-        glow::system::dbg("{} x {}", width, height);
+        glow::system::dbg("guiSetSize: {} x {}", width, height);
 
-        // glow::window::set_position(pluginWindow.m_hwnd.get(), 0, 0, width, height);
+        if (PLATFORM_WINDOWS) {
+            // glow::window::set_position(pluginWindow.m_hwnd.get(), 0, 0, width, height);
+            // return true;
+        }
 
-        return true;
+        return false;
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::system::dbg("{} x {}", *width, *height);
+        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
-        *width = 200;
-        *height = 200;
+        if (PLATFORM_WINDOWS) {
+            // *width = 200;
+            // *height = 200;
 
-        return true;
+            // return true;
+        }
+
+        return false;
     }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        return guiGetSize(width, height);
+        glow::system::dbg("guiAdjustSize");
+
+        // return guiGetSize(width, height);
+
+        return false;
     }
 
     // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
