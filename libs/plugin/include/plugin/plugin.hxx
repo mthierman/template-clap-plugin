@@ -56,7 +56,6 @@ struct Helper : public IgnoreNone {
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
     auto guiSetParent(const clap_window* window) noexcept -> bool override;
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
-
     // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
     // virtual void guiSuggestTitle(const char* title) noexcept { }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
@@ -84,11 +83,6 @@ auto make(plugin::Features& features) -> clap_plugin_descriptor;
 } // namespace plugin::descriptor
 
 namespace plugin::factory {
-// const clap_plugin_descriptor* s_descriptor { nullptr };
-// std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
-//     [](const clap_host_t* host) { return nullptr; }
-// };
-
 auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
 auto getPluginDescriptor(const clap_plugin_factory* factory,
                          uint32_t index) -> const clap_plugin_descriptor*;
@@ -101,7 +95,6 @@ auto make(const clap_plugin_descriptor* descriptor,
 } // namespace plugin::factory
 
 namespace plugin::entry {
-// const clap_plugin_factory* s_factory;
 auto init(const char* plugin_path) -> bool;
 auto deInit(void) -> void;
 auto getFactory(const char* factory_id) -> const void*;
