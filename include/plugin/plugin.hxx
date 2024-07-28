@@ -1,3 +1,5 @@
+#pragma once
+
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 

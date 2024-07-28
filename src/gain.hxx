@@ -148,7 +148,7 @@ struct Plugin final : public Helper {
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
     }
-    virtual bool guiCreate(const char* api, bool isFloating) noexcept { return false; }
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return false; }
     // virtual void guiDestroy() noexcept { }
     // virtual bool guiSetScale(double scale) noexcept { return false; }
     // virtual bool guiShow() noexcept { return false; }
