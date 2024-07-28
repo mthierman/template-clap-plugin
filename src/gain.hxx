@@ -1,12 +1,9 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-using Helper = plugin::TerminateMax;
-enum paramIds : uint32_t { pmLevel };
-
-struct Plugin final : public Helper {
+struct Plugin final : public plugin::Helper {
     explicit Plugin(const clap_host* host)
-        : Helper(&descriptor, host) {
+        : plugin::Helper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
     }
     ~Plugin() { }
@@ -120,6 +117,7 @@ struct Plugin final : public Helper {
         }
     }
 
+    enum paramIds : uint32_t { pmLevel };
     double level { 0.3 };
     clap_id nParams { 1 };
     plugin::ParameterToValue paramToValue;

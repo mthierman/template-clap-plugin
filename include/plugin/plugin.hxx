@@ -30,6 +30,10 @@ using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Igno
                                         clap::helpers::CheckingLevel::Minimal>;
 using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                          clap::helpers::CheckingLevel::None>;
+
+struct Helper : public TerminateMax {
+    using TerminateMax::TerminateMax;
+};
 } // namespace plugin
 
 namespace plugin::descriptor {
