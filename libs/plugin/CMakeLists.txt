@@ -122,12 +122,7 @@ function(clap_add_plugin)
         MANUAL_URL
         SUPPORT_URL
         )
-    set(listArgs
-        SOURCES
-        INCLUDE_DIRECTORIES
-        LINK_DIRECTORIES
-        LINK_LIBRARIES
-        )
+    set(listArgs SOURCES)
     cmake_parse_arguments(
         PLUGIN
         ""
@@ -173,25 +168,7 @@ function(clap_add_plugin)
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
-    target_include_directories(
-        ${PLUGIN_NAME}
-        PRIVATE "include"
-                ${PLUGIN_INCLUDE_DIRECTORIES}
-        )
-
-    target_link_directories(
-        ${PLUGIN_NAME}
-        PRIVATE
-        ${PLUGIN_LINK_DIRECTORIES}
-        )
-
-    target_link_libraries(
-        ${PLUGIN_NAME}
-        PRIVATE clap::clap
-                ${PLUGIN_LINK_LIBRARIES}
-        )
-
-    target_include_directories(${PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDE_DIRECTORIES})
+    target_link_libraries(${PLUGIN_NAME} PRIVATE clap::clap)
 
     if(CMAKE_SYSTEM_NAME
        STREQUAL
