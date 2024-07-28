@@ -1,5 +1,6 @@
 #include <plugin/plugin.hxx>
 
+namespace gain {
 enum paramIds : uint32_t { pmLevel };
 
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
@@ -168,3 +169,4 @@ const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host
 }) };
 
 const auto pluginEntry { plugin::entry::make(&pluginFactory) };
+} // namespace gain
