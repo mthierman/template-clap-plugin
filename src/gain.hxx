@@ -11,30 +11,13 @@ struct Plugin final : public Helper {
     }
     ~Plugin() { }
 
+    //-------------//
+    // clap_plugin //
+    //-------------//
     inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const auto descriptor { plugin::descriptor::make(features) };
 
-    clap_id nParams { 1 };
-    double level { 0.3 };
-    plugin::ParameterToValue paramToValue;
-
-    auto handleEvent(const clap_event_header_t* event) -> void {
-        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
-            return;
-        }
-
-        switch (event->type) {
-            case CLAP_EVENT_PARAM_VALUE: {
-                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-                *paramToValue[paramValue->param_id] = paramValue->value;
-            } break;
-        }
-    }
-
-    //-------------//
-    // clap_plugin //
-    //-------------//
     auto init() noexcept -> bool override { return true; }
     auto activate(double sampleRate,
                   uint32_t minFrameCount,
@@ -56,6 +39,22 @@ struct Plugin final : public Helper {
     //--------------------//
     // clap_plugin_params //
     //--------------------//
+    clap_id nParams { 1 };
+    double level { 0.3 };
+    plugin::ParameterToValue paramToValue;
+    auto handleEvent(const clap_event_header_t* event) -> void {
+        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
+            return;
+        }
+
+        switch (event->type) {
+            case CLAP_EVENT_PARAM_VALUE: {
+                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
+                *paramToValue[paramValue->param_id] = paramValue->value;
+            } break;
+        }
+    }
+
     auto implementsParams() const noexcept -> bool override { return true; }
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
