@@ -92,7 +92,6 @@ struct Plugin final : public Helper {
         switch (id) {
             case pmLevel: {
                 fmtString = std::format("{}", value);
-
             } break;
         }
 
@@ -108,12 +107,10 @@ struct Plugin final : public Helper {
         switch (id) {
             case pmLevel: {
                 *value = std::clamp(std::stod(display), 0.0, 1.0);
-                std::cout << *value << std::endl;
-                return true;
             } break;
         }
 
-        return false;
+        return true;
     }
     auto paramsFlush(const clap_input_events* in,
                      const clap_output_events* out) noexcept -> void override {
