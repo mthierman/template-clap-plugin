@@ -142,9 +142,26 @@ struct Plugin final : public plugin::Helper {
         return false;
     }
 
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
+        // plugin::gui::create()
+        return true;
+    }
 
-    auto guiDestroy() noexcept -> void override { std::cout << "guiDestroy" << std::endl; }
+    virtual bool guiSetParent(const clap_window* window) noexcept { 
+        if (PLATFORM_WINDOWS)
+        {
+            
+        }
+        
+        return false; }
+
+    auto guiDestroy() noexcept -> void override {
+        std::cout << "guiDestroy" << std::endl;
+
+        if (PLATFORM_WINDOWS) {
+            std::cout << "PLATFORM_WINDOWS" << std::endl;
+        }
+    }
 
     // virtual bool guiSetScale(double scale) noexcept { return false; }
     // virtual bool guiShow() noexcept { return false; }
@@ -157,7 +174,6 @@ struct Plugin final : public plugin::Helper {
     // }
     // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
     // virtual void guiSuggestTitle(const char* title) noexcept { }
-    // virtual bool guiSetParent(const clap_window* window) noexcept { return false; }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 
     //-------------------------//

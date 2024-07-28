@@ -193,7 +193,11 @@ function(clap_add_plugin)
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
 
-    target_include_directories(${PLUGIN_NAME} PRIVATE "include" ${PLUGIN_INCLUDE_DIRECTORIES})
+    target_include_directories(
+        ${PLUGIN_NAME}
+        PRIVATE "include"
+                ${PLUGIN_INCLUDE_DIRECTORIES}
+        )
 
     target_link_directories(
         ${PLUGIN_NAME}
@@ -218,5 +222,7 @@ function(clap_add_plugin)
             PROPERTIES SUFFIX
                        ".clap"
             )
+
+        target_compile_definitions(${PLUGIN_NAME} PRIVATE PLATFORM_WINDOWS=1 OPERATING_SYSTEM="Windows")
     endif()
 endfunction()
