@@ -1,3 +1,4 @@
+#include <plugin/gui.hxx>
 #include <plugin/plugin.hxx>
 
 namespace gain {
@@ -124,36 +125,6 @@ struct Plugin final : public plugin::Helper {
     //-----------------//
     auto implementsGui() const noexcept -> bool override { return true; }
 
-    auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        if (isFloating) {
-            return false;
-        }
-
-        if (WIN32) {
-            if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
-        return false;
-    }
-
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        // plugin::gui::create()
-        return true;
-    }
-
-    virtual bool guiSetParent(const clap_window* window) noexcept { 
-        if (PLATFORM_WINDOWS)
-        {
-            
-        }
-        
-        return false; }
 
     auto guiDestroy() noexcept -> void override {
         std::cout << "guiDestroy" << std::endl;

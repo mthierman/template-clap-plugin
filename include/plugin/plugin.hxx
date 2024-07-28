@@ -40,6 +40,35 @@ struct Helper : public IgnoreNone {
     clap_id nParams { 0 };
     plugin::ParameterToValue paramToValue;
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
+
+    //-----------------//
+    // clap_plugin_gui //
+    //-----------------//
+    auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
+        if (isFloating) {
+            return false;
+        }
+
+        if (WIN32) {
+            if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
+        return false;
+    }
+
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
+        return plugin::gui::create();
+    }
+
+    auto guiSetParent(const clap_window* window) noexcept -> bool override {
+        return plugin::gui::setParent(window);
+    }
 };
 } // namespace plugin
 
