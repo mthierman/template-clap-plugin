@@ -6,30 +6,6 @@ namespace plugin {
 //--------------------//
 auto Helper::paramsCount() const noexcept -> uint32_t { return nParams; }
 
-//-----------------//
-// clap_plugin_gui //
-//-----------------//
-auto Helper::guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool {
-    if (isFloating) {
-        return false;
-    }
-
-    if (WIN32) {
-        if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
-            return true;
-        }
-    }
-
-    return false;
-}
-auto Helper::guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool {
-    return false;
-}
-
-auto Helper::guiCreate(const char* api, bool isFloating) noexcept -> bool { return true; }
-
-auto Helper::guiDestroy() noexcept -> void { }
-
 //-------------------------//
 // clap_plugin_audio_ports //
 //-------------------------//

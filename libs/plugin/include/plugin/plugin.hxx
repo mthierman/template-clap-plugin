@@ -48,41 +48,16 @@ struct Helper : public IgnoreNone {
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
     auto guiDestroy() noexcept -> void override;
-
-    // auto guiShow() noexcept -> bool override { return plugin::gui::show(); }
-
-    // auto guiHide() noexcept -> bool override { return plugin::gui::hide(); }
-
-    // auto guiSetScale(double scale) noexcept -> bool override {
-    //     return plugin::gui::setScale(scale);
-    // }
-
-    // auto guiCanResize() const noexcept -> bool override { return true; }
-
-    // auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-    //     plugin::gui::setSize(width, height);
-
-    //     return true;
-    // }
-
-    // auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-    //     // std::cout << "getSize: " << width << " x " << height << std::endl;
-    //     // *width = 200;
-    //     // *height = 200;
-
-    //     // return true;
-
-    //     return false;
-    // }
-
-    // auto guiSetParent(const clap_window* window) noexcept -> bool override {
-    //     return plugin::gui::setParent(window);
-    // }
+    auto guiShow() noexcept -> bool override;
+    auto guiHide() noexcept -> bool override;
+    auto guiSetScale(double scale) noexcept -> bool override;
+    auto guiCanResize() const noexcept -> bool override;
+    auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override;
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
+    auto guiSetParent(const clap_window* window) noexcept -> bool override;
+    auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override;
 
     // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
-    // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
-    //     return guiGetSize(width, height);
-    // }
     // virtual void guiSuggestTitle(const char* title) noexcept { }
     // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 
