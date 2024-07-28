@@ -74,9 +74,12 @@ struct Helper : public IgnoreNone {
         return plugin::gui::setParent(window);
     }
 
+    auto guiShow() noexcept -> bool override { return plugin::gui::show(); }
+
+    auto guiHide() noexcept -> bool override { return plugin::gui::hide(); }
+
     // virtual bool guiSetScale(double scale) noexcept { return false; }
-    // virtual bool guiShow() noexcept { return false; }
-    // virtual bool guiHide() noexcept { return false; }
+
     // virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
     // virtual bool guiCanResize() const noexcept { return false; }
     // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }

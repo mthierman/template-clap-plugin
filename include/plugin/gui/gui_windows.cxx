@@ -32,4 +32,16 @@ auto setParent(const clap_window* window) -> bool {
 
     return false;
 }
+
+auto show() -> bool {
+    glow::window::show(pluginWindow.m_hwnd.get());
+
+    return true;
+}
+
+auto hide() -> bool {
+    glow::window::hide(pluginWindow.m_hwnd.get());
+
+    return true;
+}
 } // namespace plugin::gui
