@@ -122,17 +122,17 @@ struct Plugin final : public plugin::Helper {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    auto implementsGui() const noexcept -> bool override { return false; }
+    // auto implementsGui() const noexcept -> bool override { return false; }
 
     //-------------------------//
     // clap_plugin_audio_ports //
     //-------------------------//
-    auto implementsAudioPorts() const noexcept -> bool override { return true; }
+    // auto implementsAudioPorts() const noexcept -> bool override { return true; }
 
     //------------------------//
     // clap_plugin_note_ports //
     //------------------------//
-    auto implementsNotePorts() const noexcept -> bool override { return true; }
+    // auto implementsNotePorts() const noexcept -> bool override { return true; }
 };
 
 const auto pluginFactory { plugin::factory::make(&gain::Plugin::descriptor,

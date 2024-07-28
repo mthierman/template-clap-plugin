@@ -44,9 +44,9 @@ struct Helper : public IgnoreNone {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
-    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
+    // auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
+    // auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
+    // auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
     // auto guiDestroy() noexcept -> void override;
     // auto guiShow() noexcept -> bool override;
     // auto guiHide() noexcept -> bool override;
@@ -64,18 +64,18 @@ struct Helper : public IgnoreNone {
     //-------------------------//
     // clap_plugin_audio_ports //
     //-------------------------//
-    auto audioPortsCount(bool isInput) const noexcept -> uint32_t override;
-    auto audioPortsInfo(uint32_t index,
-                        bool isInput,
-                        clap_audio_port_info* info) const noexcept -> bool override;
+    // auto audioPortsCount(bool isInput) const noexcept -> uint32_t override;
+    // auto audioPortsInfo(uint32_t index,
+    //                     bool isInput,
+    //                     clap_audio_port_info* info) const noexcept -> bool override;
 
     //------------------------//
     // clap_plugin_note_ports //
     //------------------------//
-    auto notePortsCount(bool isInput) const noexcept -> uint32_t override;
-    auto notePortsInfo(uint32_t index,
-                       bool isInput,
-                       clap_note_port_info* info) const noexcept -> bool override;
+    // auto notePortsCount(bool isInput) const noexcept -> uint32_t override;
+    // auto notePortsInfo(uint32_t index,
+    //                    bool isInput,
+    //                    clap_note_port_info* info) const noexcept -> bool override;
 };
 } // namespace plugin
 
@@ -84,6 +84,12 @@ auto make(plugin::Features& features) -> clap_plugin_descriptor;
 } // namespace plugin::descriptor
 
 namespace plugin::factory {
+inline const clap_plugin_descriptor* s_descriptor { nullptr };
+
+inline std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
+    [](const clap_host_t* host) { return nullptr; }
+};
+
 auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
 auto getPluginDescriptor(const clap_plugin_factory* factory,
                          uint32_t index) -> const clap_plugin_descriptor*;
@@ -96,6 +102,7 @@ auto make(const clap_plugin_descriptor* descriptor,
 } // namespace plugin::factory
 
 namespace plugin::entry {
+inline const clap_plugin_factory* s_factory;
 auto init(const char* plugin_path) -> bool;
 auto deInit(void) -> void;
 auto getFactory(const char* factory_id) -> const void*;

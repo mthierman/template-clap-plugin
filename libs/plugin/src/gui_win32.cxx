@@ -8,67 +8,68 @@
 #include <iostream>
 
 namespace plugin::gui {
-struct PluginWindow final : glow::window::Window {
-    PluginWindow() {
-        message(WM_CREATE, [this](glow::messages::wm_create message) {
-            glow::system::dbg("WM_CREATE");
+// struct PluginWindow final : glow::window::Window {
+//     PluginWindow() {
+//         message(WM_CREATE, [this](glow::messages::wm_create message) {
+//             glow::system::dbg("WM_CREATE");
 
-            return 0;
-        });
+//             return 0;
+//         });
 
-        message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
-            glow::system::dbg("{} x {}", message.size().cx, message.size().cy);
-            // webView.put_bounds(message.size());
-            // ::SetWindowPos(hwnd, nullptr, 0, 0, message.size().cx, message.size().cy, 0);
+//         message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
+//             glow::system::dbg("{} x {}", message.size().cx, message.size().cy);
+//             // webView.put_bounds(message.size());
+//             // ::SetWindowPos(hwnd, nullptr, 0, 0, message.size().cx, message.size().cy, 0);
 
-            return 0;
-        });
-    }
-};
+//             return 0;
+//         });
+//     }
+// };
 
-glow::webview::WebViewEnvironment webViewEnvironment;
-glow::webview::WebView webView;
-PluginWindow pluginWindow;
+// glow::webview::WebViewEnvironment webViewEnvironment;
+// glow::webview::WebView webView;
+// PluginWindow pluginWindow;
 } // namespace plugin::gui
 
 namespace plugin {
 //-----------------//
 // clap_plugin_gui //
 //-----------------//
-auto Helper::guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool {
-    // if (isFloating) {
-    //     return false;
-    // }
+// auto Helper::guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool {
+//     // if (isFloating) {
+//     //     return false;
+//     // }
 
-    // if (WIN32) {
-    //     if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
-    //         return true;
-    //     }
-    // }
+//     // if (WIN32) {
+//     //     if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
+//     //         return true;
+//     //     }
+//     // }
 
-    return false;
-}
-auto Helper::guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool {
-    return false;
-}
+//     return false;
+// }
 
-auto Helper::guiCreate(const char* api, bool isFloating) noexcept -> bool {
-    plugin::gui::pluginWindow.create("Plugin", false);
-    // glow::window::show(pluginWindow.m_hwnd.get());
+// auto Helper::guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool {
+//     return false;
+// }
 
-    // webViewEnvironment.m_userDataFolder
-    //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-    // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+// auto Helper::guiCreate(const char* api, bool isFloating) noexcept -> bool {
+//     plugin::gui::pluginWindow.create("Plugin", false);
+//     // glow::window::show(pluginWindow.m_hwnd.get());
 
-    // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
-    //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
-    //         webView.navigate("https://www.google.ca/");
-    //         webView.put_bounds(hwnd);
-    //     });
-    // });
+//     // webViewEnvironment.m_userDataFolder
+//     //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+//     // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
 
-    return true;
-}
+//     // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
+//     //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
+//     //         webView.navigate("https://www.google.ca/");
+//     //         webView.put_bounds(hwnd);
+//     //     });
+//     // });
+
+//     return true;
+// }
 
 // auto Helper::guiDestroy() noexcept -> void { }
 
