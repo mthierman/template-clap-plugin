@@ -8,6 +8,9 @@
 #include <iostream>
 
 namespace plugin::gui {
+glow::webview::WebViewEnvironment webViewEnvironment;
+glow::webview::WebView webView;
+
 struct PluginWindow final : glow::window::Window {
     PluginWindow() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
@@ -24,29 +27,21 @@ struct PluginWindow final : glow::window::Window {
 
         create();
     }
-
-    // wil::unique_couninitialize_call coInit { glow::system::co_initialize() };
 };
 
-glow::webview::WebViewEnvironment m_webViewEnvironment;
-glow::webview::WebView m_webView;
 PluginWindow pluginWindow;
 
 auto create() -> bool {
     pluginWindow.create();
 
-    m_webViewEnvironment.m_userDataFolder
-        = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "ClapPlugin" });
-    std::cout << m_webViewEnvironment.m_userDataFolder.string() << std::endl;
+    webViewEnvironment.m_userDataFolder
+        = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+    std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
 
-    // if (m_hwnd.get()) {
-    //     std::cout << "Window handle exists!" << std::endl;
-    // }
-
-    m_webViewEnvironment.create([=]() {
-        m_webView.create(m_webViewEnvironment, pluginWindow.m_hwnd.get(), []() {
-            m_webView.navigate("https://www.google.ca/");
-            m_webView.put_bounds(pluginWindow.m_hwnd.get());
+    webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
+        webView.create(webViewEnvironment, hwnd, []() {
+            webView.navigate("https://www.google.ca/");
+            webView.put_bounds(pluginWindow.m_hwnd.get());
         });
     });
 
