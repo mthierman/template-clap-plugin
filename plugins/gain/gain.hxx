@@ -1,6 +1,9 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
+plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
+const auto descriptor { plugin::descriptor::make(features) };
+
 struct Plugin final : public plugin::Helper {
     explicit Plugin(const clap_host* host)
         : plugin::Helper(&descriptor, host) {
@@ -8,13 +11,6 @@ struct Plugin final : public plugin::Helper {
         nParams = static_cast<clap_id>(paramToValue.size());
     }
     ~Plugin() { }
-
-    //-----------------//
-    // clap_descriptor //
-    //-----------------//
-    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                              CLAP_PLUGIN_FEATURE_UTILITY };
-    inline static const auto descriptor { plugin::descriptor::make(features) };
 
     //-------------//
     // clap_plugin //
@@ -135,8 +131,7 @@ struct Plugin final : public plugin::Helper {
     auto implementsNotePorts() const noexcept -> bool override { return true; }
 };
 
-const auto pluginFactory { plugin::factory::make(&gain::Plugin::descriptor,
-                                                 [](const clap_host_t* host) {
+const auto pluginFactory { plugin::factory::make(&descriptor, [](const clap_host_t* host) {
     auto plugin { new Plugin(host) };
     return plugin->clapPlugin();
 }) };
