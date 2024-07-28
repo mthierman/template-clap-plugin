@@ -1,0 +1,20 @@
+clap_add_plugin(
+    NAME
+    "Gain"
+    VERSION
+    "0.0.0"
+    DESCRIPTION
+    "Gain plugin"
+    VENDOR
+    "Vendor"
+    ID
+    "com.vendor.gain"
+    URL
+    "https://cleveraudio.org/"
+    MANUAL_URL
+    "https://cleveraudio.org/"
+    SUPPORT_URL
+    "https://cleveraudio.org/"
+    SOURCES
+    "gain.cxx"
+    )

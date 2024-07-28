@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "gui/gui.hxx"
+#include "gui.hxx"
 
 namespace plugin {
 using ParameterToValue = std::unordered_map<clap_id, double*>;

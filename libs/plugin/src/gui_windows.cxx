@@ -1,4 +1,4 @@
-#include "gui.hxx"
+#include "../include/plugin/gui.hxx"
 
 #include <glow/filesystem.hxx>
 #include <glow/system.hxx>
