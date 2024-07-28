@@ -15,6 +15,10 @@ struct Plugin final : public Helper {
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const auto descriptor { plugin::descriptor::make(features) };
 
+    clap_id nParams { 1 };
+    double level { 0.3 };
+    plugin::ParameterToValue paramToValue;
+
     //-------------//
     // clap_plugin //
     //-------------//
@@ -39,7 +43,7 @@ struct Plugin final : public Helper {
     // clap_plugin_params //
     //--------------------//
     auto implementsParams() const noexcept -> bool override { return true; }
-    auto paramsCount() const noexcept -> uint32_t override { return 1; }
+    auto paramsCount() const noexcept -> uint32_t override { return nParams; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
         info->flags = CLAP_PARAM_IS_AUTOMATABLE;
 
@@ -168,10 +172,6 @@ struct Plugin final : public Helper {
         info->preferred_dialect = CLAP_NOTE_DIALECT_CLAP;
         return true;
     }
-
-    const int nParams { 1 };
-    double level { 0.3 };
-    plugin::ParameterToValue paramToValue;
 };
 
 const auto pluginFactory { plugin::factory::make(&gain::Plugin::descriptor,
