@@ -2,6 +2,7 @@
 #include <clap/helpers/plugin.hxx>
 
 #include <algorithm>
+#include <format>
 #include <functional>
 #include <iomanip>
 #include <iostream>

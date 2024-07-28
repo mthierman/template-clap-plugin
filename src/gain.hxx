@@ -80,9 +80,6 @@ struct Plugin final : public Helper {
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
         *value = *paramToValue[paramId];
 
-        // std::cout << "paramsValue() - value: " << *value << std::endl;
-        // std::cout << "paramsValue() - level: " << level << std::endl;
-
         return true;
     }
     auto paramsValueToText(clap_id paramId,
@@ -90,24 +87,16 @@ struct Plugin final : public Helper {
                            char* display,
                            uint32_t size) noexcept -> bool override {
         auto id { static_cast<paramIds>(paramId) };
-        std::string stringValue;
-
-        auto to_string = [](auto n) {
-            std::ostringstream oss;
-            oss << std::setprecision(6) << n;
-            return oss.str();
-        };
+        std::string fmtString;
 
         switch (id) {
             case pmLevel: {
-                stringValue = to_string(value);
+                fmtString = std::format("{}", value);
 
             } break;
         }
 
-        strcpy_s(display, size, stringValue.c_str());
-
-        // std::cout << "paramsValueToText() - display: " << display << std::endl;
+        strcpy_s(display, size, fmtString.c_str());
 
         return true;
     }
@@ -118,7 +107,8 @@ struct Plugin final : public Helper {
 
         switch (id) {
             case pmLevel: {
-                *value = std::clamp(std::atof(display), 0.0, 1.0);
+                *value = std::clamp(std::stod(display), 0.0, 1.0);
+                std::cout << *value << std::endl;
                 return true;
             } break;
         }
