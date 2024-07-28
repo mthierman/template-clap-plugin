@@ -21,21 +21,32 @@ struct Window final : glow::window::Window {
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
                     webView.navigate("https://www.google.ca/");
-                    webView.put_bounds(m_hwnd.get());
+                    // glow::messages::send_message(m_hwnd.get(), WM_SIZE, 0, MAKELPARAM(200, 200));
+                    // webView.put_bounds(m_hwnd.get());
                 });
             });
 
             return 0;
         });
 
-        message(WM_SIZE, [this](glow::messages::wm_size message) {
-            glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
+        message(WM_NOTIFY, [this](glow::messages::wm message) {
+            glow::system::dbg(
+                "WM_NOTIFY: cx: {} cy: {}", LOWORD(message.lparam), HIWORD(message.lparam));
 
             ::SetWindowPos(m_hwnd.get(), nullptr, 0, 0, message.size().cx, message.size().cy, 0);
             webView.put_bounds(m_hwnd.get());
 
             return 0;
         });
+
+        // message(WM_SIZE, [this](glow::messages::wm_size message) {
+        //     glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
+
+        //     ::SetWindowPos(m_hwnd.get(), nullptr, 0, 0, message.size().cx, message.size().cy, 0);
+        //     webView.put_bounds(m_hwnd.get());
+
+        //     return 0;
+        // });
     }
 
     glow::webview::WebViewEnvironment webViewEnvironment;

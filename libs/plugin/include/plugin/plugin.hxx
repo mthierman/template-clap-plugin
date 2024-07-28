@@ -40,7 +40,7 @@ template <typename T, typename U> struct PluginHelper : public U {
     // clap_plugin_gui //
     //-----------------//
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        glow::system::dbg("guiIsApiSupported");
+        // glow::system::dbg("guiIsApiSupported");
 
         if (isFloating) {
             return false;
@@ -55,14 +55,8 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
-        glow::system::dbg("guiGetPreferredApi");
-
-        return false;
-    }
-
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        glow::system::dbg("guiCreate");
+        // glow::system::dbg("guiCreate");
 
         if (PLATFORM_WINDOWS) {
             m_window.create("PluginHelper", false);
@@ -73,11 +67,61 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiDestroy() noexcept -> void override { glow::system::dbg("guiDestroy"); }
+    auto guiSetScale(double scale) noexcept -> bool override {
+        // glow::system::dbg("guiSetScale: {}", scale);
+
+        if (PLATFORM_WINDOWS) {
+            m_window.m_scale = scale;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    auto guiCanResize() const noexcept -> bool override {
+        // glow::system::dbg("guiCanResize");
+
+        return true;
+    }
+
+    auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+        // glow::system::dbg("guiAdjustSize: {} x {}", *width, *height);
+
+        // if (PLATFORM_WINDOWS) {
+        //     return guiGetSize(width, height);
+        // }
+
+        return false;
+    }
+
+    auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
+        glow::system::dbg("guiSetSize: {} x {}", width, height);
+
+        if (PLATFORM_WINDOWS) {
+            glow::messages::send_message(
+                m_window.m_hwnd.get(), WM_NOTIFY, WM_APP, MAKELPARAM(width, height));
+
+            // return true;
+        }
+
+        return false;
+    }
+
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
+
+        if (PLATFORM_WINDOWS) {
+            // *width = 200;
+            // *height = 600;
+
+            // return true;
+        }
+
+        return false;
+    }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
-        glow::system::dbg("guiSetParent");
-
         if (PLATFORM_WINDOWS) {
             glow::system::dbg("PLATFORM_WINDOWS TRUE, reparenting..");
             ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
@@ -90,11 +134,8 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     auto guiShow() noexcept -> bool override {
-        glow::system::dbg("guiShow");
-
         if (PLATFORM_WINDOWS) {
-            // glow::window::show(m_window.m_hwnd.get());
-            ::ShowWindow(m_window.m_hwnd.get(), SW_SHOW);
+            glow::window::show(m_window.m_hwnd.get());
 
             return true;
         }
@@ -103,11 +144,8 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     auto guiHide() noexcept -> bool override {
-        glow::system::dbg("guiHide");
-
         if (PLATFORM_WINDOWS) {
-            // glow::window::hide(m_window.m_hwnd.get());
-            ::ShowWindow(m_window.m_hwnd.get(), SW_HIDE);
+            glow::window::hide(m_window.m_hwnd.get());
 
             return true;
         }
@@ -115,58 +153,9 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiSetScale(double scale) noexcept -> bool override {
-        glow::system::dbg("guiSetScale: {}", scale);
+    auto guiDestroy() noexcept -> void override { }
 
-        if (PLATFORM_WINDOWS) {
-            // m_window.m_scale = scale;
-
-            // return true;
-        }
-
-        return false;
-    }
-
-    auto guiCanResize() const noexcept -> bool override {
-        glow::system::dbg("guiCanResize");
-
-        return true;
-    }
-
-    auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-        glow::system::dbg("guiSetSize: {} x {}", width, height);
-
-        if (PLATFORM_WINDOWS) {
-            // glow::window::set_position(pluginWindow.m_hwnd.get(), 0, 0, width, height);
-            glow::messages::send_message(
-                m_window.m_hwnd.get(), WM_SIZE, 0, MAKELPARAM(width, height));
-
-            return true;
-        }
-
-        return false;
-    }
-
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
-
-        if (PLATFORM_WINDOWS) {
-            // *width = 600;
-            // *height = 600;
-
-            // return true;
-        }
-
-        return false;
-    }
-
-    auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::system::dbg("guiAdjustSize");
-
-        if (PLATFORM_WINDOWS) {
-            // return guiGetSize(width, height);
-        }
-
+    auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
     }
 
