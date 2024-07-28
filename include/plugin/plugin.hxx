@@ -81,13 +81,17 @@ struct Helper : public IgnoreNone {
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-        std::cout << "setSize: " << width << " x " << height << std::endl;
+        plugin::gui::setSize(width, height);
 
-        return false;
+        return true;
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         std::cout << "getSize: " << width << " x " << height << std::endl;
+        // *width = 200;
+        // *height = 200;
+
+        // return true;
 
         return false;
     }
