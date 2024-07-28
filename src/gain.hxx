@@ -19,39 +19,20 @@ struct Plugin final : public Helper {
     double level { 0.3 };
     plugin::ParameterToValue paramToValue;
 
-    auto handleEventFromGui(const clap_output_events_t* outputEvents) -> void {
-        std::cout << "handleEventFromGui" << std::endl;
+    // auto handleEvent(const clap_event_header_t* event) -> void {
+    //     std::cout << "handleEvent" << std::endl;
 
-        // bool uiAdjustedValues { false };
+    //     if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
+    //         return;
+    //     }
 
-        // *paramToValue[r.id] = r.value;
-        auto event { clap_event_param_value() };
-        // event.header.size = sizeof(clap_event_param_value);
-        // event.header.type = (uint16_t)CLAP_EVENT_PARAM_VALUE;
-        // event.header.time = 0;
-        // event.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
-        // event.header.flags = 0;
-        // event.param_id =
-        // event.value =
-
-        outputEvents->try_push(outputEvents, &(event.header));
-        // uiAdjustedValues = true;
-    }
-
-    auto handleInboundEvent(const clap_event_header_t* event) -> void {
-        std::cout << "handleInboundEvent" << std::endl;
-
-        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
-            return;
-        }
-
-        switch (event->type) {
-            case CLAP_EVENT_PARAM_VALUE: {
-                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-                *paramToValue[paramValue->param_id] = paramValue->value;
-            } break;
-        }
-    }
+    //     switch (event->type) {
+    //         case CLAP_EVENT_PARAM_VALUE: {
+    //             auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
+    //             *paramToValue[paramValue->param_id] = paramValue->value;
+    //         } break;
+    //     }
+    // }
 
     //-------------//
     // clap_plugin //
@@ -66,39 +47,20 @@ struct Plugin final : public Helper {
     auto startProcessing() noexcept -> bool override { return true; }
     auto stopProcessing() noexcept -> void override { }
     auto process(const clap_process* process) noexcept -> clap_process_status override {
-        if (process->audio_outputs_count <= 0) {
-            return CLAP_PROCESS_SLEEP;
-        }
+        return plugin::event::run_loop(process, [this](const clap_event_header* event) {
+            std::cout << "handleEvent" << std::endl;
 
-        // handleEventFromGui(process->out_events);
-
-        // auto out { process->audio_outputs[0].data32 };
-        // auto chans { process->audio_outputs->channel_count };
-
-        auto ev { process->in_events };
-        auto sz { ev->size(ev) };
-
-        const clap_event_header* nextEvent { nullptr };
-        clap_id nextEventIndex { 0 };
-        if (sz != 0) {
-            nextEvent = ev->get(ev, nextEventIndex);
-        }
-
-        for (uint32_t i { 0 }; i < process->frames_count; ++i) {
-            while (nextEvent && nextEvent->time == i) {
-                handleInboundEvent(nextEvent);
-                nextEventIndex++;
-                if (nextEventIndex >= sz) {
-                    nextEvent = nullptr;
-                } else {
-                    nextEvent = ev->get(ev, nextEventIndex);
-                }
+            if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
+                return;
             }
-        }
 
-        assert(!nextEvent);
-
-        return CLAP_PROCESS_SLEEP;
+            switch (event->type) {
+                case CLAP_EVENT_PARAM_VALUE: {
+                    auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
+                    *paramToValue[paramValue->param_id] = paramValue->value;
+                } break;
+            }
+        });
     }
     auto reset() noexcept -> void override { }
     auto onMainThread() noexcept -> void override { }
@@ -108,19 +70,9 @@ struct Plugin final : public Helper {
     //--------------------//
     // clap_plugin_params //
     //--------------------//
-    auto implementsParams() const noexcept -> bool override {
-        // std::cout << "implementsParams" << std::endl;
-
-        return true;
-    }
-    auto paramsCount() const noexcept -> uint32_t override {
-        // std::cout << "paramsCount" << std::endl;
-
-        return nParams;
-    }
+    auto implementsParams() const noexcept -> bool override { return true; }
+    auto paramsCount() const noexcept -> uint32_t override { return nParams; }
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
-        // std::cout << "paramsInfo" << std::endl;
-
         if (paramIndex >= nParams) {
             return false;
         }
@@ -141,12 +93,10 @@ struct Plugin final : public Helper {
         return true;
     }
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
-        // std::cout << "paramsValue" << std::endl;
-
         *value = *paramToValue[paramId];
 
-        std::cout << "paramsValue() - value: " << *value << std::endl;
-        std::cout << "paramsValue() - level: " << level << std::endl;
+        // std::cout << "paramsValue() - value: " << *value << std::endl;
+        // std::cout << "paramsValue() - level: " << level << std::endl;
 
         return true;
     }
@@ -172,7 +122,7 @@ struct Plugin final : public Helper {
 
         strcpy_s(display, size, stringValue.c_str());
 
-        std::cout << "paramsValueToText() - display: " << display << std::endl;
+        // std::cout << "paramsValueToText() - display: " << display << std::endl;
 
         return true;
     }
@@ -192,7 +142,6 @@ struct Plugin final : public Helper {
     }
     // auto paramsFlush(const clap_input_events* in,
     //                  const clap_output_events* out) noexcept -> void override {
-    //     std::cout << "paramsFlush" << std::endl;
 
     //     auto size { in->size(in) };
 
