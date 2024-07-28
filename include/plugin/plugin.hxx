@@ -66,9 +66,24 @@ struct Helper : public IgnoreNone {
         return plugin::gui::create();
     }
 
+    auto guiDestroy() noexcept -> void override { plugin::gui::destroy(); }
+
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         return plugin::gui::setParent(window);
     }
+
+    // virtual bool guiSetScale(double scale) noexcept { return false; }
+    // virtual bool guiShow() noexcept { return false; }
+    // virtual bool guiHide() noexcept { return false; }
+    // virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
+    // virtual bool guiCanResize() const noexcept { return false; }
+    // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
+    // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
+    //     return guiGetSize(width, height);
+    // }
+    // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
+    // virtual void guiSuggestTitle(const char* title) noexcept { }
+    // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
 };
 } // namespace plugin
 

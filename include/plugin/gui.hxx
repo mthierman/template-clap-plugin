@@ -9,6 +9,8 @@
 namespace plugin::gui {
 auto create() -> bool { return true; }
 
+auto destroy() -> void { }
+
 auto setParent(const clap_window* window) -> bool {
     if (PLATFORM_WINDOWS) {
         return true;

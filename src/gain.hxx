@@ -125,28 +125,6 @@ struct Plugin final : public plugin::Helper {
     //-----------------//
     auto implementsGui() const noexcept -> bool override { return true; }
 
-
-    auto guiDestroy() noexcept -> void override {
-        std::cout << "guiDestroy" << std::endl;
-
-        if (PLATFORM_WINDOWS) {
-            std::cout << "PLATFORM_WINDOWS" << std::endl;
-        }
-    }
-
-    // virtual bool guiSetScale(double scale) noexcept { return false; }
-    // virtual bool guiShow() noexcept { return false; }
-    // virtual bool guiHide() noexcept { return false; }
-    // virtual bool guiGetSize(uint32_t* width, uint32_t* height) noexcept { return false; }
-    // virtual bool guiCanResize() const noexcept { return false; }
-    // virtual bool guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept { return false; }
-    // virtual bool guiAdjustSize(uint32_t* width, uint32_t* height) noexcept {
-    //     return guiGetSize(width, height);
-    // }
-    // virtual bool guiSetSize(uint32_t width, uint32_t height) noexcept { return false; }
-    // virtual void guiSuggestTitle(const char* title) noexcept { }
-    // virtual bool guiSetTransient(const clap_window* window) noexcept { return false; }
-
     //-------------------------//
     // clap_plugin_audio_ports //
     //-------------------------//
