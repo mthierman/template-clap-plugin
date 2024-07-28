@@ -71,7 +71,20 @@ struct Helper : public IgnoreNone {
 };
 
 namespace descriptor {
-    auto make(Features& features) -> clap_plugin_descriptor;
+    template <typename T> auto make() -> clap_plugin_descriptor {
+        T::features.push_back("\n");
+
+        return { .clap_version { CLAP_VERSION },
+                 .id { PLUGIN_ID },
+                 .name { PLUGIN_NAME },
+                 .vendor { PLUGIN_VENDOR },
+                 .url { PLUGIN_URL },
+                 .manual_url { PLUGIN_MANUAL_URL },
+                 .support_url { PLUGIN_SUPPORT_URL },
+                 .version { PLUGIN_VERSION },
+                 .description { PLUGIN_DESCRIPTION },
+                 .features { T::features.data() } };
+    }
 } // namespace descriptor
 
 namespace factory {

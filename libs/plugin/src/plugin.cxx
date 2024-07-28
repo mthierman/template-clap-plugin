@@ -3,23 +3,6 @@
 #include <cassert>
 
 namespace plugin {
-namespace descriptor {
-    auto make(Features& features) -> clap_plugin_descriptor {
-        features.push_back(nullptr);
-
-        return { .clap_version { CLAP_VERSION },
-                 .id { PLUGIN_ID },
-                 .name { PLUGIN_NAME },
-                 .vendor { PLUGIN_VENDOR },
-                 .url { PLUGIN_URL },
-                 .manual_url { PLUGIN_MANUAL_URL },
-                 .support_url { PLUGIN_SUPPORT_URL },
-                 .version { PLUGIN_VERSION },
-                 .description { PLUGIN_DESCRIPTION },
-                 .features { features.data() } };
-    }
-} // namespace descriptor
-
 namespace factory {
     auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return 1; }
 
