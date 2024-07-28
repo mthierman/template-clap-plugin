@@ -39,9 +39,6 @@ struct Plugin final : public Helper {
     //--------------------//
     // clap_plugin_params //
     //--------------------//
-    clap_id nParams { 1 };
-    double level { 0.3 };
-    plugin::ParameterToValue paramToValue;
     auto handleEvent(const clap_event_header_t* event) -> void {
         if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
             return;
@@ -123,15 +120,13 @@ struct Plugin final : public Helper {
         }
     }
 
-    // This method is meant for implementing contract checking, it isn't part of CLAP.
-    // The default implementation will be slow, so consider overriding it with a faster one.
-    // Returns -1 if the parameter isn't found.
-    // auto getParamIndexForParamId(clap_id paramId) const noexcept -> int32_t override { }
+    double level { 0.3 };
+    clap_id nParams { 1 };
+    plugin::ParameterToValue paramToValue;
+
     auto isValidParamId(clap_id paramId) const noexcept -> bool override {
         return paramToValue.find(paramId) != paramToValue.end();
     }
-    // auto getParamInfoForParamId(clap_id paramId,
-    //                             clap_param_info* info) const noexcept -> bool override { }
 
     //-----------------//
     // clap_plugin_gui //
