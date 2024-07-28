@@ -36,7 +36,7 @@ struct Helper : public IgnoreNone {
     //-----------------//
     // clap_plugin_gui //
     //-----------------//
-    // auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
+    auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override;
     // auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override;
     // auto guiCreate(const char* api, bool isFloating) noexcept -> bool override;
     // auto guiDestroy() noexcept -> void override;
@@ -56,18 +56,18 @@ struct Helper : public IgnoreNone {
     //-------------------------//
     // clap_plugin_audio_ports //
     //-------------------------//
-    // auto audioPortsCount(bool isInput) const noexcept -> uint32_t override;
-    // auto audioPortsInfo(uint32_t index,
-    //                     bool isInput,
-    //                     clap_audio_port_info* info) const noexcept -> bool override;
+    auto audioPortsCount(bool isInput) const noexcept -> uint32_t override;
+    auto audioPortsInfo(uint32_t index,
+                        bool isInput,
+                        clap_audio_port_info* info) const noexcept -> bool override;
 
     //------------------------//
     // clap_plugin_note_ports //
     //------------------------//
-    // auto notePortsCount(bool isInput) const noexcept -> uint32_t override;
-    // auto notePortsInfo(uint32_t index,
-    //                    bool isInput,
-    //                    clap_note_port_info* info) const noexcept -> bool override;
+    auto notePortsCount(bool isInput) const noexcept -> uint32_t override;
+    auto notePortsInfo(uint32_t index,
+                       bool isInput,
+                       clap_note_port_info* info) const noexcept -> bool override;
 };
 
 namespace descriptor {

@@ -35,19 +35,19 @@ namespace plugin {
 //-----------------//
 // clap_plugin_gui //
 //-----------------//
-// auto Helper::guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool {
-//     // if (isFloating) {
-//     //     return false;
-//     // }
+auto Helper::guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool {
+    if (isFloating) {
+        return false;
+    }
 
-//     // if (WIN32) {
-//     //     if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
-//     //         return true;
-//     //     }
-//     // }
+    if (WIN32) {
+        if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
+            return true;
+        }
+    }
 
-//     return false;
-// }
+    return false;
+}
 
 // auto Helper::guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool {
 //     return false;
