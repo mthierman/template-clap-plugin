@@ -9,16 +9,19 @@
 
 namespace plugin {
 #if PLATFORM_WINDOWS
-struct PluginWindow final : glow::window::Window {
-    PluginWindow() {
-        message(WM_CREATE, [this](glow::messages::wm_create message) {
+struct Window final : glow::window::Window {
+    Window() {
+        message(WM_CREATE, [](glow::messages::wm_create message) {
             glow::system::dbg("WM_CREATE");
 
             return 0;
         });
 
-        message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
+        message(WM_SIZE, [this, hwnd = m_hwnd.get()](glow::messages::wm_size message) {
             glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
+
+            // ::SetWindowPos(hwnd, nullptr, 0, 0, message.size().cx, message.size().cy, 0);
+            // webView.put_bounds(hwnd);
 
             return 0;
         });

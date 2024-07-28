@@ -65,20 +65,18 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiCreate");
 
         if (PLATFORM_WINDOWS) {
-            m_window.create("plugin", false);
-            // glow::window::show(m_window.m_hwnd.get());
+            m_window.create("PluginHelper", false);
 
-            // webViewEnvironment.m_userDataFolder
-            //     = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin"
-            //     });
-            // std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+            m_window.webViewEnvironment.m_userDataFolder
+                = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+            std::cout << m_window.webViewEnvironment.m_userDataFolder.string() << std::endl;
 
-            // webViewEnvironment.create([hwnd = pluginWindow.m_hwnd.get()]() {
-            //     webView.create(webViewEnvironment, hwnd, [hwnd]() {
-            //         webView.navigate("https://www.google.ca/");
-            //         webView.put_bounds(hwnd);
-            //     });
-            // });
+            m_window.webViewEnvironment.create([this, hwnd = m_window.m_hwnd.get()]() {
+                m_window.webView.create(m_window.webViewEnvironment, hwnd, [this, hwnd]() {
+                    m_window.webView.navigate("https://www.google.ca/");
+                    m_window.webView.put_bounds(hwnd);
+                });
+            });
 
             return true;
         }
@@ -92,6 +90,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiSetParent");
 
         if (PLATFORM_WINDOWS) {
+            glow::system::dbg("PLATFORM_WINDOWS TRUE, reparenting..");
             ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
             glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
 
@@ -105,7 +104,8 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiShow");
 
         if (PLATFORM_WINDOWS) {
-            glow::window::show(m_window.m_hwnd.get());
+            // glow::window::show(m_window.m_hwnd.get());
+            ::ShowWindow(m_window.m_hwnd.get(), SW_SHOW);
 
             return true;
         }
@@ -117,7 +117,8 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiHide");
 
         if (PLATFORM_WINDOWS) {
-            glow::window::hide(m_window.m_hwnd.get());
+            // glow::window::hide(m_window.m_hwnd.get());
+            ::ShowWindow(m_window.m_hwnd.get(), SW_HIDE);
 
             return true;
         }
@@ -129,9 +130,9 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiSetScale: {}", scale);
 
         if (PLATFORM_WINDOWS) {
-            m_window.m_scale = scale;
+            // m_window.m_scale = scale;
 
-            return true;
+            // return true;
         }
 
         return false;
@@ -140,11 +141,7 @@ template <typename T, typename U> struct PluginHelper : public U {
     auto guiCanResize() const noexcept -> bool override {
         glow::system::dbg("guiCanResize");
 
-        if (PLATFORM_WINDOWS) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
@@ -152,7 +149,10 @@ template <typename T, typename U> struct PluginHelper : public U {
 
         if (PLATFORM_WINDOWS) {
             // glow::window::set_position(pluginWindow.m_hwnd.get(), 0, 0, width, height);
-            // return true;
+            glow::messages::send_message(
+                m_window.m_hwnd.get(), WM_SIZE, 0, MAKELPARAM(width, height));
+
+            return true;
         }
 
         return false;
@@ -162,10 +162,10 @@ template <typename T, typename U> struct PluginHelper : public U {
         glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
         if (PLATFORM_WINDOWS) {
-            *width = 600;
-            *height = 600;
+            // *width = 600;
+            // *height = 600;
 
-            return true;
+            // return true;
         }
 
         return false;
@@ -174,7 +174,11 @@ template <typename T, typename U> struct PluginHelper : public U {
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         glow::system::dbg("guiAdjustSize");
 
-        return guiGetSize(width, height);
+        if (PLATFORM_WINDOWS) {
+            // return guiGetSize(width, height);
+        }
+
+        return false;
     }
 
     // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
@@ -216,7 +220,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         return true;
     }
 
-    plugin::PluginWindow m_window;
+    plugin::Window m_window;
     plugin::Config m_config;
 };
 
