@@ -24,8 +24,8 @@ struct Window final : glow::window::Window {
         });
 
         message(WM_SIZE, [hwnd = m_hwnd.get()](glow::messages::wm_size message) {
-            glow::system::dbg("WM_SIZE");
-            // glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
+            // glow::system::dbg("WM_SIZE");
+            glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
 
             return 0;
         });
@@ -119,10 +119,10 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiSetParent");
 
         if (PLATFORM_WINDOWS) {
-            // ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
-            // glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
+            ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
+            glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
 
-            // return true;
+            return true;
         }
 
         return false;
@@ -132,9 +132,9 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiShow");
 
         if (PLATFORM_WINDOWS) {
-            // glow::window::show(m_window.m_hwnd.get());
+            glow::window::show(m_window.m_hwnd.get());
 
-            // return true;
+            return true;
         }
 
         return false;
@@ -144,9 +144,9 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiHide");
 
         if (PLATFORM_WINDOWS) {
-            // glow::window::hide(m_window.m_hwnd.get());
+            glow::window::hide(m_window.m_hwnd.get());
 
-            // return true;
+            return true;
         }
 
         return false;
@@ -156,8 +156,9 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiSetScale: {}", scale);
 
         if (PLATFORM_WINDOWS) {
-            // m_window.m_scale = scale;
-            // return true;
+            m_window.m_scale = scale;
+
+            return true;
         }
 
         return false;
@@ -167,7 +168,7 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiCanResize");
 
         if (PLATFORM_WINDOWS) {
-            // return true;
+            return true;
         }
 
         return false;
@@ -188,10 +189,10 @@ template <typename T> struct Helper : public IgnoreNone {
         glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
         if (PLATFORM_WINDOWS) {
-            // *width = 200;
-            // *height = 200;
+            *width = 600;
+            *height = 600;
 
-            // return true;
+            return true;
         }
 
         return false;
@@ -200,9 +201,7 @@ template <typename T> struct Helper : public IgnoreNone {
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         glow::system::dbg("guiAdjustSize");
 
-        // return guiGetSize(width, height);
-
-        return false;
+        return guiGetSize(width, height);
     }
 
     // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
