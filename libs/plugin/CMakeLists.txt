@@ -49,29 +49,14 @@ target_compile_features(
 
 target_sources(
     clap
+    PRIVATE "src/gui_windows.cxx"
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
            "include"
-    )
-
-target_sources(
-    clap
-    PUBLIC FILE_SET
-           HEADERS
-           BASE_DIRS
            "${clap_SOURCE_DIR}/include"
-    )
-
-target_sources(
-    clap
-    PUBLIC FILE_SET
-           HEADERS
-           BASE_DIRS
            "${clap-helpers_SOURCE_DIR}/include"
     )
-
-target_sources(clap PRIVATE "src/gui_windows.cxx")
 
 target_link_libraries(clap PUBLIC glow::glow)
 
