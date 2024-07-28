@@ -49,6 +49,7 @@ target_compile_features(
 
 target_sources(
     plugin
+    PRIVATE "src/plugin.cxx"
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
@@ -61,11 +62,6 @@ if(CMAKE_SYSTEM_NAME
    STREQUAL
    "Windows"
     )
-    target_sources(
-        plugin PRIVATE "src/plugin.cxx"
-                       # "src/gui_win32.cxx"
-        )
-
     target_link_libraries(plugin PUBLIC glow::glow)
 
     target_compile_options(

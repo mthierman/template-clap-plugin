@@ -218,7 +218,9 @@ namespace descriptor {
 } // namespace descriptor
 
 namespace factory {
-    auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t;
+    template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
+        return 1;
+    }
 
     template <typename T>
     auto getPluginDescriptor(const clap_plugin_factory* factory,
@@ -238,7 +240,7 @@ namespace factory {
         // s_descriptor = &T::descriptor;
 
         return {
-            .get_plugin_count { getPluginCount },
+            .get_plugin_count { getPluginCount<T> },
             .get_plugin_descriptor { getPluginDescriptor<T> },
             .create_plugin { createPlugin<T> },
         };
@@ -246,8 +248,9 @@ namespace factory {
 } // namespace factory
 
 namespace entry {
-    auto init(const char* plugin_path) -> bool;
-    auto deInit(void) -> void;
+    template <typename T> auto init(const char* plugin_path) -> bool { return true; }
+
+    template <typename T> auto deInit(void) -> void { }
 
     template <typename T> auto getFactory(const char* factory_id) -> const void* {
         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &T::factory : nullptr;
@@ -255,8 +258,8 @@ namespace entry {
 
     template <typename T> auto make() -> clap_plugin_entry {
         return { .clap_version { CLAP_VERSION },
-                 .init { init },
-                 .deinit { deInit },
+                 .init { init<T> },
+                 .deinit { deInit<T> },
                  .get_factory { getFactory<T> } };
     }
 }; // namespace entry
@@ -264,6 +267,35 @@ namespace entry {
 namespace event {
     auto run_loop(const clap_process* process,
                   std::function<void(const clap_event_header* event)> eventHandler)
-        -> clap_process_status;
+        -> clap_process_status {
+        if (process->audio_outputs_count <= 0) {
+            return CLAP_PROCESS_SLEEP;
+        }
+
+        auto ev { process->in_events };
+        auto sz { ev->size(ev) };
+
+        const clap_event_header* nextEvent { nullptr };
+        clap_id nextEventIndex { 0 };
+        if (sz != 0) {
+            nextEvent = ev->get(ev, nextEventIndex);
+        }
+
+        for (uint32_t i { 0 }; i < process->frames_count; ++i) {
+            while (nextEvent && nextEvent->time == i) {
+                eventHandler(nextEvent);
+                nextEventIndex++;
+                if (nextEventIndex >= sz) {
+                    nextEvent = nullptr;
+                } else {
+                    nextEvent = ev->get(ev, nextEventIndex);
+                }
+            }
+        }
+
+        assert(!nextEvent);
+
+        return CLAP_PROCESS_SLEEP;
+    }
 } // namespace event
 } // namespace plugin
