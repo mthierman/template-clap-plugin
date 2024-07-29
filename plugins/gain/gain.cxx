@@ -5,8 +5,10 @@ plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATUR
 clap_plugin_descriptor descriptor { plugin::descriptor::make(features) };
 
 struct Plugin final : public plugin::PluginHelper {
-    explicit Plugin(const clap_host* host)
-        : plugin::PluginHelper(&descriptor, host) {
+    explicit Plugin(const clap_plugin_descriptor* desc, const clap_host* host)
+        : plugin::PluginHelper(desc, host) {
+        glow::system::dbg(
+            "name: {} id: {}, vendor: {}", descriptor.name, descriptor.id, descriptor.vendor);
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -119,8 +121,8 @@ struct Plugin final : public plugin::PluginHelper {
 
 clap_plugin_factory factory { plugin::factory::make<Plugin>(&descriptor) };
 clap_plugin_entry entry { plugin::entry::make(&factory) };
+} // namespace gain
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { entry };
+const CLAP_EXPORT clap_plugin_entry clap_entry { gain::entry };
 }
-} // namespace gain

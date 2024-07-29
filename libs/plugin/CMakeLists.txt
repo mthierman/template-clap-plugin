@@ -33,10 +33,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(clap-helpers)
 
-add_library(
-    plugin
-    INTERFACE
-    )
+add_library(plugin)
 
 add_library(
     plugin::plugin
@@ -46,53 +43,54 @@ add_library(
 
 target_compile_features(
     plugin
-    INTERFACE c_std_17
-              cxx_std_23
+    PUBLIC c_std_17
+           cxx_std_23
     )
 
 target_sources(
     plugin
-    PRIVATE "include/plugin/plugin.hxx"
+    PRIVATE "src/plugin.cxx"
+            "include/plugin/plugin.hxx"
             "include/plugin/win32.hxx"
-    INTERFACE FILE_SET
-              HEADERS
-              BASE_DIRS
-              "include"
-              "${clap_SOURCE_DIR}/include"
-              "${clap-helpers_SOURCE_DIR}/include"
+    PUBLIC FILE_SET
+           HEADERS
+           BASE_DIRS
+           "include"
+           "${clap_SOURCE_DIR}/include"
+           "${clap-helpers_SOURCE_DIR}/include"
     )
 
 if(CMAKE_SYSTEM_NAME
    STREQUAL
    "Windows"
     )
-    target_link_libraries(plugin INTERFACE glow::glow)
+    target_link_libraries(plugin PUBLIC glow::glow)
 
     target_compile_options(
         plugin
-        INTERFACE $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
-                  /W4
-                  /WX
-                  /wd4100
-                  /wd4127
-                  /utf-8
-                  /bigobj
-                  /diagnostics:caret
-                  /Zc:__cplusplus
-                  >
-                  $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
-                  -Wall
-                  -Werror
-                  -Wextra
-                  -Wpedantic
-                  -Wno-unused-parameter
-                  -Wno-braced-scalar-init
-                  >
+        PUBLIC $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
+               /W4
+               /WX
+               /wd4100
+               /wd4127
+               /utf-8
+               /bigobj
+               /diagnostics:caret
+               /Zc:__cplusplus
+               >
+               $<$<CXX_COMPILER_FRONTEND_VARIANT:GNU>:
+               -Wall
+               -Werror
+               -Wextra
+               -Wpedantic
+               -Wno-unused-parameter
+               -Wno-braced-scalar-init
+               >
         )
 
     target_link_options(
         plugin
-        INTERFACE
+        PUBLIC
         $<$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>:
         /WX
         >
@@ -103,10 +101,10 @@ if(CMAKE_SYSTEM_NAME
 
     target_compile_definitions(
         plugin
-        INTERFACE NOMINMAX
-                  WIN32_LEAN_AND_MEAN
-                  PLATFORM_WINDOWS=1
-                  OPERATING_SYSTEM="Windows"
+        PUBLIC NOMINMAX
+               WIN32_LEAN_AND_MEAN
+               PLATFORM_WINDOWS=1
+               OPERATING_SYSTEM="Windows"
         )
 endif()
 
@@ -155,14 +153,14 @@ function(clap_add_plugin)
 
     target_compile_definitions(
         plugin
-        INTERFACE PLUGIN_ID="${PLUGIN_ID}"
-                  PLUGIN_NAME="${PLUGIN_NAME}"
-                  PLUGIN_VENDOR="${PLUGIN_VENDOR}"
-                  PLUGIN_URL="${PLUGIN_URL}"
-                  PLUGIN_MANUAL_URL="${PLUGIN_MANUAL_URL}"
-                  PLUGIN_SUPPORT_URL="${PLUGIN_SUPPORT_URL}"
-                  PLUGIN_VERSION="${PLUGIN_VERSION}"
-                  PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
+        PUBLIC PLUGIN_ID="${PLUGIN_ID}"
+               PLUGIN_NAME="${PLUGIN_NAME}"
+               PLUGIN_VENDOR="${PLUGIN_VENDOR}"
+               PLUGIN_URL="${PLUGIN_URL}"
+               PLUGIN_MANUAL_URL="${PLUGIN_MANUAL_URL}"
+               PLUGIN_SUPPORT_URL="${PLUGIN_SUPPORT_URL}"
+               PLUGIN_VERSION="${PLUGIN_VERSION}"
+               PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
         )
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})

@@ -12,13 +12,14 @@
 #endif
 
 namespace plugin {
-using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                     clap::helpers::CheckingLevel::Maximal>;
+using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                     clap::helpers::CheckingLevel::None>;
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
 
 struct PluginHelper : public Helper {
-    using Helper::Helper;
+    PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
+        : Helper(desc, host) { }
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
@@ -172,7 +173,7 @@ namespace factory {
     auto createPlugin(const struct clap_plugin_factory* factory,
                       const clap_host_t* host,
                       const char* plugin_id) -> const clap_plugin* {
-        auto plugin { new T(host) };
+        auto plugin { new T(s_descriptor, host) };
         return plugin->clapPlugin();
     }
 
