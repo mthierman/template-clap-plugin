@@ -51,7 +51,6 @@ target_sources(
     plugin
     PRIVATE "include/plugin/plugin.hxx"
             "include/plugin/win32.hxx"
-            # "src/plugin.cxx"
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
