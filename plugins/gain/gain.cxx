@@ -12,9 +12,6 @@ struct Plugin final : public plugin::PluginHelper {
     }
     ~Plugin() { }
 
-    inline static const auto descriptor { plugin::make_descriptor<Plugin>() };
-    inline static const auto factory { plugin::make_factory<Plugin>() };
-
     // implements
     auto implementsGui() const noexcept -> bool override { return true; }
     auto implementsParams() const noexcept -> bool override { return true; }

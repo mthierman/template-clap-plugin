@@ -21,39 +21,51 @@ using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
 using Entry = clap_plugin_entry;
 
-namespace features {
-    auto make() -> std::vector<std::string> {
-        auto file(std::istringstream(PLUGIN_FEATURES));
-        std::string buffer;
-        int count { 0 };
-        std::vector<std::string> features;
+auto make_features() -> std::vector<std::string> {
+    auto file(std::istringstream(PLUGIN_FEATURES));
+    std::string buffer;
+    int count { 0 };
+    std::vector<std::string> features;
 
-        while (std::getline(file, buffer, ',')) {
-            features.push_back(buffer);
-            count++;
-        }
-
-        return features;
+    while (std::getline(file, buffer, ',')) {
+        features.push_back(buffer);
+        count++;
     }
 
-    auto get(const std::vector<std::string>& vec) -> std::vector<const char*> {
-        std::vector<const char*> strings;
-        for (int i = 0; i < vec.size(); ++i) {
-            strings.push_back(vec[i].c_str());
-        }
+    return features;
+}
 
-        strings.push_back(nullptr);
-
-        return strings;
+auto get_features(const std::vector<std::string>& vec) -> std::vector<const char*> {
+    std::vector<const char*> strings;
+    for (int i = 0; i < vec.size(); ++i) {
+        strings.push_back(vec[i].c_str());
     }
-} // namespace features
+
+    strings.push_back(nullptr);
+
+    return strings;
+}
+
+auto make_descriptor(const plugin::Features& features) -> Descriptor {
+    return { .clap_version { CLAP_VERSION },
+             .id { PLUGIN_ID },
+             .name { PLUGIN_NAME },
+             .vendor { PLUGIN_VENDOR },
+             .url { PLUGIN_URL },
+             .manual_url { PLUGIN_MANUAL_URL },
+             .support_url { PLUGIN_SUPPORT_URL },
+             .version { PLUGIN_VERSION },
+             .description { PLUGIN_DESCRIPTION },
+             .features { features.data() } };
+}
 
 struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
 
-    inline static std::vector<std::string> featureStrings { features::make() };
-    inline static plugin::Features features { features::get(featureStrings) };
+    inline static std::vector<std::string> featureStrings { make_features() };
+    inline static plugin::Features features { get_features(featureStrings) };
+    inline static const auto descriptor { make_descriptor(features) };
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
@@ -193,21 +205,6 @@ struct PluginHelper : public Helper {
     plugin::ParameterToValue paramToValue;
     plugin::Window m_window;
 };
-
-template <typename T> auto make_descriptor() -> Descriptor {
-    T::features.push_back(nullptr);
-
-    return { .clap_version { CLAP_VERSION },
-             .id { PLUGIN_ID },
-             .name { PLUGIN_NAME },
-             .vendor { PLUGIN_VENDOR },
-             .url { PLUGIN_URL },
-             .manual_url { PLUGIN_MANUAL_URL },
-             .support_url { PLUGIN_SUPPORT_URL },
-             .version { PLUGIN_VERSION },
-             .description { PLUGIN_DESCRIPTION },
-             .features { T::features.data() } };
-}
 
 namespace factory {
     template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
