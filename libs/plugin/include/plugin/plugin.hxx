@@ -30,36 +30,42 @@ struct PluginHelper : public Helper {
 
     // gui
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        if (isFloating) {
-            return false;
-        }
+        // if (isFloating) {
+        //     return false;
+        // }
 
-        if (PLATFORM_WINDOWS) {
-            if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
-                return true;
-            }
-        }
+        // if (PLATFORM_WINDOWS) {
+        //     if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
+        //         return true;
+        //     }
+        // }
 
-        return false;
+        // return false;
+
+        return true;
     }
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        if (PLATFORM_WINDOWS) {
-            m_window = std::make_unique<plugin::Window>();
+        // if (PLATFORM_WINDOWS) {
+        //     m_window = std::make_unique<plugin::Window>();
 
-            return true;
-        }
+        //     return true;
+        // }
 
-        return false;
+        // return false;
+
+        m_window = std::make_unique<plugin::Window>();
+        glow::window::set_position(m_window->m_hwnd.get(), 0, 0, 200, 200);
+        return true;
     }
 
-    auto guiSetScale(double scale) noexcept -> bool override { return false; }
+    auto guiSetScale(double scale) noexcept -> bool override { return true; }
 
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        // return guiSetSize(*width, *height);
-        return false;
+        return guiSetSize(*width, *height);
+        // return false;
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
@@ -72,11 +78,14 @@ struct PluginHelper : public Helper {
         return true;
     }
 
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override { return false; }
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+        glow::window::set_position(m_window->m_hwnd.get(), 0, 0, *width, *height);
+
+        return true;
+    }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::set_style(m_window->m_hwnd.get(), WS_CHILD);
             glow::window::set_parent(m_window->m_hwnd.get(), (::HWND)window->win32);
 
             return true;
@@ -108,7 +117,7 @@ struct PluginHelper : public Helper {
     auto guiDestroy() noexcept -> void override { m_window.reset(); }
 
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
-        return false;
+        return true;
     }
 
     // audio ports
