@@ -194,7 +194,7 @@ namespace factory {
     auto createPlugin(const struct clap_plugin_factory* factory,
                       const clap_host_t* host,
                       const char* plugin_id) -> const clap_plugin* {
-        auto plugin { new T(&T::descriptor, host) };
+        auto plugin { new T(host) };
         return plugin->clapPlugin();
     }
 } // namespace factory
