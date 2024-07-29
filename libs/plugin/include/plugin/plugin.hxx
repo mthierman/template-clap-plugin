@@ -32,7 +32,7 @@ using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
 using Entry = clap_plugin_entry;
 
-using ParameterToValue = std::unordered_map<clap_id, double*>;
+using Parameters = std::unordered_map<clap_id, double*>;
 
 namespace factory {
     template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
@@ -90,7 +90,9 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
                                       .get_factory { entry::getFactory<T> } };
 
     // params
-    auto paramsCount() const noexcept -> uint32_t override { return nParams; }
+    auto paramsCount() const noexcept -> uint32_t override {
+        return static_cast<uint32_t>(m_params.size());
+    }
 
     // gui
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
@@ -223,8 +225,7 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
         return true;
     }
 
-    clap_id nParams { 0 };
-    plugin::ParameterToValue paramToValue;
+    plugin::Parameters m_params;
     plugin::Window m_window;
 };
 
