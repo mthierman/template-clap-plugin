@@ -15,10 +15,24 @@
 #include <config/config.hxx>
 
 namespace plugin {
+namespace helper {
+    using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                               clap::helpers::CheckingLevel::Maximal>;
+    using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                               clap::helpers::CheckingLevel::Minimal>;
+    using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                                clap::helpers::CheckingLevel::None>;
+    using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                            clap::helpers::CheckingLevel::Maximal>;
+    using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                            clap::helpers::CheckingLevel::Minimal>;
+    using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                             clap::helpers::CheckingLevel::None>;
+}
+
 using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                      clap::helpers::CheckingLevel::None>;
 using ParameterToValue = std::unordered_map<clap_id, double*>;
-using Features = std::vector<const char*>;
 using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
 using Entry = clap_plugin_entry;
@@ -251,4 +265,5 @@ namespace event {
         return CLAP_PROCESS_SLEEP;
     }
 } // namespace event
+} // namespace plugin
 } // namespace plugin
