@@ -7,8 +7,7 @@ namespace plugins::gain {
 struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> {
     explicit Plugin(const clap_host* host)
         : plugin::PluginHelper<Plugin, plugin::TerminateMax>(&descriptor, host) {
-        paramToValue[pmLevel] = &level;
-        nParams = static_cast<clap_id>(paramToValue.size());
+        m_params[pmLevel] = &level;
     }
     ~Plugin() { }
 
@@ -26,7 +25,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
 
     // params
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
-        if (paramIndex >= nParams) {
+        if (paramIndex >= paramsCount()) {
             return false;
         }
 
@@ -47,7 +46,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     }
 
     auto paramsValue(clap_id paramId, double* value) noexcept -> bool override {
-        *value = *paramToValue[paramId];
+        *value = *m_params[paramId];
 
         return true;
     }
@@ -96,7 +95,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     }
 
     auto isValidParamId(clap_id paramId) const noexcept -> bool override {
-        return paramToValue.find(paramId) != paramToValue.end();
+        return m_params.find(paramId) != m_params.end();
     }
 
     // events
@@ -108,7 +107,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
         switch (event->type) {
             case CLAP_EVENT_PARAM_VALUE: {
                 auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-                *paramToValue[paramValue->param_id] = paramValue->value;
+                *m_params[paramValue->param_id] = paramValue->value;
             } break;
         }
     }
