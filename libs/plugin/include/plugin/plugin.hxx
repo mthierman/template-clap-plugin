@@ -13,8 +13,6 @@
 #endif
 
 #include <config/config.hxx>
-// #include <array>
-// auto features { std::to_array({ "audio-effect", "utility", "test" }) };
 
 namespace plugin {
 using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
