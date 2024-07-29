@@ -150,13 +150,6 @@ function(clap_add_plugin)
         PLUGIN_FEATURES
         )
 
-    configure_file(
-        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/config.hxx
-        ${CMAKE_CURRENT_BINARY_DIR}/include/config/config.hxx
-        )
-
-    target_include_directories(plugin INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/include)
-
     if(NOT
        PLUGIN_NAME
         )
@@ -175,17 +168,12 @@ function(clap_add_plugin)
         message(FATAL_ERROR "Plugin ID was not set")
     endif()
 
-    add_library(
-        ${PLUGIN_NAME}
-        MODULE
+    configure_file(
+        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/include/config/config.hxx
         )
 
-    list(
-        JOIN
-        PLUGIN_FEATURES
-        ","
-        PLUGIN_FEATURE_LIST
-        )
+    target_include_directories(plugin INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/include)
 
     target_compile_definitions(
         plugin
@@ -198,6 +186,18 @@ function(clap_add_plugin)
                   PLUGIN_VERSION="${PLUGIN_VERSION}"
                   PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
                   PLUGIN_FEATURES="${PLUGIN_FEATURE_LIST}"
+        )
+
+    add_library(
+        ${PLUGIN_NAME}
+        MODULE
+        )
+
+    list(
+        JOIN
+        PLUGIN_FEATURES
+        ","
+        PLUGIN_FEATURE_LIST
         )
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
