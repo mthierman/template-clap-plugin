@@ -118,6 +118,6 @@ struct Plugin final : public plugin::PluginHelper<Plugin> {
 };
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { Plugin::entry };
+const CLAP_EXPORT plugin::Entry clap_entry { Plugin::entry };
 }
 } // namespace plugins::gain
