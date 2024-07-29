@@ -51,30 +51,6 @@ namespace entry {
     }
 }; // namespace entry
 
-auto make_features(const std::vector<std::string>& featureStrings) -> Features {
-    std::vector<const char*> features;
-    for (int i = 0; i < featureStrings.size(); ++i) {
-        features.push_back(featureStrings[i].c_str());
-    }
-
-    features.push_back(nullptr);
-
-    return features;
-}
-
-auto make_descriptor(const plugin::Features& features) -> Descriptor {
-    return { .clap_version { CLAP_VERSION },
-             .id { PLUGIN_ID },
-             .name { PLUGIN_NAME },
-             .vendor { PLUGIN_VENDOR },
-             .url { PLUGIN_URL },
-             .manual_url { PLUGIN_MANUAL_URL },
-             .support_url { PLUGIN_SUPPORT_URL },
-             .version { PLUGIN_VERSION },
-             .description { PLUGIN_DESCRIPTION },
-             .features { features.data() } };
-}
-
 template <typename T> auto make_factory() -> Factory {
     return {
         .get_plugin_count { factory::getPluginCount<T> },
@@ -107,10 +83,34 @@ template <typename T> struct PluginHelper : public Helper {
 
         return features;
     }();
-    inline static auto features { make_features(featureStrings) };
-    inline static const auto descriptor { make_descriptor(features) };
+
+    inline static auto features { []() {
+        std::vector<const char*> features;
+        for (int i = 0; i < featureStrings.size(); ++i) {
+            features.push_back(featureStrings[i].c_str());
+        }
+
+        features.push_back(nullptr);
+
+        return features;
+    }() };
+
+    inline static const Descriptor descriptor { .clap_version { CLAP_VERSION },
+                                                .id { PLUGIN_ID },
+                                                .name { PLUGIN_NAME },
+                                                .vendor { PLUGIN_VENDOR },
+                                                .url { PLUGIN_URL },
+                                                .manual_url { PLUGIN_MANUAL_URL },
+                                                .support_url { PLUGIN_SUPPORT_URL },
+                                                .version { PLUGIN_VERSION },
+                                                .description { PLUGIN_DESCRIPTION },
+                                                .features { features.data() } };
+
     inline static const auto factory { make_factory<T>() };
     inline static const auto entry { make_entry<T>() };
+
+    // inline static const auto factory { make_factory<T>() };
+    // inline static const auto entry { make_entry<T>() };
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
