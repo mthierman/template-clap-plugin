@@ -12,23 +12,13 @@
 #endif
 
 namespace plugin {
-using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                           clap::helpers::CheckingLevel::Maximal>;
-using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                           clap::helpers::CheckingLevel::Minimal>;
-using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                            clap::helpers::CheckingLevel::None>;
-using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                        clap::helpers::CheckingLevel::Maximal>;
-using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                        clap::helpers::CheckingLevel::Minimal>;
-using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                         clap::helpers::CheckingLevel::None>;
+using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                     clap::helpers::CheckingLevel::Maximal>;
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
 
-template <typename T, typename U> struct PluginHelper : public U {
-    using U::U;
+struct PluginHelper : public Helper {
+    using Helper::Helper;
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
@@ -152,8 +142,8 @@ template <typename T, typename U> struct PluginHelper : public U {
 };
 
 namespace descriptor {
-    template <typename T> auto make() -> clap_plugin_descriptor {
-        T::features.push_back("\n");
+    auto make(plugin::Features& features) -> clap_plugin_descriptor {
+        features.push_back("\n");
 
         return { .clap_version { CLAP_VERSION },
                  .id { PLUGIN_ID },
@@ -164,7 +154,7 @@ namespace descriptor {
                  .support_url { PLUGIN_SUPPORT_URL },
                  .version { PLUGIN_VERSION },
                  .description { PLUGIN_DESCRIPTION },
-                 .features { T::features.data() } };
+                 .features { features.data() } };
     }
 } // namespace descriptor
 

@@ -1,8 +1,9 @@
 #include <plugin/plugin.hxx>
 
-struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> {
+namespace gain {
+struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_host* host)
-        : plugin::PluginHelper<Plugin, plugin::TerminateMax>(&descriptor, host) {
+        : plugin::PluginHelper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -11,7 +12,7 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     // entry
     inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                               CLAP_PLUGIN_FEATURE_UTILITY };
-    inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make<Plugin>() };
+    inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make(features) };
     inline static const clap_plugin_factory factory { plugin::factory::make<Plugin>() };
     inline static const clap_plugin_entry entry { plugin::entry::make<Plugin>() };
 
@@ -123,3 +124,4 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
 extern "C" {
 const CLAP_EXPORT clap_plugin_entry clap_entry { Plugin::entry };
 }
+} // namespace gain
