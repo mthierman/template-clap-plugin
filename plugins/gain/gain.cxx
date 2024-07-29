@@ -4,9 +4,10 @@
 #include <string>
 
 namespace plugins::gain {
-struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> {
+using Level = plugin::TerminateMax;
+struct Plugin final : public plugin::PluginHelper<Plugin, Level> {
     explicit Plugin(const clap_host* host)
-        : plugin::PluginHelper<Plugin, plugin::TerminateMax>(&descriptor, host) {
+        : plugin::PluginHelper<Plugin, Level>(&descriptor, host) {
         m_params[pmLevel] = &level;
     }
     ~Plugin() { }
