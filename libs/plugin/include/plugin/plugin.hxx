@@ -53,20 +53,13 @@ struct PluginHelper : public Helper {
         return false;
     }
 
-    auto guiSetScale(double scale) noexcept -> bool override {
-        if (PLATFORM_WINDOWS) {
-            m_window->m_scale = scale;
-
-            return true;
-        }
-
-        return false;
-    }
+    auto guiSetScale(double scale) noexcept -> bool override { return false; }
 
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        return guiSetSize(*width, *height);
+        // return guiSetSize(*width, *height);
+        return false;
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
@@ -79,7 +72,7 @@ struct PluginHelper : public Helper {
         return true;
     }
 
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override { return true; }
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override { return false; }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
