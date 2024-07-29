@@ -111,6 +111,45 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
+            ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
+            // ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
+            // ::SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
+
+            // auto ctx = ::GetThreadDpiAwarenessContext();
+            // auto aware = ::GetAwarenessFromDpiAwarenessContext(ctx);
+
+            // if (ctx == DPI_AWARENESS_CONTEXT_UNAWARE) {
+            //     glow::system::message_box("DPI_AWARENESS_CONTEXT_UNAWARE");
+            // }
+            // if (ctx == DPI_AWARENESS_CONTEXT_SYSTEM_AWARE) {
+            //     glow::system::message_box("DPI_AWARENESS_CONTEXT_SYSTEM_AWARE");
+            // }
+            // if (ctx == DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE) {
+            //     glow::system::message_box("DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE");
+            // }
+            // if (ctx == DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2) {
+            //     glow::system::message_box("DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2");
+            // }
+            // if (ctx == DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED) {
+            //     glow::system::message_box("DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED");
+            // }
+
+            // switch (aware) {
+            //     case DPI_AWARENESS_INVALID: {
+            //         glow::system::message_box("DPI_AWARENESS_INVALID");
+            //     } break;
+            //     case DPI_AWARENESS_UNAWARE: {
+            //         glow::system::message_box("DPI_AWARENESS_UNAWARE");
+            //     } break;
+            //     case DPI_AWARENESS_SYSTEM_AWARE: {
+            //         glow::system::message_box("DPI_AWARENESS_SYSTEM_AWARE");
+            //     } break;
+            //     case DPI_AWARENESS_PER_MONITOR_AWARE: {
+            //         glow::system::message_box("DPI_AWARENESS_PER_MONITOR_AWARE");
+            //     } break;
+            // }
+
             m_window.create();
 
             return true;
