@@ -25,9 +25,6 @@ struct Window final : glow::window::Window {
         });
 
         message(WM_NOTIFY, [this](glow::messages::wm message) {
-            // glow::system::dbg(
-            //     "WM_NOTIFY: cx: {} cy: {}", LOWORD(message.lparam), HIWORD(message.lparam));
-
             ::SetWindowPos(
                 m_hwnd.get(), nullptr, 0, 0, LOWORD(message.lparam), HIWORD(message.lparam), 0);
             webView.put_bounds(m_hwnd.get());
