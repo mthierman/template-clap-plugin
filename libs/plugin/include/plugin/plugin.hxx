@@ -17,6 +17,8 @@ using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
 using Descriptor = clap_plugin_descriptor;
+using Factory = clap_plugin_factory;
+using Entry = clap_plugin_entry;
 
 struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
@@ -159,7 +161,7 @@ auto make_descriptor(plugin::Features& features) -> Descriptor {
 }
 
 namespace factory {
-    const clap_plugin_descriptor* s_descriptor { nullptr };
+    const Descriptor* s_descriptor { nullptr };
 
     std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
         [](const clap_host_t* host) -> const clap_plugin* { return nullptr; }
@@ -177,23 +179,22 @@ namespace factory {
                       const char* plugin_id) -> const clap_plugin* {
         return s_callback(host);
     }
-
-    auto make(const clap_plugin_descriptor* descriptor,
-              std::function<const clap_plugin*(const clap_host_t* host)> callback)
-        -> clap_plugin_factory {
-        s_descriptor = descriptor;
-        s_callback = callback;
-
-        return {
-            .get_plugin_count { getPluginCount },
-            .get_plugin_descriptor { getPluginDescriptor },
-            .create_plugin { createPlugin },
-        };
-    }
 } // namespace factory
 
+auto make_factory(const Descriptor* descriptor,
+                  std::function<const clap_plugin*(const clap_host_t* host)> callback) -> Factory {
+    factory::s_descriptor = descriptor;
+    factory::s_callback = callback;
+
+    return {
+        .get_plugin_count { factory::getPluginCount },
+        .get_plugin_descriptor { factory::getPluginDescriptor },
+        .create_plugin { factory::createPlugin },
+    };
+}
+
 namespace entry {
-    const clap_plugin_factory* s_factory { nullptr };
+    const Factory* s_factory { nullptr };
 
     auto init(const char* plugin_path) -> bool { return true; }
 
@@ -202,16 +203,16 @@ namespace entry {
     auto getFactory(const char* factory_id) -> const void* {
         return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? s_factory : nullptr;
     }
-
-    auto make(const clap_plugin_factory* factory) -> clap_plugin_entry {
-        s_factory = factory;
-
-        return { .clap_version { CLAP_VERSION },
-                 .init { init },
-                 .deinit { deInit },
-                 .get_factory { getFactory } };
-    }
 }; // namespace entry
+
+auto make_entry(const clap_plugin_factory* factory) -> clap_plugin_entry {
+    entry::s_factory = factory;
+
+    return { .clap_version { CLAP_VERSION },
+             .init { entry::init },
+             .deinit { entry::deInit },
+             .get_factory { entry::getFactory } };
+}
 
 namespace event {
     auto run_loop(const clap_process* process,

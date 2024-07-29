@@ -117,13 +117,13 @@ struct Plugin final : public plugin::PluginHelper {
     double level { 0.3 };
 };
 
-const clap_plugin_factory factory { plugin::factory::make(
-    &descriptor, [](const clap_host_t* host) -> const clap_plugin* {
+const auto factory { plugin::make_factory(&descriptor,
+                                          [](const clap_host* host) -> const clap_plugin* {
     auto plugin { new Plugin(&descriptor, host) };
     return plugin->clapPlugin();
 }) };
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::entry::make(&factory) };
+const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::make_entry(&factory) };
 }
 } // namespace gain
