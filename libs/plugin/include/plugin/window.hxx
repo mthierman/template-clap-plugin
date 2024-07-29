@@ -10,8 +10,6 @@ namespace plugin {
 struct Window final : glow::window::Window {
     Window() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
-            glow::system::dbg("WM_CREATE");
-
             webViewEnvironment.m_userDataFolder
                 = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
             std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
