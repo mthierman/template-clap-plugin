@@ -79,7 +79,7 @@ template <typename T, typename U> struct PluginHelper : public U {
             return true;
         }
 
-        return false;
+        return true;
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override { return true; }
