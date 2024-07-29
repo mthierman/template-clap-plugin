@@ -58,6 +58,10 @@ target_sources(
               "include"
               "${clap_SOURCE_DIR}/include"
               "${clap-helpers_SOURCE_DIR}/include"
+              FILES
+              "include/plugin/config.hxx"
+              "include/plugin/plugin.hxx"
+              "include/plugin/window.hxx"
     )
 
 if(CMAKE_SYSTEM_NAME

@@ -37,15 +37,6 @@ struct Window final : glow::window::Window {
             return 0;
         });
 
-        // message(WM_SIZE, [this](glow::messages::wm_size message) {
-        //     glow::system::dbg("WM_SIZE: cx: {} cy: {}", message.size().cx, message.size().cy);
-
-        //     ::SetWindowPos(m_hwnd.get(), nullptr, 0, 0, message.size().cx, message.size().cy, 0);
-        //     webView.put_bounds(m_hwnd.get());
-
-        //     return 0;
-        // });
-
         create("PluginHelper", false);
     }
 
