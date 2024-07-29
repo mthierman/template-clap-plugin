@@ -159,14 +159,13 @@ namespace descriptor {
 } // namespace descriptor
 
 namespace factory {
-    template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
-        return 1;
-    }
+    clap_plugin_descriptor* s_descriptor { nullptr };
 
-    template <typename T>
+    auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return 1; }
+
     auto getPluginDescriptor(const clap_plugin_factory* factory,
                              uint32_t index) -> const clap_plugin_descriptor* {
-        return &T::descriptor;
+        return s_descriptor;
     }
 
     template <typename T>
@@ -177,29 +176,35 @@ namespace factory {
         return plugin->clapPlugin();
     }
 
-    template <typename T> auto make() -> clap_plugin_factory {
+    template <typename T> auto make(clap_plugin_descriptor* descriptor) -> clap_plugin_factory {
+        s_descriptor = descriptor;
+
         return {
-            .get_plugin_count { getPluginCount<T> },
-            .get_plugin_descriptor { getPluginDescriptor<T> },
+            .get_plugin_count { getPluginCount },
+            .get_plugin_descriptor { getPluginDescriptor },
             .create_plugin { createPlugin<T> },
         };
     }
 } // namespace factory
 
 namespace entry {
-    template <typename T> auto init(const char* plugin_path) -> bool { return true; }
+    clap_plugin_factory* s_factory { nullptr };
 
-    template <typename T> auto deInit(void) -> void { }
+    auto init(const char* plugin_path) -> bool { return true; }
 
-    template <typename T> auto getFactory(const char* factory_id) -> const void* {
-        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &T::factory : nullptr;
+    auto deInit(void) -> void { }
+
+    auto getFactory(const char* factory_id) -> const void* {
+        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? s_factory : nullptr;
     }
 
-    template <typename T> auto make() -> clap_plugin_entry {
+    auto make(clap_plugin_factory* factory) -> clap_plugin_entry {
+        s_factory = factory;
+
         return { .clap_version { CLAP_VERSION },
-                 .init { init<T> },
-                 .deinit { deInit<T> },
-                 .get_factory { getFactory<T> } };
+                 .init { init },
+                 .deinit { deInit },
+                 .get_factory { getFactory } };
     }
 }; // namespace entry
 
