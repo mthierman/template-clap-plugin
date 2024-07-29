@@ -64,8 +64,10 @@ struct PluginHelper : public Helper {
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        return guiSetSize(*width, *height);
+        // return guiSetSize(*width, *height);
         // return false;
+
+        return true;
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
@@ -79,7 +81,8 @@ struct PluginHelper : public Helper {
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::window::set_position(m_window->m_hwnd.get(), 0, 0, *width, *height);
+        *width = glow::window::get_client_rect(m_window->m_hwnd.get()).right;
+        *height = glow::window::get_client_rect(m_window->m_hwnd.get()).bottom;
 
         return true;
     }
