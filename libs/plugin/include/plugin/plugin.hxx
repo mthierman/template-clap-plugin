@@ -81,8 +81,9 @@ struct PluginHelper : public Helper {
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            *width = glow::window::get_client_rect(m_window.m_hwnd.get()).right;
-            *height = glow::window::get_client_rect(m_window.m_hwnd.get()).bottom;
+            auto rect { glow::window::get_client_rect(m_window.m_hwnd.get()) };
+            *width = rect.right - rect.left;
+            *height = rect.bottom - rect.top;
 
             return true;
         }
