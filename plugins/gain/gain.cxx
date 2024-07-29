@@ -120,13 +120,12 @@ struct Plugin final : public plugin::PluginHelper {
     double level { 0.3 };
 };
 
-const clap_plugin_factory pluginFactory { plugin::factory::make(&pluginDescriptor,
-                                                                [](const clap_host_t* host) -> const clap_plugin* {
+const clap_plugin_factory pluginFactory { plugin::factory::make(
+    &pluginDescriptor, [](const clap_host_t* host) -> const clap_plugin* {
     auto plugin { new Plugin(&pluginDescriptor, host) };
     return plugin->clapPlugin();
 }) };
-const clap_plugin_entry pluginEntry { plugin::entry::make(&pluginFactory) };
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { pluginEntry };
+const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::entry::make(&pluginFactory) };
 }
