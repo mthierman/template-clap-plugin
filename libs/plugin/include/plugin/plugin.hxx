@@ -53,16 +53,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        if (PLATFORM_WINDOWS) {
-            // m_window.create("PluginHelper", false);
-            guiShow();
-
-            return true;
-        }
-
-        return false;
-    }
+    auto guiCreate(const char* api, bool isFloating) noexcept -> bool override { return true; }
 
     auto guiSetScale(double scale) noexcept -> bool override {
         // glow::system::dbg("guiSetScale: {}", scale);
