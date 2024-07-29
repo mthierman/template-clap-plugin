@@ -3,48 +3,15 @@
 #include <sstream>
 #include <string>
 
-auto make_features() -> std::vector<std::string> {
-    auto file(std::istringstream(PLUGIN_FEATURES));
-    std::string buffer;
-    int count { 0 };
-    std::vector<std::string> features;
-
-    while (std::getline(file, buffer, ',')) {
-        features.push_back(buffer);
-        count++;
-    }
-
-    return features;
-}
-
-auto make_feature_array(const std::vector<std::string>& vec) -> std::vector<const char*> {
-    std::vector<const char*> strings;
-    for (int i = 0; i < vec.size(); ++i) {
-        strings.push_back(vec[i].c_str());
-    }
-
-    strings.push_back(nullptr);
-
-    return strings;
-}
-
-std::vector<std::string> featureBuffer { make_features() };
-std::vector<const char*> feature { make_feature_array(featureBuffer) };
-
 namespace plugins::gain {
 struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_host* host)
         : plugin::PluginHelper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
-        for (auto feat : feature) {
-            std::cout << feat << std::endl;
-        }
     }
     ~Plugin() { }
 
-    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
-                                              CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const auto descriptor { plugin::make_descriptor<Plugin>() };
     inline static const auto factory { plugin::make_factory<Plugin>() };
 

@@ -21,9 +21,37 @@ using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
 using Entry = clap_plugin_entry;
 
+auto make_features() -> std::vector<std::string> {
+    auto file(std::istringstream(PLUGIN_FEATURES));
+    std::string buffer;
+    int count { 0 };
+    std::vector<std::string> features;
+
+    while (std::getline(file, buffer, ',')) {
+        features.push_back(buffer);
+        count++;
+    }
+
+    return features;
+}
+
+auto get_features(const std::vector<std::string>& vec) -> std::vector<const char*> {
+    std::vector<const char*> strings;
+    for (int i = 0; i < vec.size(); ++i) {
+        strings.push_back(vec[i].c_str());
+    }
+
+    strings.push_back(nullptr);
+
+    return strings;
+}
+
 struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
+
+    inline static std::vector<std::string> featureStrings { make_features() };
+    inline static plugin::Features features { get_features(featureStrings) };
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
