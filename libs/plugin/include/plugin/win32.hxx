@@ -16,7 +16,11 @@ struct Window final : glow::window::Window {
 
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
+#if HOT_RELOAD
+                    webView.navigate(DEV_URL);
+#else
                     webView.navigate("https://www.example.com/");
+#endif
                     webView.put_bounds(m_hwnd.get());
                 });
             });
@@ -26,6 +30,13 @@ struct Window final : glow::window::Window {
 
         message(WM_WINDOWPOSCHANGED, [this](glow::messages::wm_windowposchanged message) {
             webView.put_bounds(m_hwnd.get());
+
+            return 0;
+        });
+
+        message(WM_DESTROY, [this](glow::messages::wm message) {
+            webView.close();
+            webViewEnvironment.close();
 
             return 0;
         });
