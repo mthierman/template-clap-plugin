@@ -4,9 +4,9 @@
 #include <string>
 
 namespace plugins::gain {
-struct Plugin final : public plugin::PluginHelper<Plugin> {
+struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> {
     explicit Plugin(const clap_host* host)
-        : plugin::PluginHelper<Plugin>(&descriptor, host) {
+        : plugin::PluginHelper<Plugin, plugin::TerminateMax>(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }

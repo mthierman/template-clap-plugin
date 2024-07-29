@@ -15,23 +15,19 @@
 #include <config/config.hxx>
 
 namespace plugin {
-namespace helper {
-    using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                               clap::helpers::CheckingLevel::Maximal>;
-    using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                               clap::helpers::CheckingLevel::Minimal>;
-    using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
-                                                clap::helpers::CheckingLevel::None>;
-    using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                            clap::helpers::CheckingLevel::Maximal>;
-    using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                            clap::helpers::CheckingLevel::Minimal>;
-    using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                             clap::helpers::CheckingLevel::None>;
-} // namespace helper
+using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                           clap::helpers::CheckingLevel::Maximal>;
+using TerminateMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                           clap::helpers::CheckingLevel::Minimal>;
+using TerminateNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
+                                            clap::helpers::CheckingLevel::None>;
+using IgnoreMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                        clap::helpers::CheckingLevel::Maximal>;
+using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                        clap::helpers::CheckingLevel::Minimal>;
+using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
+                                         clap::helpers::CheckingLevel::None>;
 
-using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
-                                     clap::helpers::CheckingLevel::None>;
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
@@ -67,7 +63,7 @@ namespace entry {
     }
 }; // namespace entry
 
-template <typename T> struct PluginHelper : public Helper {
+template <typename T, typename Helper> struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
 
