@@ -1,5 +1,15 @@
 #include <plugin/plugin.hxx>
 
+#include <sstream>
+#include <string>
+
+auto make_features() -> void {
+    auto feat = PLUGIN_FEATURES;
+    auto file(std::istringstream(PLUGIN_FEATURES));
+    std::string empty;
+    // auto count { std::getline(file, empty, ',') };
+}
+
 namespace plugins::gain {
 struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_host* host)

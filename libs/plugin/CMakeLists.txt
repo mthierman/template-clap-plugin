@@ -120,7 +120,10 @@ function(clap_add_plugin)
         MANUAL_URL
         SUPPORT_URL
         )
-    set(listArgs SOURCES)
+    set(listArgs
+        SOURCES
+        FEATURES
+        )
     cmake_parse_arguments(
         PLUGIN
         ""
@@ -152,6 +155,13 @@ function(clap_add_plugin)
         MODULE
         )
 
+    string(
+        JOIN
+        ,
+        PLUGIN_FEATURE_LIST
+        ${PLUGIN_FEATURES}
+        )
+
     target_compile_definitions(
         plugin
         PUBLIC PLUGIN_ID="${PLUGIN_ID}"
@@ -162,6 +172,7 @@ function(clap_add_plugin)
                PLUGIN_SUPPORT_URL="${PLUGIN_SUPPORT_URL}"
                PLUGIN_VERSION="${PLUGIN_VERSION}"
                PLUGIN_DESCRIPTION="${PLUGIN_DESCRIPTION}"
+               PLUGIN_FEATURES="${PLUGIN_FEATURE_LIST}"
         )
 
     target_sources(${PLUGIN_NAME} PRIVATE ${PLUGIN_SOURCES})
