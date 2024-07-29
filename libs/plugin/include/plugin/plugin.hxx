@@ -68,11 +68,11 @@ template <typename T, typename U> struct PluginHelper : public U {
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        return guiGetSize(width, height);
+        return guiSetSize(*width, *height);
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-        // glow::system::dbg("guiSetSize: {} x {}", width, height);
+        glow::system::dbg("guiSetSize: {} x {}", width, height);
 
         if (PLATFORM_WINDOWS) {
             glow::messages::send_message(
@@ -84,11 +84,11 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
+    // auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+    //     glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
-        return false;
-    }
+    //     return false;
+    // }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
