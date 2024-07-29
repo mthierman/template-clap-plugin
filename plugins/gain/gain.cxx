@@ -2,7 +2,7 @@
 
 namespace gain {
 plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
-const clap_plugin_descriptor descriptor { plugin::descriptor::make(features) };
+const auto descriptor { plugin::make_descriptor(features) };
 
 struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_plugin_descriptor* desc, const clap_host* host)

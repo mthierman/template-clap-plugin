@@ -16,6 +16,7 @@ using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                      clap::helpers::CheckingLevel::None>;
 using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Features = std::vector<const char*>;
+using Descriptor = clap_plugin_descriptor;
 
 struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
@@ -142,22 +143,20 @@ struct PluginHelper : public Helper {
     plugin::Window m_window;
 };
 
-namespace descriptor {
-    auto make(plugin::Features& features) -> clap_plugin_descriptor {
-        features.push_back(nullptr);
+auto make_descriptor(plugin::Features& features) -> Descriptor {
+    features.push_back(nullptr);
 
-        return { .clap_version { CLAP_VERSION },
-                 .id { PLUGIN_ID },
-                 .name { PLUGIN_NAME },
-                 .vendor { PLUGIN_VENDOR },
-                 .url { PLUGIN_URL },
-                 .manual_url { PLUGIN_MANUAL_URL },
-                 .support_url { PLUGIN_SUPPORT_URL },
-                 .version { PLUGIN_VERSION },
-                 .description { PLUGIN_DESCRIPTION },
-                 .features { features.data() } };
-    }
-} // namespace descriptor
+    return { .clap_version { CLAP_VERSION },
+             .id { PLUGIN_ID },
+             .name { PLUGIN_NAME },
+             .vendor { PLUGIN_VENDOR },
+             .url { PLUGIN_URL },
+             .manual_url { PLUGIN_MANUAL_URL },
+             .support_url { PLUGIN_SUPPORT_URL },
+             .version { PLUGIN_VERSION },
+             .description { PLUGIN_DESCRIPTION },
+             .features { features.data() } };
+}
 
 namespace factory {
     const clap_plugin_descriptor* s_descriptor { nullptr };
