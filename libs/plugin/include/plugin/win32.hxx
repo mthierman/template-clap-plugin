@@ -12,6 +12,8 @@ struct Window final : glow::window::Window {
             = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
 
         message(WM_CREATE, [this](glow::messages::wm_create message) {
+            glow::window::set_position(m_hwnd.get(), 0, 0, 640, 480);
+
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
                     webView.navigate("https://www.example.com/");
