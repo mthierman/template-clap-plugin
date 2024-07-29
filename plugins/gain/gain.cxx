@@ -1,14 +1,15 @@
 #include <plugin/plugin.hxx>
 
-namespace gain {
-plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
-clap_plugin_descriptor descriptor { plugin::descriptor::make(features) };
+plugin::Features pluginFeatures { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
+const clap_plugin_descriptor pluginDescriptor { plugin::descriptor::make(pluginFeatures) };
 
 struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_plugin_descriptor* desc, const clap_host* host)
         : plugin::PluginHelper(desc, host) {
-        glow::system::dbg(
-            "name: {} id: {}, vendor: {}", descriptor.name, descriptor.id, descriptor.vendor);
+        glow::system::dbg("name: {} id: {}, vendor: {}",
+                          pluginDescriptor.name,
+                          pluginDescriptor.id,
+                          pluginDescriptor.vendor);
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -119,10 +120,13 @@ struct Plugin final : public plugin::PluginHelper {
     double level { 0.3 };
 };
 
-clap_plugin_factory factory { plugin::factory::make<Plugin>(&descriptor) };
-clap_plugin_entry entry { plugin::entry::make(&factory) };
-} // namespace gain
+const clap_plugin_factory pluginFactory { plugin::factory::make(&pluginDescriptor,
+                                                                [](const clap_host_t* host) -> const clap_plugin* {
+    auto plugin { new Plugin(&pluginDescriptor, host) };
+    return plugin->clapPlugin();
+}) };
+const clap_plugin_entry pluginEntry { plugin::entry::make(&pluginFactory) };
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { gain::entry };
+const CLAP_EXPORT clap_plugin_entry clap_entry { pluginEntry };
 }
