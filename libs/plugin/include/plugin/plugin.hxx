@@ -28,10 +28,11 @@ using IgnoreMin = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Igno
 using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                          clap::helpers::CheckingLevel::None>;
 
-using ParameterToValue = std::unordered_map<clap_id, double*>;
 using Descriptor = clap_plugin_descriptor;
 using Factory = clap_plugin_factory;
 using Entry = clap_plugin_entry;
+
+using ParameterToValue = std::unordered_map<clap_id, double*>;
 
 namespace factory {
     template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
