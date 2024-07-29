@@ -122,7 +122,7 @@ struct PluginHelper : public Helper {
         return false;
     }
 
-    auto guiDestroy() noexcept -> void override { m_window.m_hwnd.reset(); }
+    auto guiDestroy() noexcept -> void override { m_window.close(); }
 
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
