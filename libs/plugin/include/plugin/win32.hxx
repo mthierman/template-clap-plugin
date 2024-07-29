@@ -23,9 +23,7 @@ struct Window final : glow::window::Window {
         });
 
         message(WM_WINDOWPOSCHANGED, [this](glow::messages::wm_windowposchanged message) {
-            if (m_hwnd.get()) {
-                webView.put_bounds(m_hwnd.get());
-            }
+            webView.put_bounds(message.windowPos());
 
             return 0;
         });
