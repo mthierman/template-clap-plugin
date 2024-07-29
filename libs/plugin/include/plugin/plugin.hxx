@@ -68,13 +68,7 @@ template <typename T, typename U> struct PluginHelper : public U {
     auto guiCanResize() const noexcept -> bool override { return true; }
 
     auto guiAdjustSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        // glow::system::dbg("guiAdjustSize: {} x {}", *width, *height);
-
-        // if (PLATFORM_WINDOWS) {
-        //     return guiGetSize(width, height);
-        // }
-
-        return false;
+        return guiGetSize(width, height);
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
@@ -91,7 +85,7 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        // glow::system::dbg("guiGetSize: {} x {}", *width, *height);
+        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
         return false;
     }
