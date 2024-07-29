@@ -68,8 +68,7 @@ template <typename T, typename U> struct PluginHelper : public U {
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::messages::send_message(
-                m_window.m_hwnd.get(), WM_NOTIFY, WM_APP, MAKELPARAM(width, height));
+            glow::window::set_position(m_window.m_hwnd.get(), 0, 0, width, height);
 
             return true;
         }

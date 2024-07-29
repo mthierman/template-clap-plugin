@@ -5,6 +5,12 @@
 #include <glow/webview.hxx>
 #include <glow/window.hxx>
 
+namespace glow::messages {
+enum struct notice : ::UINT {
+    SET_SIZE = WM_APP,
+};
+}
+
 namespace plugin {
 struct Window final : glow::window::Window {
     Window() {
@@ -23,9 +29,18 @@ struct Window final : glow::window::Window {
             return 0;
         });
 
-        message(WM_NOTIFY, [this](glow::messages::wm message) {
-            // ::SetWindowPos(
-            //     m_hwnd.get(), nullptr, 0, 0, LOWORD(message.lparam), HIWORD(message.lparam), 0);
+        // message(WM_NOTIFY, [this](glow::messages::wm message) {
+        //     glow::window::set_position(
+        //         m_hwnd.get(), 0, 0, LOWORD(message.lparam), HIWORD(message.lparam));
+        //     webView.put_bounds(m_hwnd.get());
+
+        //     return 0;
+        // });
+
+        message(WM_WINDOWPOSCHANGED, [this](glow::messages::wm message) {
+            auto pos { reinterpret_cast<WINDOWPOS*>(message.lparam) };
+            glow::system::dbg("{} x {}", pos->cx, pos->cy);
+
             glow::window::set_position(
                 m_hwnd.get(), 0, 0, LOWORD(message.lparam), HIWORD(message.lparam));
             webView.put_bounds(m_hwnd.get());
