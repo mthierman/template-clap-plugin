@@ -146,7 +146,7 @@ function(clap_add_plugin)
     list(
         JOIN
         PLUGIN_FEATURES
-        ","
+        ", "
         PLUGIN_FEATURES
         )
 
