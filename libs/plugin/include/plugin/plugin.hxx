@@ -44,7 +44,11 @@ struct PluginHelper : public Helper {
     }
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        m_window = std::make_unique<plugin::Window>();
+        if (PLATFORM_WINDOWS) {
+            m_window = std::make_unique<plugin::Window>();
+
+            return true;
+        }
 
         return true;
     }
