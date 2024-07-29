@@ -80,7 +80,7 @@ template <typename T, typename U> struct PluginHelper : public U {
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            ::SetWindowLongPtrA(m_window.m_hwnd.get(), GWL_STYLE, WS_POPUP);
+            glow::window::set_style(m_window.m_hwnd.get(), WS_POPUP);
             glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
 
             return true;
