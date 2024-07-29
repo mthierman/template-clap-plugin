@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "config.hxx"
 #include "window.hxx"
 
 namespace plugin {
@@ -29,16 +28,10 @@ using Features = std::vector<const char*>;
 template <typename T, typename U> struct PluginHelper : public U {
     using U::U;
 
-    //--------------------//
-    // clap_plugin_params //
-    //--------------------//
-    clap_id nParams { 0 };
-    plugin::ParameterToValue paramToValue;
+    // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
 
-    //-----------------//
-    // clap_plugin_gui //
-    //-----------------//
+    // gui
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
         if (isFloating) {
             return false;
@@ -121,13 +114,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    // auto guiGetResizeHints(clap_gui_resize_hints_t* hints) noexcept -> bool override;
-    // auto guiSuggestTitle(const char* title) noexcept -> void override;
-    // auto guiSetTransient(const clap_window* window) noexcept -> bool override;
-
-    //-------------------------//
-    // clap_plugin_audio_ports //
-    //-------------------------//
+    // audio ports
     auto audioPortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
     auto audioPortsInfo(uint32_t index,
                         bool isInput,
@@ -143,9 +130,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         return true;
     }
 
-    //------------------------//
-    // clap_plugin_note_ports //
-    //------------------------//
+    // note ports
     auto notePortsCount(bool isInput) const noexcept -> uint32_t override { return 1; }
     auto notePortsInfo(uint32_t index,
                        bool isInput,
@@ -160,8 +145,9 @@ template <typename T, typename U> struct PluginHelper : public U {
         return true;
     }
 
+    clap_id nParams { 0 };
+    plugin::ParameterToValue paramToValue;
     plugin::Window m_window;
-    plugin::Config m_config;
 };
 
 namespace descriptor {
@@ -201,8 +187,6 @@ namespace factory {
     }
 
     template <typename T> auto make() -> clap_plugin_factory {
-        // s_descriptor = &T::descriptor;
-
         return {
             .get_plugin_count { getPluginCount<T> },
             .get_plugin_descriptor { getPluginDescriptor<T> },

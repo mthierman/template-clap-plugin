@@ -8,36 +8,26 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
     }
     ~Plugin() { }
 
-    inline static plugin::Config config;
+    // entry
     inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
                                               CLAP_PLUGIN_FEATURE_UTILITY };
     inline static const clap_plugin_descriptor descriptor { plugin::descriptor::make<Plugin>() };
     inline static const clap_plugin_factory factory { plugin::factory::make<Plugin>() };
     inline static const clap_plugin_entry entry { plugin::entry::make<Plugin>() };
 
+    // implements
     auto implementsGui() const noexcept -> bool override { return true; }
+    auto implementsParams() const noexcept -> bool override { return true; }
     auto implementsAudioPorts() const noexcept -> bool override { return true; }
     auto implementsNotePorts() const noexcept -> bool override { return true; }
-    auto implementsParams() const noexcept -> bool override { return true; }
 
+    // process
     auto process(const clap_process* process) noexcept -> clap_process_status override {
         return plugin::event::run_loop(
             process, [this](const clap_event_header_t* event) { handleEvent(event); });
     }
 
-    auto handleEvent(const clap_event_header_t* event) -> void {
-        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
-            return;
-        }
-
-        switch (event->type) {
-            case CLAP_EVENT_PARAM_VALUE: {
-                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
-                *paramToValue[paramValue->param_id] = paramValue->value;
-            } break;
-        }
-    }
-
+    // params
     auto paramsInfo(uint32_t paramIndex, clap_param_info* info) const noexcept -> bool override {
         if (paramIndex >= nParams) {
             return false;
@@ -110,6 +100,20 @@ struct Plugin final : public plugin::PluginHelper<Plugin, plugin::TerminateMax> 
 
     auto isValidParamId(clap_id paramId) const noexcept -> bool override {
         return paramToValue.find(paramId) != paramToValue.end();
+    }
+
+    // events
+    auto handleEvent(const clap_event_header_t* event) -> void {
+        if (event->space_id != CLAP_CORE_EVENT_SPACE_ID) {
+            return;
+        }
+
+        switch (event->type) {
+            case CLAP_EVENT_PARAM_VALUE: {
+                auto paramValue { reinterpret_cast<const clap_event_param_value*>(event) };
+                *paramToValue[paramValue->param_id] = paramValue->value;
+            } break;
+        }
     }
 
     enum paramIds : uint32_t { pmLevel };
