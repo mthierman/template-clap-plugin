@@ -79,11 +79,20 @@ struct PluginHelper : public Helper {
         return true;
     }
 
-    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override { return true; }
+    auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
+        if (PLATFORM_WINDOWS) {
+            *width = glow::window::get_client_rect(m_window->m_hwnd.get()).right;
+            *height = glow::window::get_client_rect(m_window->m_hwnd.get()).bottom;
+
+            return true;
+        }
+
+        return false;
+    }
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::set_style(m_window->m_hwnd.get(), WS_CHILD);
+            glow::window::set_style(m_window->m_hwnd.get(), WS_POPUP);
             glow::window::set_parent(m_window->m_hwnd.get(), (::HWND)window->win32);
 
             return true;
