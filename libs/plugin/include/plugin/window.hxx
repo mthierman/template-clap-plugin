@@ -21,10 +21,7 @@ struct Window final : glow::window::Window {
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
                     webView.navigate("about:blank");
-                    // glow::messages::send_message(m_hwnd.get(), WM_SIZE, 0, MAKELPARAM(200, 200));
-                    // webView.put_bounds(m_hwnd.get());
-                    auto rect { glow::window::get_client_rect(m_hwnd.get()) };
-                    webView.put_bounds(rect);
+                    webView.put_bounds(m_hwnd.get());
                 });
             });
 

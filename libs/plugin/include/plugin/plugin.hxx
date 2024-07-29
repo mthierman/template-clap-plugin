@@ -40,8 +40,6 @@ template <typename T, typename U> struct PluginHelper : public U {
     // clap_plugin_gui //
     //-----------------//
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        // glow::system::dbg("guiIsApiSupported");
-
         if (isFloating) {
             return false;
         }
@@ -56,8 +54,6 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        // glow::system::dbg("guiCreate");
-
         if (PLATFORM_WINDOWS) {
             m_window.create("PluginHelper", false);
 
@@ -96,27 +92,20 @@ template <typename T, typename U> struct PluginHelper : public U {
     }
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
-        glow::system::dbg("guiSetSize: {} x {}", width, height);
+        // glow::system::dbg("guiSetSize: {} x {}", width, height);
 
         if (PLATFORM_WINDOWS) {
             glow::messages::send_message(
                 m_window.m_hwnd.get(), WM_NOTIFY, WM_APP, MAKELPARAM(width, height));
 
-            // return true;
+            return true;
         }
 
         return false;
     }
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
-        glow::system::dbg("guiGetSize: {} x {}", *width, *height);
-
-        if (PLATFORM_WINDOWS) {
-            // *width = 200;
-            // *height = 600;
-
-            // return true;
-        }
+        // glow::system::dbg("guiGetSize: {} x {}", *width, *height);
 
         return false;
     }
