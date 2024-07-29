@@ -165,8 +165,8 @@ struct PluginHelper : public Helper {
     plugin::Window m_window;
 };
 
-auto make_descriptor(plugin::Features& features) -> Descriptor {
-    features.push_back(nullptr);
+template <typename T> auto make_descriptor() -> Descriptor {
+    T::features.push_back(nullptr);
 
     return { .clap_version { CLAP_VERSION },
              .id { PLUGIN_ID },
@@ -177,61 +177,52 @@ auto make_descriptor(plugin::Features& features) -> Descriptor {
              .support_url { PLUGIN_SUPPORT_URL },
              .version { PLUGIN_VERSION },
              .description { PLUGIN_DESCRIPTION },
-             .features { features.data() } };
+             .features { T::features.data() } };
 }
 
 namespace factory {
-    const Descriptor* s_descriptor { nullptr };
-
-    std::function<const clap_plugin*(const clap_host_t* host)> s_callback {
-        [](const clap_host_t* host) -> const clap_plugin* { return nullptr; }
-    };
-
-    auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t { return 1; }
-
-    auto getPluginDescriptor(const clap_plugin_factory* factory,
-                             uint32_t index) -> const clap_plugin_descriptor* {
-        return s_descriptor;
+    template <typename T> auto getPluginCount(const clap_plugin_factory* factory) -> uint32_t {
+        return 1;
     }
 
+    template <typename T>
+    auto getPluginDescriptor(const clap_plugin_factory* factory,
+                             uint32_t index) -> const clap_plugin_descriptor* {
+        return &T::descriptor;
+    }
+
+    template <typename T>
     auto createPlugin(const struct clap_plugin_factory* factory,
                       const clap_host_t* host,
                       const char* plugin_id) -> const clap_plugin* {
-        return s_callback(host);
+        auto plugin { new T(&T::descriptor, host) };
+        return plugin->clapPlugin();
     }
 } // namespace factory
 
-auto make_factory(const Descriptor* descriptor,
-                  std::function<const clap_plugin*(const clap_host_t* host)> callback) -> Factory {
-    factory::s_descriptor = descriptor;
-    factory::s_callback = callback;
-
+template <typename T> auto make_factory() -> Factory {
     return {
-        .get_plugin_count { factory::getPluginCount },
-        .get_plugin_descriptor { factory::getPluginDescriptor },
-        .create_plugin { factory::createPlugin },
+        .get_plugin_count { factory::getPluginCount<T> },
+        .get_plugin_descriptor { factory::getPluginDescriptor<T> },
+        .create_plugin { factory::createPlugin<T> },
     };
 }
 
 namespace entry {
-    const Factory* s_factory { nullptr };
+    template <typename T> auto init(const char* plugin_path) -> bool { return true; }
 
-    auto init(const char* plugin_path) -> bool { return true; }
+    template <typename T> auto deInit(void) -> void { }
 
-    auto deInit(void) -> void { }
-
-    auto getFactory(const char* factory_id) -> const void* {
-        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? s_factory : nullptr;
+    template <typename T> auto getFactory(const char* factory_id) -> const void* {
+        return (factory_id != CLAP_PLUGIN_FACTORY_ID) ? &T::factory : nullptr;
     }
 }; // namespace entry
 
-auto make_entry(const clap_plugin_factory* factory) -> clap_plugin_entry {
-    entry::s_factory = factory;
-
+template <typename T> auto make_entry() -> clap_plugin_entry {
     return { .clap_version { CLAP_VERSION },
-             .init { entry::init },
-             .deinit { entry::deInit },
-             .get_factory { entry::getFactory } };
+             .init { entry::init<T> },
+             .deinit { entry::deInit<T> },
+             .get_factory { entry::getFactory<T> } };
 }
 
 namespace event {

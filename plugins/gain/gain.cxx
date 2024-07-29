@@ -1,8 +1,6 @@
 #include <plugin/plugin.hxx>
 
 namespace gain {
-plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, CLAP_PLUGIN_FEATURE_UTILITY };
-const auto descriptor { plugin::make_descriptor(features) };
 
 struct Plugin final : public plugin::PluginHelper {
     explicit Plugin(const clap_plugin_descriptor* desc, const clap_host* host)
@@ -11,6 +9,11 @@ struct Plugin final : public plugin::PluginHelper {
         nParams = static_cast<clap_id>(paramToValue.size());
     }
     ~Plugin() { }
+
+    inline static plugin::Features features { CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                              CLAP_PLUGIN_FEATURE_UTILITY };
+    inline static const auto descriptor { plugin::make_descriptor<Plugin>() };
+    inline static const auto factory { plugin::make_factory<Plugin>() };
 
     // implements
     auto implementsGui() const noexcept -> bool override { return true; }
@@ -117,13 +120,7 @@ struct Plugin final : public plugin::PluginHelper {
     double level { 0.3 };
 };
 
-const auto factory { plugin::make_factory(&descriptor,
-                                          [](const clap_host* host) -> const clap_plugin* {
-    auto plugin { new Plugin(&descriptor, host) };
-    return plugin->clapPlugin();
-}) };
-
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::make_entry(&factory) };
+const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::make_entry<Plugin>() };
 }
 } // namespace gain
