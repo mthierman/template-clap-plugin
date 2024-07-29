@@ -4,10 +4,15 @@
 #include <string>
 
 auto make_features() -> void {
-    auto feat = PLUGIN_FEATURES;
     auto file(std::istringstream(PLUGIN_FEATURES));
     std::string empty;
-    // auto count { std::getline(file, empty, ',') };
+    int count { 0 };
+
+    while (std::getline(file, empty, ',')) {
+        ++count;
+    }
+
+    std::cout << count << std::endl;
 }
 
 namespace plugins::gain {

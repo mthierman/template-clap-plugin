@@ -155,11 +155,11 @@ function(clap_add_plugin)
         MODULE
         )
 
-    string(
+    list(
         JOIN
-        ,
+        PLUGIN_FEATURES
+        ","
         PLUGIN_FEATURE_LIST
-        ${PLUGIN_FEATURES}
         )
 
     target_compile_definitions(
