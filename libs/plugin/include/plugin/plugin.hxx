@@ -51,21 +51,7 @@ namespace entry {
     }
 }; // namespace entry
 
-auto make_features() -> std::vector<std::string> {
-    auto file(std::istringstream(PLUGIN_FEATURES));
-    std::string buffer;
-    int count { 0 };
-    std::vector<std::string> features;
-
-    while (std::getline(file, buffer, ',')) {
-        features.push_back(buffer);
-        count++;
-    }
-
-    return features;
-}
-
-auto get_features(const std::vector<std::string>& featureStrings) -> std::vector<const char*> {
+auto make_features(const std::vector<std::string>& featureStrings) -> Features {
     std::vector<const char*> features;
     for (int i = 0; i < featureStrings.size(); ++i) {
         features.push_back(featureStrings[i].c_str());
@@ -97,7 +83,7 @@ template <typename T> auto make_factory() -> Factory {
     };
 }
 
-template <typename T> auto make_entry() -> clap_plugin_entry {
+template <typename T> auto make_entry() -> Entry {
     return { .clap_version { CLAP_VERSION },
              .init { entry::init<T> },
              .deinit { entry::deInit<T> },
@@ -108,8 +94,20 @@ template <typename T> struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
 
-    inline static std::vector<std::string> featureStrings { make_features() };
-    inline static plugin::Features features { get_features(featureStrings) };
+    inline static std::vector<std::string> featureStrings = []() {
+        auto file(std::istringstream(PLUGIN_FEATURES));
+        std::string buffer;
+        int count { 0 };
+        std::vector<std::string> features;
+
+        while (std::getline(file, buffer, ',')) {
+            features.push_back(buffer);
+            count++;
+        }
+
+        return features;
+    }();
+    inline static auto features { make_features(featureStrings) };
     inline static const auto descriptor { make_descriptor(features) };
     inline static const auto factory { make_factory<T>() };
     inline static const auto entry { make_entry<T>() };
