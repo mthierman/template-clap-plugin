@@ -3,26 +3,33 @@
 #include <sstream>
 #include <string>
 
-auto make_features() -> void {
+auto make_features() -> std::vector<std::string> {
     auto file(std::istringstream(PLUGIN_FEATURES));
     std::string buffer;
-    // int count { 0 };
-    plugin::Features features;
+    int count { 0 };
+    std::vector<std::string> features;
 
     while (std::getline(file, buffer, ',')) {
-        // std::cout << empty << std::endl;
-        features.push_back(buffer.c_str());
-        // ++count;
+        features.push_back(buffer);
+        count++;
     }
 
-    // features.push_back("\0");
-
-    for (auto feat : features) {
-        std::cout << feat << std::endl;
-    }
-
-    // std::cout << count << std::endl;
+    return features;
 }
+
+auto make_feature_array(const std::vector<std::string>& vec) -> std::vector<const char*> {
+    std::vector<const char*> strings;
+    for (int i = 0; i < vec.size(); ++i) {
+        strings.push_back(vec[i].c_str());
+    }
+
+    strings.push_back(nullptr);
+
+    return strings;
+}
+
+std::vector<std::string> featureBuffer { make_features() };
+std::vector<const char*> feature { make_feature_array(featureBuffer) };
 
 namespace plugins::gain {
 struct Plugin final : public plugin::PluginHelper {
@@ -30,7 +37,9 @@ struct Plugin final : public plugin::PluginHelper {
         : plugin::PluginHelper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
-        make_features();
+        for (auto feat : feature) {
+            std::cout << feat << std::endl;
+        }
     }
     ~Plugin() { }
 
