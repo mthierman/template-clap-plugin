@@ -5,12 +5,6 @@
 #include <glow/webview.hxx>
 #include <glow/window.hxx>
 
-namespace glow::messages {
-enum struct notice : ::UINT {
-    SET_SIZE = WM_APP,
-};
-}
-
 namespace plugin {
 struct Window final : glow::window::Window {
     Window() {
