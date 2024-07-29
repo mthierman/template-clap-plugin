@@ -28,7 +28,7 @@ namespace helper {
                                             clap::helpers::CheckingLevel::Minimal>;
     using IgnoreNone = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                              clap::helpers::CheckingLevel::None>;
-}
+} // namespace helper
 
 using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                      clap::helpers::CheckingLevel::None>;
@@ -265,5 +265,4 @@ namespace event {
         return CLAP_PROCESS_SLEEP;
     }
 } // namespace event
-} // namespace plugin
 } // namespace plugin
