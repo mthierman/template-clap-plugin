@@ -132,29 +132,31 @@ function(clap_add_plugin)
         ${ARGN}
         )
 
-    list(
-        TRANSFORM
-        PLUGIN_FEATURES
-        REPLACE "(.+)"
-                "\"\\1\""
-                OUTPUT_VARIABLE
-                PLUGIN_FEATURES
-        )
-    list(
-        JOIN
-        PLUGIN_FEATURES
-        ","
-        PLUGIN_FEATURES
-        )
+    # list(
+    #     TRANSFORM
+    #     PLUGIN_FEATURES
+    #     REPLACE "(.+)"
+    #             "\"\\1\""
+    #             OUTPUT_VARIABLE
+    #             PLUGIN_FEATURES
+    #     )
+    # list(
+    #     JOIN
+    #     PLUGIN_FEATURES
+    #     ","
+    #     PLUGIN_FEATURES
+    #     )
 
-    message(STATUS ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/in.hxx)
+    # configure_file(
+    #     ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/config.hxx
+    #     ${CMAKE_CURRENT_BINARY_DIR}/include/config/config.hxx
+    #     )
 
-    configure_file(
-        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/in.hxx
-        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/config/out.hxx
-        )
+    # target_include_directories(plugin PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
 
-    message(STATUS ${PLUGIN_FEATURES})
+    # message(STATUS "${CMAKE_CURRENT_BINARY_DIR}/include")
+
+    # message(STATUS ${PLUGIN_FEATURES})
 
     if(NOT
        PLUGIN_NAME

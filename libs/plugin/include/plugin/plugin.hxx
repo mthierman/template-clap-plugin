@@ -12,6 +12,10 @@
 #include "win32.hxx"
 #endif
 
+// #include <config/config.hxx>
+#include <array>
+auto features { std::to_array({ "audio-effect", "utility", "test" }) };
+
 namespace plugin {
 using Helper = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Ignore,
                                      clap::helpers::CheckingLevel::None>;
@@ -54,31 +58,6 @@ namespace entry {
 template <typename T> struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
-
-    inline static std::vector<std::string> featureStrings = []() {
-        auto file(std::istringstream(PLUGIN_FEATURES));
-        std::string buffer;
-        int count { 0 };
-        std::vector<std::string> features;
-
-        while (std::getline(file, buffer, ',')) {
-            features.push_back(buffer);
-            count++;
-        }
-
-        return features;
-    }();
-
-    inline static auto features { []() {
-        std::vector<const char*> features;
-        for (int i = 0; i < featureStrings.size(); ++i) {
-            features.push_back(featureStrings[i].c_str());
-        }
-
-        features.push_back(nullptr);
-
-        return features;
-    }() };
 
     inline static const Descriptor descriptor { .clap_version { CLAP_VERSION },
                                                 .id { PLUGIN_ID },
