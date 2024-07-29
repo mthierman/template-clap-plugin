@@ -89,8 +89,7 @@ struct PluginHelper : public Helper {
             return true;
         }
 
-        return true;
-        b
+        return false;
     }
 
     auto guiShow() noexcept -> bool override {
