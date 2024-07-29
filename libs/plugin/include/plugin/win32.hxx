@@ -30,7 +30,7 @@ struct Window final : glow::window::Window {
             return 0;
         });
 
-        create("PluginHelper", false);
+        create();
     }
 
     // glow::webview::WebViewEnvironment webViewEnvironment;

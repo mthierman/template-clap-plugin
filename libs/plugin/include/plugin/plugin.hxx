@@ -30,9 +30,9 @@ struct PluginHelper : public Helper {
 
     // gui
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        if (isFloating) {
-            return false;
-        }
+        // if (isFloating) {
+        //     return false;
+        // }
 
         if (PLATFORM_WINDOWS) {
             if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
@@ -44,9 +44,13 @@ struct PluginHelper : public Helper {
     }
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
-        m_window = std::make_unique<plugin::Window>();
+        if (PLATFORM_WINDOWS) {
+            m_window = std::make_unique<plugin::Window>();
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     auto guiSetScale(double scale) noexcept -> bool override {
@@ -85,7 +89,8 @@ struct PluginHelper : public Helper {
             return true;
         }
 
-        return false;
+        return true;
+        b
     }
 
     auto guiShow() noexcept -> bool override {
