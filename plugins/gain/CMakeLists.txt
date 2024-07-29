@@ -20,4 +20,5 @@ clap_add_plugin(
     FEATURES
     "audio-effect"
     "utility"
+    "test"
     )

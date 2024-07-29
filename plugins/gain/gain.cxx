@@ -5,14 +5,23 @@
 
 auto make_features() -> void {
     auto file(std::istringstream(PLUGIN_FEATURES));
-    std::string empty;
-    int count { 0 };
+    std::string buffer;
+    // int count { 0 };
+    plugin::Features features;
 
-    while (std::getline(file, empty, ',')) {
-        ++count;
+    while (std::getline(file, buffer, ',')) {
+        // std::cout << empty << std::endl;
+        features.push_back(buffer.c_str());
+        // ++count;
     }
 
-    std::cout << count << std::endl;
+    // features.push_back("\0");
+
+    for (auto feat : features) {
+        std::cout << feat << std::endl;
+    }
+
+    // std::cout << count << std::endl;
 }
 
 namespace plugins::gain {
@@ -21,6 +30,7 @@ struct Plugin final : public plugin::PluginHelper {
         : plugin::PluginHelper(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
+        make_features();
     }
     ~Plugin() { }
 
