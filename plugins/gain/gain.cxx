@@ -4,9 +4,9 @@
 #include <string>
 
 namespace plugins::gain {
-struct Plugin final : public plugin::PluginHelper {
+struct Plugin final : public plugin::PluginHelper<Plugin> {
     explicit Plugin(const clap_host* host)
-        : plugin::PluginHelper(&descriptor, host) {
+        : plugin::PluginHelper<Plugin>(&descriptor, host) {
         paramToValue[pmLevel] = &level;
         nParams = static_cast<clap_id>(paramToValue.size());
     }
@@ -118,6 +118,6 @@ struct Plugin final : public plugin::PluginHelper {
 };
 
 extern "C" {
-const CLAP_EXPORT clap_plugin_entry clap_entry { plugin::make_entry<Plugin>() };
+const CLAP_EXPORT clap_plugin_entry clap_entry { Plugin::entry };
 }
 } // namespace plugins::gain
