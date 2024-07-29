@@ -45,7 +45,7 @@ struct PluginHelper : public Helper {
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            m_window = std::make_unique<plugin::Window>();
+            m_window.create();
 
             return true;
         }
@@ -55,7 +55,7 @@ struct PluginHelper : public Helper {
 
     auto guiSetScale(double scale) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            m_window->m_scale = scale;
+            m_window.m_scale = scale;
 
             return true;
         }
@@ -71,7 +71,7 @@ struct PluginHelper : public Helper {
 
     auto guiSetSize(uint32_t width, uint32_t height) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::set_position(m_window->m_hwnd.get(), 0, 0, width, height);
+            glow::window::set_position(m_window.m_hwnd.get(), 0, 0, width, height);
 
             return true;
         }
@@ -81,8 +81,8 @@ struct PluginHelper : public Helper {
 
     auto guiGetSize(uint32_t* width, uint32_t* height) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            *width = glow::window::get_client_rect(m_window->m_hwnd.get()).right;
-            *height = glow::window::get_client_rect(m_window->m_hwnd.get()).bottom;
+            *width = glow::window::get_client_rect(m_window.m_hwnd.get()).right;
+            *height = glow::window::get_client_rect(m_window.m_hwnd.get()).bottom;
 
             return true;
         }
@@ -92,8 +92,8 @@ struct PluginHelper : public Helper {
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::set_style(m_window->m_hwnd.get(), WS_POPUP);
-            glow::window::set_parent(m_window->m_hwnd.get(), (::HWND)window->win32);
+            glow::window::set_style(m_window.m_hwnd.get(), WS_POPUP);
+            glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
 
             return true;
         }
@@ -103,7 +103,7 @@ struct PluginHelper : public Helper {
 
     auto guiShow() noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::show(m_window->m_hwnd.get());
+            glow::window::show(m_window.m_hwnd.get());
 
             return true;
         }
@@ -113,7 +113,7 @@ struct PluginHelper : public Helper {
 
     auto guiHide() noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            glow::window::hide(m_window->m_hwnd.get());
+            glow::window::hide(m_window.m_hwnd.get());
 
             return true;
         }
@@ -121,7 +121,9 @@ struct PluginHelper : public Helper {
         return false;
     }
 
-    auto guiDestroy() noexcept -> void override { m_window.reset(); }
+    // auto guiDestroy() noexcept -> void override { m_window.reset(); }
+    // auto guiDestroy() noexcept -> void override { m_window->m_hwnd.reset(); }
+    auto guiDestroy() noexcept -> void override { }
 
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
@@ -160,7 +162,7 @@ struct PluginHelper : public Helper {
 
     clap_id nParams { 0 };
     plugin::ParameterToValue paramToValue;
-    std::unique_ptr<plugin::Window> m_window;
+    plugin::Window m_window;
 };
 
 auto make_descriptor(plugin::Features& features) -> Descriptor {

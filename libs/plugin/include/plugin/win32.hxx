@@ -8,11 +8,10 @@
 namespace plugin {
 struct Window final : glow::window::Window {
     Window() {
-        message(WM_CREATE, [this](glow::messages::wm_create message) {
-            webViewEnvironment.m_userDataFolder
-                = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
-            std::cout << webViewEnvironment.m_userDataFolder.string() << std::endl;
+        webViewEnvironment.m_userDataFolder
+            = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
 
+        message(WM_CREATE, [this](glow::messages::wm_create message) {
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
                     webView.navigate("https://www.example.com/");
@@ -30,8 +29,6 @@ struct Window final : glow::window::Window {
 
             return 0;
         });
-
-        create();
     }
 
     glow::webview::WebViewEnvironment webViewEnvironment;
