@@ -65,15 +65,15 @@ auto make_features() -> std::vector<std::string> {
     return features;
 }
 
-auto get_features(const std::vector<std::string>& vec) -> std::vector<const char*> {
-    std::vector<const char*> strings;
-    for (int i = 0; i < vec.size(); ++i) {
-        strings.push_back(vec[i].c_str());
+auto get_features(const std::vector<std::string>& featureStrings) -> std::vector<const char*> {
+    std::vector<const char*> features;
+    for (int i = 0; i < featureStrings.size(); ++i) {
+        features.push_back(featureStrings[i].c_str());
     }
 
-    strings.push_back(nullptr);
+    features.push_back(nullptr);
 
-    return strings;
+    return features;
 }
 
 auto make_descriptor(const plugin::Features& features) -> Descriptor {
