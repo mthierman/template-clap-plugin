@@ -51,21 +51,6 @@ namespace entry {
     }
 }; // namespace entry
 
-template <typename T> auto make_factory() -> Factory {
-    return {
-        .get_plugin_count { factory::getPluginCount<T> },
-        .get_plugin_descriptor { factory::getPluginDescriptor<T> },
-        .create_plugin { factory::createPlugin<T> },
-    };
-}
-
-template <typename T> auto make_entry() -> Entry {
-    return { .clap_version { CLAP_VERSION },
-             .init { entry::init<T> },
-             .deinit { entry::deInit<T> },
-             .get_factory { entry::getFactory<T> } };
-}
-
 template <typename T> struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) { }
@@ -106,11 +91,15 @@ template <typename T> struct PluginHelper : public Helper {
                                                 .description { PLUGIN_DESCRIPTION },
                                                 .features { features.data() } };
 
-    inline static const auto factory { make_factory<T>() };
-    inline static const auto entry { make_entry<T>() };
+    inline static const Factory factory { .get_plugin_count { factory::getPluginCount<T> },
+                                          .get_plugin_descriptor {
+                                              factory::getPluginDescriptor<T> },
+                                          .create_plugin { factory::createPlugin<T> } };
 
-    // inline static const auto factory { make_factory<T>() };
-    // inline static const auto entry { make_entry<T>() };
+    inline static const Entry entry { .clap_version { CLAP_VERSION },
+                                      .init { entry::init<T> },
+                                      .deinit { entry::deInit<T> },
+                                      .get_factory { entry::getFactory<T> } };
 
     // params
     auto paramsCount() const noexcept -> uint32_t override { return nParams; }
