@@ -30,9 +30,9 @@ struct PluginHelper : public Helper {
 
     // gui
     auto guiIsApiSupported(const char* api, bool isFloating) noexcept -> bool override {
-        // if (isFloating) {
-        //     return false;
-        // }
+        if (isFloating) {
+            return false;
+        }
 
         if (PLATFORM_WINDOWS) {
             if (std::strcmp(api, CLAP_WINDOW_API_WIN32) == 0) {
