@@ -5,10 +5,8 @@
 #include <glow/system.hxx>
 #include <glow/webview.hxx>
 #include <glow/window.hxx>
-#endif
 
 namespace plugin {
-#if PLATFORM_WINDOWS
 struct Window final : glow::window::Window {
     Window() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
@@ -47,10 +45,12 @@ struct Window final : glow::window::Window {
 
         //     return 0;
         // });
+
+        create("PluginHelper", false);
     }
 
     glow::webview::WebViewEnvironment webViewEnvironment;
     glow::webview::WebView webView;
 };
-#endif
 } // namespace plugin
+#endif

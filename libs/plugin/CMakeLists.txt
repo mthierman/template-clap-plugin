@@ -49,13 +49,16 @@ target_compile_features(
 
 target_sources(
     plugin
-    PRIVATE "src/plugin.cxx"
     PUBLIC FILE_SET
            HEADERS
            BASE_DIRS
            "include"
            "${clap_SOURCE_DIR}/include"
            "${clap-helpers_SOURCE_DIR}/include"
+           FILES
+           "include/plugin/plugin.hxx"
+           "include/plugin/config.hxx"
+           "include/plugin/window.hxx"
     )
 
 if(CMAKE_SYSTEM_NAME
@@ -101,11 +104,7 @@ if(CMAKE_SYSTEM_NAME
         plugin
         PUBLIC NOMINMAX
                WIN32_LEAN_AND_MEAN
-        )
-
-    target_compile_definitions(
-        plugin
-        PUBLIC PLATFORM_WINDOWS=1
+               PLATFORM_WINDOWS=1
                OPERATING_SYSTEM="Windows"
         )
 endif()

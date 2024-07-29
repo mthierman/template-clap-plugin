@@ -55,7 +55,8 @@ template <typename T, typename U> struct PluginHelper : public U {
 
     auto guiCreate(const char* api, bool isFloating) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
-            m_window.create("PluginHelper", false);
+            // m_window.create("PluginHelper", false);
+            guiShow();
 
             return true;
         }
@@ -142,7 +143,7 @@ template <typename T, typename U> struct PluginHelper : public U {
         return false;
     }
 
-    auto guiDestroy() noexcept -> void override { }
+    auto guiDestroy() noexcept -> void override { m_window.m_hwnd.reset(); }
 
     auto guiGetPreferredApi(const char** api, bool* is_floating) noexcept -> bool override {
         return false;
