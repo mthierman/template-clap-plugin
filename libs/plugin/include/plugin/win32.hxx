@@ -1,14 +1,11 @@
 #pragma once
 
-#if PLATFORM_WINDOWS
 #include <glow/filesystem.hxx>
 #include <glow/system.hxx>
 #include <glow/webview.hxx>
 #include <glow/window.hxx>
-#endif
 
 namespace plugin {
-#if PLATFORM_WINDOWS
 struct Window final : glow::window::Window {
     Window() {
         message(WM_CREATE, [this](glow::messages::wm_create message) {
@@ -18,7 +15,7 @@ struct Window final : glow::window::Window {
 
             webViewEnvironment.create([this]() {
                 webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
-                    webView.navigate("about:blank");
+                    webView.navigate("https://www.example.com/");
                     webView.put_bounds(m_hwnd.get());
                 });
             });
@@ -27,8 +24,10 @@ struct Window final : glow::window::Window {
         });
 
         message(WM_NOTIFY, [this](glow::messages::wm message) {
-            ::SetWindowPos(
-                m_hwnd.get(), nullptr, 0, 0, LOWORD(message.lparam), HIWORD(message.lparam), 0);
+            // ::SetWindowPos(
+            //     m_hwnd.get(), nullptr, 0, 0, LOWORD(message.lparam), HIWORD(message.lparam), 0);
+            glow::window::set_position(
+                m_hwnd.get(), 0, 0, LOWORD(message.lparam), HIWORD(message.lparam));
             webView.put_bounds(m_hwnd.get());
 
             return 0;
@@ -40,5 +39,4 @@ struct Window final : glow::window::Window {
     glow::webview::WebViewEnvironment webViewEnvironment;
     glow::webview::WebView webView;
 };
-#endif
 } // namespace plugin

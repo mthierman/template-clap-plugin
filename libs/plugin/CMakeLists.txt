@@ -52,16 +52,14 @@ target_compile_features(
 
 target_sources(
     plugin
+    PRIVATE "include/plugin/plugin.hxx"
+            "include/plugin/win32.hxx"
     INTERFACE FILE_SET
               HEADERS
               BASE_DIRS
               "include"
               "${clap_SOURCE_DIR}/include"
               "${clap-helpers_SOURCE_DIR}/include"
-              FILES
-              "include/plugin/config.hxx"
-              "include/plugin/plugin.hxx"
-              "include/plugin/window.hxx"
     )
 
 if(CMAKE_SYSTEM_NAME

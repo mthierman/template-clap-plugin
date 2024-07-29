@@ -7,7 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "window.hxx"
+#if PLATFORM_WINDOWS
+#include "win32.hxx"
+#endif
 
 namespace plugin {
 using TerminateMax = clap::helpers::Plugin<clap::helpers::MisbehaviourHandler::Terminate,
