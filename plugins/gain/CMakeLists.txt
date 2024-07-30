@@ -16,7 +16,7 @@ clap_add_plugin(
     SUPPORT_URL
     "https://cleveraudio.org/"
     SOURCES
-    "gain.cxx"
+    "src/gain.cxx"
     FEATURES
     "audio-effect"
     "utility"

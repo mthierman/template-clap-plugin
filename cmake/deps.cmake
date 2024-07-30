@@ -11,17 +11,7 @@ FetchContent_MakeAvailable(cmake-modules)
 
 include("${cmake-modules_SOURCE_DIR}/cmake-modules.cmake")
 
-fetch_glow(
-    VERSION
-    "next"
-    )
-
-fetch_clap(
-    VERSION
-    "main"
-    )
-
-fetch_clap_helpers(
+fetch_hand(
     VERSION
     "main"
     )

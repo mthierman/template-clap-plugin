@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(TemplateClapPlugin)
+project(TemplateClapPlugin VERSION 0.0.0)
 
-add_subdirectory(libs/plugin)
+include(cmake/deps.cmake)
+
 add_subdirectory(plugins/gain)
