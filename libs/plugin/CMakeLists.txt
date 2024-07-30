@@ -1,54 +1,6 @@
 project(Plugin VERSION 0.0.0)
 
-include(FetchContent)
-
-FetchContent_Declare(
-    cmake-modules
-    GIT_REPOSITORY "https://github.com/mthierman/cmake-modules.git"
-    GIT_TAG "main"
-    GIT_SHALLOW ON
-    )
-
-FetchContent_MakeAvailable(cmake-modules)
-
-list(
-    APPEND
-    CMAKE_MODULE_PATH
-    "${cmake-modules_SOURCE_DIR}"
-    )
-
-include(cmake-modules)
-
-FetchContent_Declare(
-    glow
-    GIT_REPOSITORY "https://github.com/mthierman/Glow.git"
-    GIT_TAG "next"
-    GIT_SHALLOW ON
-    )
-
-FetchContent_MakeAvailable(glow)
-
-FetchContent_Declare(
-    clap
-    GIT_REPOSITORY "https://github.com/free-audio/clap.git"
-    GIT_TAG "main"
-    GIT_SHALLOW ON
-    SOURCE_SUBDIR
-    "NULL"
-    )
-
-FetchContent_MakeAvailable(clap)
-
-FetchContent_Declare(
-    clap-helpers
-    GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
-    GIT_TAG "main"
-    GIT_SHALLOW ON
-    SOURCE_SUBDIR
-    "NULL"
-    )
-
-FetchContent_MakeAvailable(clap-helpers)
+include(cmake/deps.cmake)
 
 add_library(
     plugin
@@ -61,12 +13,6 @@ add_library(
     plugin
     )
 
-target_compile_features(
-    plugin
-    INTERFACE c_std_17
-              cxx_std_23
-    )
-
 target_sources(
     plugin
     INTERFACE "include/plugin/plugin.hxx"
@@ -75,8 +21,12 @@ target_sources(
               HEADERS
               BASE_DIRS
               "include"
-              "${clap_SOURCE_DIR}/include"
-              "${clap-helpers_SOURCE_DIR}/include"
+    )
+
+target_link_libraries(
+    plugin
+    INTERFACE free-audio::clap
+              free-audio::clap-helpers
     )
 
 if(CMAKE_SYSTEM_NAME
