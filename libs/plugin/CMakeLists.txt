@@ -11,6 +11,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glow)
 
+if(NOT
+   CLAP_VERSION
+    )
+    set(CLAP_VERSION "main")
+endif()
+
 FetchContent_Declare(
     clap
     GIT_REPOSITORY "https://github.com/free-audio/clap.git"
@@ -21,6 +27,12 @@ FetchContent_Declare(
     )
 
 FetchContent_MakeAvailable(clap)
+
+if(NOT
+   CLAP_HELPERS_VERSION
+    )
+    set(CLAP_HELPERS_VERSION "main")
+endif()
 
 FetchContent_Declare(
     clap-helpers
