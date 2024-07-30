@@ -159,6 +159,43 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
 
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
+
+            auto threadAwareness = ::GetAwarenessFromDpiAwarenessContext(
+                ::GetThreadDpiAwarenessContext();
+
+            auto windowAwareness = ::GetAwarenessFromDpiAwarenessContext(
+                ::GetWindowDpiAwarenessContext((::HWND)window->win32));
+
+            switch (threadAwareness) {
+                case DPI_AWARENESS_INVALID: {
+                    glow::system::message_box("Thread: DPI_AWARENESS_INVALID");
+                } break;
+                case DPI_AWARENESS_UNAWARE: {
+                    glow::system::message_box("Thread: DPI_AWARENESS_UNAWARE");
+                } break;
+                case DPI_AWARENESS_SYSTEM_AWARE: {
+                    glow::system::message_box("Thread: DPI_AWARENESS_SYSTEM_AWARE");
+                } break;
+                case DPI_AWARENESS_PER_MONITOR_AWARE: {
+                    glow::system::message_box("Thread: DPI_AWARENESS_PER_MONITOR_AWARE");
+                } break;
+            }
+
+            switch (windowAwareness) {
+                case DPI_AWARENESS_INVALID: {
+                    glow::system::message_box("Window: DPI_AWARENESS_INVALID");
+                } break;
+                case DPI_AWARENESS_UNAWARE: {
+                    glow::system::message_box("Window: DPI_AWARENESS_UNAWARE");
+                } break;
+                case DPI_AWARENESS_SYSTEM_AWARE: {
+                    glow::system::message_box("Window: DPI_AWARENESS_SYSTEM_AWARE");
+                } break;
+                case DPI_AWARENESS_PER_MONITOR_AWARE: {
+                    glow::system::message_box("Window: DPI_AWARENESS_PER_MONITOR_AWARE");
+                } break;
+            }
+
             glow::window::set_style(m_window.m_hwnd.get(), WS_POPUP);
             glow::window::set_parent(m_window.m_hwnd.get(), (::HWND)window->win32);
 
