@@ -66,8 +66,10 @@ namespace entry {
 template <typename T, typename Helper> struct PluginHelper : public Helper {
     PluginHelper(const clap_plugin_descriptor* desc, const clap_host* host)
         : Helper(desc, host) {
-        m_window.webViewEnvironment.m_userDataFolder
-            = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+        if (PLATFORM_WINDOWS) {
+            m_window.webViewEnvironment.m_userDataFolder
+                = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
+        }
     }
 
     inline static const Descriptor descriptor { .clap_version { CLAP_VERSION },
