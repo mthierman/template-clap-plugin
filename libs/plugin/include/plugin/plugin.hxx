@@ -160,8 +160,8 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
     auto guiSetParent(const clap_window* window) noexcept -> bool override {
         if (PLATFORM_WINDOWS) {
 
-            auto threadAwareness = ::GetAwarenessFromDpiAwarenessContext(
-                ::GetThreadDpiAwarenessContext();
+            auto threadAwareness
+                = ::GetAwarenessFromDpiAwarenessContext(::GetThreadDpiAwarenessContext());
 
             auto windowAwareness = ::GetAwarenessFromDpiAwarenessContext(
                 ::GetWindowDpiAwarenessContext((::HWND)window->win32));
