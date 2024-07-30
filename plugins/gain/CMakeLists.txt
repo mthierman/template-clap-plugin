@@ -1,4 +1,4 @@
-clap_add_plugin(
+hand_plugin(
     NAME
     "Gain"
     VERSION
