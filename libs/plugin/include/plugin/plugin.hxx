@@ -3,10 +3,9 @@
 #include <clap/helpers/plugin.hh>
 #include <clap/helpers/plugin.hxx>
 
+#include <cstring>
 #include <functional>
-#include <memory>
 #include <unordered_map>
-#include <vector>
 
 #if PLATFORM_WINDOWS
 #include "win32.hxx"
