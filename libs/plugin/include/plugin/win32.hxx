@@ -11,30 +11,24 @@ struct Window final : glow::window::Window {
         webViewEnvironment.m_userDataFolder
             = glow::filesystem::known_folder(FOLDERID_LocalAppData, { "template-clap-plugin" });
 
-        message(WM_CREATE, [this](glow::messages::wm_create message) {
+        auto createWebView { [this]() {
+            webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
+#if HOT_RELOAD
+                webView.navigate(DEV_URL);
+#else
+                webView.navigate("https://www.example.com/");
+#endif
+                webView.put_bounds(m_hwnd.get());
+            });
+        } };
+
+        message(WM_CREATE, [=, this](glow::messages::wm_create message) {
             glow::window::set_position(m_hwnd.get(), 0, 0, 640, 480);
 
             if (!webViewEnvironment.m_environment) {
-                webViewEnvironment.create([this]() {
-                    webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
-#if HOT_RELOAD
-                        webView.navigate(DEV_URL);
-#else
-                        webView.navigate("https://www.example.com/");
-#endif
-                        webView.put_bounds(m_hwnd.get());
-                    });
-                });
-            }
-            else {
-                webView.create(webViewEnvironment, m_hwnd.get(), [this]() {
-#if HOT_RELOAD
-                    webView.navigate(DEV_URL);
-#else
-                    webView.navigate("https://www.example.com/");
-#endif
-                    webView.put_bounds(m_hwnd.get());
-                });
+                webViewEnvironment.create([createWebView]() { createWebView(); });
+            } else {
+                createWebView();
             }
 
             return 0;

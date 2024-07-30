@@ -89,15 +89,6 @@ template <typename T, typename Helper> struct PluginHelper : public Helper {
                                       .deinit { entry::deInit<T> },
                                       .get_factory { entry::getFactory<T> } };
 
-    // plugin
-    auto init() noexcept -> bool override {
-        if (PLATFORM_WINDOWS) {
-            ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-        }
-
-        return true;
-    }
-
     // params
     auto paramsCount() const noexcept -> uint32_t override {
         return static_cast<uint32_t>(m_params.size());
