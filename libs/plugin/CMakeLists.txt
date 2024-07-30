@@ -25,7 +25,11 @@ target_sources(
 
 target_link_libraries(
     plugin
-    INTERFACE free-audio::clap
+    INTERFACE common::compile_features
+              common::compile_definitions
+              common::compile_options
+              common::link_options
+              free-audio::clap
               free-audio::clap-helpers
     )
 
