@@ -1,6 +1,23 @@
-project(Plugin)
+project(Plugin VERSION 0.0.0)
 
 include(FetchContent)
+
+FetchContent_Declare(
+    cmake-modules
+    GIT_REPOSITORY "https://github.com/mthierman/cmake-modules.git"
+    GIT_TAG "main"
+    GIT_SHALLOW ON
+    )
+
+FetchContent_MakeAvailable(cmake-modules)
+
+list(
+    APPEND
+    CMAKE_MODULE_PATH
+    "${cmake-modules_SOURCE_DIR}"
+    )
+
+include(cmake-modules)
 
 FetchContent_Declare(
     glow
@@ -11,16 +28,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glow)
 
-if(NOT
-   CLAP_VERSION
-    )
-    set(CLAP_VERSION "main")
-endif()
-
 FetchContent_Declare(
     clap
     GIT_REPOSITORY "https://github.com/free-audio/clap.git"
-    GIT_TAG ${CLAP_VERSION}
+    GIT_TAG "main"
     GIT_SHALLOW ON
     SOURCE_SUBDIR
     "NULL"
@@ -28,16 +39,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(clap)
 
-if(NOT
-   CLAP_HELPERS_VERSION
-    )
-    set(CLAP_HELPERS_VERSION "main")
-endif()
-
 FetchContent_Declare(
     clap-helpers
     GIT_REPOSITORY "https://github.com/free-audio/clap-helpers.git"
-    GIT_TAG ${CLAP_HELPERS_VERSION}
+    GIT_TAG "main"
     GIT_SHALLOW ON
     SOURCE_SUBDIR
     "NULL"
